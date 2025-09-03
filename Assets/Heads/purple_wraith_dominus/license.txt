@@ -1,0 +1,11 @@
+Model Information:
+* title:	Purple Wraith Dominus
+* source:	https://sketchfab.com/3d-models/purple-wraith-dominus-d86b611e2e7245c086bafc6d0e5d2413
+* author:	{ e̵c̴l̶i̵p̷s̷e̵ } (https://sketchfab.com/eclipse22)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Purple Wraith Dominus" (https://sketchfab.com/3d-models/purple-wraith-dominus-d86b611e2e7245c086bafc6d0e5d2413) by { e̵c̴l̶i̵p̷s̷e̵ } (https://sketchfab.com/eclipse22) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

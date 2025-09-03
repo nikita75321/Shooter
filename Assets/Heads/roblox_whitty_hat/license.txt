@@ -1,0 +1,11 @@
+Model Information:
+* title:	Roblox Whitty Hat
+* source:	https://sketchfab.com/3d-models/roblox-whitty-hat-d182305feecc454b89a4cb8cdd0c0929
+* author:	Lenny (https://sketchfab.com/LennyCormick)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Roblox Whitty Hat" (https://sketchfab.com/3d-models/roblox-whitty-hat-d182305feecc454b89a4cb8cdd0c0929) by Lenny (https://sketchfab.com/LennyCormick) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

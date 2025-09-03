@@ -1,0 +1,11 @@
+Model Information:
+* title:	raise a floppa cube
+* source:	https://sketchfab.com/3d-models/raise-a-floppa-cube-7bb6ea0b7a1b491fa1bee7981ae1a17b
+* author:	realism (https://sketchfab.com/Beluga_Cat)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "raise a floppa cube" (https://sketchfab.com/3d-models/raise-a-floppa-cube-7bb6ea0b7a1b491fa1bee7981ae1a17b) by realism (https://sketchfab.com/Beluga_Cat) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

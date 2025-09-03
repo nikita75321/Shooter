@@ -1,0 +1,28 @@
+public class DamageUpgrade : Upgrade
+{
+    private float damageBonus = 0.2f;
+    private float damagePenetration = 0.2f;
+
+    public override void ApplyBoostEffect(Player player)
+    {
+        if (player != null)
+        {
+            player.Character.MainWeapon.damage = player.Character.MainWeapon.InitMaxDamage + player.Character.MainWeapon.InitMaxDamage * damageBonus;
+            player.Character.MainWeapon.armorPenetration = damagePenetration;
+        }
+    }
+    
+    public override void RemoveBoostEffect(Player player)
+    {
+        if (player != null)
+        {
+            player.Character.MainWeapon.damage = player.Character.MainWeapon.InitMaxDamage - player.Character.MainWeapon.InitMaxDamage * damageBonus;
+            player.Character.MainWeapon.armorPenetration = damagePenetration;
+        }
+    }
+
+    public override bool CanPickUp(Player player)
+    {
+        return player != null && !HaveUpgrade(player);
+    }
+}

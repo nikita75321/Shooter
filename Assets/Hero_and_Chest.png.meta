@@ -1,0 +1,1866 @@
+fileFormatVersion: 2
+guid: e3f0f136e7633c543a5e82964e4a1a49
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 1
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Hero_and_Chest_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1923
+        width: 104
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdb28e93386a0214bb4d102ae0730b46
+      internalID: -1489417371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_1
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 1923
+        width: 101
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67554173c7c98294eba6f70dd5d19735
+      internalID: -1524167543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_2
+      rect:
+        serializedVersion: 2
+        x: 235
+        y: 1923
+        width: 92
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 202bfb29e9277c44d8a4ebdfa0432b09
+      internalID: 420052335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_3
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 1922
+        width: 106
+        height: 91
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 162ad0f207d730b4f9d3f9a82b8d232d
+      internalID: 966434460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_4
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 1928
+        width: 97
+        height: 90
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00837b3a685291045bdb26d9c9d78a75
+      internalID: -936988125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_5
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 1924
+        width: 106
+        height: 98
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36b2e7ac91d023f4b92a618d36bb9499
+      internalID: 786861082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_6
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 1923
+        width: 108
+        height: 92
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d659cb31e16605040b85797eaad5d20e
+      internalID: -299923083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_7
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 1822
+        width: 190
+        height: 226
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6763640ebcbda4d4aa423d9080a80bd3
+      internalID: 1961183063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_8
+      rect:
+        serializedVersion: 2
+        x: 1113
+        y: 1836
+        width: 119
+        height: 212
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39c408380522c18419079e587ba859bf
+      internalID: -313443883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_9
+      rect:
+        serializedVersion: 2
+        x: 1270
+        y: 1837
+        width: 166
+        height: 211
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cce44e25655ac1f4aba02d08e986e17b
+      internalID: 126266950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_10
+      rect:
+        serializedVersion: 2
+        x: 1482
+        y: 1776
+        width: 196
+        height: 272
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6571fa90cb58ece4981b06f7f205d6cc
+      internalID: 1432768248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_11
+      rect:
+        serializedVersion: 2
+        x: 1717
+        y: 1771
+        width: 141
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5349dec270c6d5242b02232b6ee6538f
+      internalID: 890330490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_12
+      rect:
+        serializedVersion: 2
+        x: 1905
+        y: 1814
+        width: 143
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 64396731cb8305043abdd87361941434
+      internalID: -516996221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1567
+        width: 146
+        height: 231
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e55007f39663f564fb24560b3ae7a4fa
+      internalID: 132889743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_14
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 1557
+        width: 127
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d3f1a3be6fafe94a82d4585f02afe96
+      internalID: 807639667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_15
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 1565
+        width: 141
+        height: 254
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7bd4d5b1a8394af46b9358b1bddbf296
+      internalID: -2132033180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_16
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 1554
+        width: 210
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c77307b2cf8a11548a29ba9bccce6c4d
+      internalID: -220961356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_17
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1554
+        width: 126
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 166f58be93129c0459ed9dcec630b7e5
+      internalID: -865841551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_18
+      rect:
+        serializedVersion: 2
+        x: 940
+        y: 1554
+        width: 113
+        height: 196
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3cb27508d44865942aee4981192e3167
+      internalID: -1429165039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_19
+      rect:
+        serializedVersion: 2
+        x: 1117
+        y: 1557
+        width: 130
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1387ea5bccce3494d99799251c167f68
+      internalID: -618496479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_20
+      rect:
+        serializedVersion: 2
+        x: 1288
+        y: 1545
+        width: 117
+        height: 274
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dfd6bc2e9bbc904b9858a625161c58a
+      internalID: -2017960669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_21
+      rect:
+        serializedVersion: 2
+        x: 1451
+        y: 1567
+        width: 123
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bba74b10d5a4b44584112232ff7527f
+      internalID: 20746713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_22
+      rect:
+        serializedVersion: 2
+        x: 1717
+        y: 1487
+        width: 125
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a8ac8fe2d6794042a97227290e0e4d5
+      internalID: 47761438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_23
+      rect:
+        serializedVersion: 2
+        x: 1913
+        y: 1491
+        width: 128
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e601ffa2d256ca747ab29cb970426108
+      internalID: -1921073281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1258
+        width: 122
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8db2fd26a777614187d50ffa1f749ef
+      internalID: 1590584583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_25
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 1281
+        width: 266
+        height: 210
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f450864202e354246b63c4556301518e
+      internalID: -1724109301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_26
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 1281
+        width: 106
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f04db672d75609e4192c447023e79568
+      internalID: 2080797177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_27
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 1221
+        width: 124
+        height: 301
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99d7b37ea153d9640b7acf560c7b3caf
+      internalID: 1401421511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_28
+      rect:
+        serializedVersion: 2
+        x: 788
+        y: 1281
+        width: 139
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 713d4206514a67946bc1209cc51c3f97
+      internalID: 1178937740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_29
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 1281
+        width: 153
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0954c4fbe0b716408eeac51a65a2428
+      internalID: 992724738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_30
+      rect:
+        serializedVersion: 2
+        x: 1139
+        y: 1281
+        width: 150
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e858bdf3b3eb6c45adaca101f95b766
+      internalID: 1553305462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_31
+      rect:
+        serializedVersion: 2
+        x: 1320
+        y: 1281
+        width: 116
+        height: 229
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a9aecd20df684d4c80a9d4d0312063a
+      internalID: -1979879411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_32
+      rect:
+        serializedVersion: 2
+        x: 1500
+        y: 1278
+        width: 119
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fbf38e9019ddd643806a19bdd64888e
+      internalID: -82443151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_33
+      rect:
+        serializedVersion: 2
+        x: 1726
+        y: 1275
+        width: 157
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08d9774634f088d489b95030c1688883
+      internalID: 1950927471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_34
+      rect:
+        serializedVersion: 2
+        x: 1920
+        y: 1243
+        width: 113
+        height: 226
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dcdf85ded4d77654c8dc0f2a37a0b397
+      internalID: -2133629813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 941
+        width: 119
+        height: 228
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68ff9e1131d4ac944a941c991cb54799
+      internalID: 1860495160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_36
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 941
+        width: 214
+        height: 281
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3f8e883143124e4281ec4744337435b
+      internalID: 932008198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_37
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 941
+        width: 149
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ed6fd3f0fef3004f8f68fb7775cfc55
+      internalID: 96685025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_38
+      rect:
+        serializedVersion: 2
+        x: 607
+        y: 941
+        width: 150
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 032a94d71f1bf3840abefb5ef8fcf4be
+      internalID: -1955513914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_39
+      rect:
+        serializedVersion: 2
+        x: 803
+        y: 941
+        width: 124
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e561ebc4ffc8249b90049759448480
+      internalID: -142037405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_40
+      rect:
+        serializedVersion: 2
+        x: 968
+        y: 941
+        width: 145
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee9e182cd7e398949b67f85010f3e3af
+      internalID: 1241705311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_41
+      rect:
+        serializedVersion: 2
+        x: 1155
+        y: 941
+        width: 134
+        height: 223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ffd87b6b4b65dd4a98235d6e7362949
+      internalID: 1872789535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_42
+      rect:
+        serializedVersion: 2
+        x: 1326
+        y: 938
+        width: 150
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d0f471354e72f7419d8d42e0294d4a8
+      internalID: -978890272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_43
+      rect:
+        serializedVersion: 2
+        x: 1502
+        y: 947
+        width: 117
+        height: 219
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a55f7d07d5b447b4e92cd92020561c45
+      internalID: 986221691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_44
+      rect:
+        serializedVersion: 2
+        x: 1693
+        y: 998
+        width: 159
+        height: 237
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b60a1362c8592140b5578c272c28cf8
+      internalID: 661637096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_45
+      rect:
+        serializedVersion: 2
+        x: 1911
+        y: 1037
+        width: 111
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10d33fc164a761749b86107db2481f32
+      internalID: 1229161685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_46
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 639
+        width: 120
+        height: 223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1755a5c059ffdda44a5589836d8f2722
+      internalID: 518358762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_47
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 640
+        width: 153
+        height: 262
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bba38647a0723d34c82abd06f48eb7bc
+      internalID: -1227804010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_48
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 636
+        width: 119
+        height: 220
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 731bb57a9140a4c4f985f9011a30ea26
+      internalID: -534586864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_49
+      rect:
+        serializedVersion: 2
+        x: 503
+        y: 630
+        width: 121
+        height: 236
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaf8e8ab4fa0b0047a8cdbddb51b7d5f
+      internalID: 697014910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_50
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 622
+        width: 121
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5607fecf80980341b4d3628b5c1fa49
+      internalID: -1393649883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_51
+      rect:
+        serializedVersion: 2
+        x: 812
+        y: 613
+        width: 157
+        height: 270
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c056f47f90a84d64682ef10c000fecdb
+      internalID: 1754738731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_52
+      rect:
+        serializedVersion: 2
+        x: 999
+        y: 626
+        width: 174
+        height: 230
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8ca971bed0fb0b498726e013c6d2656
+      internalID: 1603049998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_53
+      rect:
+        serializedVersion: 2
+        x: 1203
+        y: 640
+        width: 123
+        height: 197
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edfaa9b41dc68784d869423d7a71d75b
+      internalID: 354320329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_54
+      rect:
+        serializedVersion: 2
+        x: 1355
+        y: 639
+        width: 121
+        height: 218
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5465dc795a402c4886ff0e05c222b26
+      internalID: 1709788768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_55
+      rect:
+        serializedVersion: 2
+        x: 1560
+        y: 640
+        width: 118
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9caff4fd5a655d48b9428eb8c8e214a
+      internalID: -1218278220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_56
+      rect:
+        serializedVersion: 2
+        x: 1760
+        y: 742
+        width: 252
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca634e9a61c7b7147b461fa7e67ae5e7
+      internalID: 842925311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_57
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 287
+        width: 244
+        height: 251
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 502ae4f16bf3f5449909f7f8e9b0ec38
+      internalID: -885826956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_58
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 302
+        width: 122
+        height: 221
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c7242315b1c9394a8e9ff10e0e1da5f
+      internalID: -158860200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_59
+      rect:
+        serializedVersion: 2
+        x: 451
+        y: 302
+        width: 137
+        height: 266
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d909641ef6fcb246a63cb9875af26ac
+      internalID: 1538513965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_60
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 302
+        width: 149
+        height: 293
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01095b4c20624e749833bd2de250b9d8
+      internalID: -1344890007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_61
+      rect:
+        serializedVersion: 2
+        x: 834
+        y: 288
+        width: 136
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c172abb770c88af4fb21c9918a8acbdf
+      internalID: -1552063048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_62
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 307
+        width: 122
+        height: 211
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18e1e110cb4e6854fa6f5fbb971d8e2b
+      internalID: -1499377965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_63
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 308
+        width: 118
+        height: 210
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7f02b3946640b04b9808c396b6c01be
+      internalID: -1939871679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_64
+      rect:
+        serializedVersion: 2
+        x: 1371
+        y: 301
+        width: 132
+        height: 223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 009ca71337c0507469aecf45f0701cc6
+      internalID: 750715714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_65
+      rect:
+        serializedVersion: 2
+        x: 1532
+        y: 294
+        width: 146
+        height: 281
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05199e8a0f5df9e49b7964cdf3db730c
+      internalID: 1028001210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_66
+      rect:
+        serializedVersion: 2
+        x: 1735
+        y: 495
+        width: 123
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f2b32714a7533942830899229b05c3c
+      internalID: -1380302397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_67
+      rect:
+        serializedVersion: 2
+        x: 1905
+        y: 438
+        width: 120
+        height: 278
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fa0a9be284f93140bf6f5605144baab
+      internalID: -416626130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_69
+      rect:
+        serializedVersion: 2
+        x: 1736
+        y: 162
+        width: 121
+        height: 277
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dacb5d514720f8c44b90ad495106c090
+      internalID: -165950756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_70
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 220
+        width: 131
+        height: 195
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e980c4cf68135be4eb77201660fd6458
+      internalID: -1711911392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_71
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 16
+        width: 115
+        height: 245
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35ed173003231204f9678b59cff23a1d
+      internalID: 1262958856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_72
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 16
+        width: 123
+        height: 223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cadd1fd298740784cbf3af14bf3e8a76
+      internalID: -477045678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_73
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 12
+        width: 126
+        height: 253
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68ae780a5c07c2e4f8106956dd486023
+      internalID: 1542823261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_74
+      rect:
+        serializedVersion: 2
+        x: 518
+        y: 0
+        width: 286
+        height: 283
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3b63d7c5a632cb41bd8f36e6129a36c
+      internalID: -92023928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_75
+      rect:
+        serializedVersion: 2
+        x: 826
+        y: 0
+        width: 129
+        height: 252
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e78a506d2b28a244bbe468ef4a26cc4
+      internalID: -2054397197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_76
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 0
+        width: 134
+        height: 235
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5a08bef87651204fa0d9bc216686d7d
+      internalID: -580804972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_77
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 0
+        width: 129
+        height: 234
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4d6c517e612f804d819b4377d986f99
+      internalID: -202258804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_78
+      rect:
+        serializedVersion: 2
+        x: 1403
+        y: 0
+        width: 111
+        height: 241
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01b57c67c453511458443c15591f59ed
+      internalID: -371928000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hero_and_Chest_79
+      rect:
+        serializedVersion: 2
+        x: 1574
+        y: 0
+        width: 119
+        height: 274
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a6f0853fc18c9c49b37d7a95435a5df
+      internalID: -2139611923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 81227a688e16aad49b41826fa1a4b4e0
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Hero_and_Chest_0: -1489417371
+      Hero_and_Chest_1: -1524167543
+      Hero_and_Chest_10: 1432768248
+      Hero_and_Chest_11: 890330490
+      Hero_and_Chest_12: -516996221
+      Hero_and_Chest_13: 132889743
+      Hero_and_Chest_14: 807639667
+      Hero_and_Chest_15: -2132033180
+      Hero_and_Chest_16: -220961356
+      Hero_and_Chest_17: -865841551
+      Hero_and_Chest_18: -1429165039
+      Hero_and_Chest_19: -618496479
+      Hero_and_Chest_2: 420052335
+      Hero_and_Chest_20: -2017960669
+      Hero_and_Chest_21: 20746713
+      Hero_and_Chest_22: 47761438
+      Hero_and_Chest_23: -1921073281
+      Hero_and_Chest_24: 1590584583
+      Hero_and_Chest_25: -1724109301
+      Hero_and_Chest_26: 2080797177
+      Hero_and_Chest_27: 1401421511
+      Hero_and_Chest_28: 1178937740
+      Hero_and_Chest_29: 992724738
+      Hero_and_Chest_3: 966434460
+      Hero_and_Chest_30: 1553305462
+      Hero_and_Chest_31: -1979879411
+      Hero_and_Chest_32: -82443151
+      Hero_and_Chest_33: 1950927471
+      Hero_and_Chest_34: -2133629813
+      Hero_and_Chest_35: 1860495160
+      Hero_and_Chest_36: 932008198
+      Hero_and_Chest_37: 96685025
+      Hero_and_Chest_38: -1955513914
+      Hero_and_Chest_39: -142037405
+      Hero_and_Chest_4: -936988125
+      Hero_and_Chest_40: 1241705311
+      Hero_and_Chest_41: 1872789535
+      Hero_and_Chest_42: -978890272
+      Hero_and_Chest_43: 986221691
+      Hero_and_Chest_44: 661637096
+      Hero_and_Chest_45: 1229161685
+      Hero_and_Chest_46: 518358762
+      Hero_and_Chest_47: -1227804010
+      Hero_and_Chest_48: -534586864
+      Hero_and_Chest_49: 697014910
+      Hero_and_Chest_5: 786861082
+      Hero_and_Chest_50: -1393649883
+      Hero_and_Chest_51: 1754738731
+      Hero_and_Chest_52: 1603049998
+      Hero_and_Chest_53: 354320329
+      Hero_and_Chest_54: 1709788768
+      Hero_and_Chest_55: -1218278220
+      Hero_and_Chest_56: 842925311
+      Hero_and_Chest_57: -885826956
+      Hero_and_Chest_58: -158860200
+      Hero_and_Chest_59: 1538513965
+      Hero_and_Chest_6: -299923083
+      Hero_and_Chest_60: -1344890007
+      Hero_and_Chest_61: -1552063048
+      Hero_and_Chest_62: -1499377965
+      Hero_and_Chest_63: -1939871679
+      Hero_and_Chest_64: 750715714
+      Hero_and_Chest_65: 1028001210
+      Hero_and_Chest_66: -1380302397
+      Hero_and_Chest_67: -416626130
+      Hero_and_Chest_68: 1428235896
+      Hero_and_Chest_69: -165950756
+      Hero_and_Chest_7: 1961183063
+      Hero_and_Chest_70: -1711911392
+      Hero_and_Chest_71: 1262958856
+      Hero_and_Chest_72: -477045678
+      Hero_and_Chest_73: 1542823261
+      Hero_and_Chest_74: -92023928
+      Hero_and_Chest_75: -2054397197
+      Hero_and_Chest_76: -580804972
+      Hero_and_Chest_77: -202258804
+      Hero_and_Chest_78: -371928000
+      Hero_and_Chest_79: -2139611923
+      Hero_and_Chest_8: -313443883
+      Hero_and_Chest_9: 126266950
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

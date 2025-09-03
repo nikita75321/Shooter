@@ -1,0 +1,11 @@
+Model Information:
+* title:	Screech
+* source:	https://sketchfab.com/3d-models/screech-b4f6366c6bfe4572bc034c6cba43da2c
+* author:	korbenhall (https://sketchfab.com/korbenhall)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Screech" (https://sketchfab.com/3d-models/screech-b4f6366c6bfe4572bc034c6cba43da2c) by korbenhall (https://sketchfab.com/korbenhall) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

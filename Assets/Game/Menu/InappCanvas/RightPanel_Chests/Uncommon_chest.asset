@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e122be7b2000f448a2cf090abe0356, type: 3}
+  m_Name: Uncommon_chest
+  m_EditorClassIdentifier: 
+  chestPrefab: {fileID: 5868597052747362413, guid: 6da5f53bde42e974e9c4855348a44a04, type: 3}
+  chestSprite: {fileID: -936988125, guid: e3f0f136e7633c543a5e82964e4a1a49, type: 3}
+  rewards:
+  - rewardPrefab: {fileID: 11400000, guid: d44b731d2ee58494f85ae3c49a4a1ebb, type: 2}
+    cardReward: {fileID: 0}
+    skinReward: {fileID: 0}
+    amount: 0
+    minAmount: 500
+    maxAmount: 1500
+    inRange: 1
+    idHero: 0
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 0
+    allSkin: 0
+    isRandomReward: 0
+    chance: 0
+  - rewardPrefab: {fileID: 11400000, guid: c6389583a8826ff4ba4c9874cfc371fd, type: 2}
+    cardReward: {fileID: 11400000, guid: bd4785b858b29e34596e1fea7e7363fb, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 3
+    maxAmount: 6
+    inRange: 1
+    idHero: 0
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 95
+  - rewardPrefab: {fileID: 11400000, guid: 86f029c3f408b2e4a92838de652ebf8a, type: 2}
+    cardReward: {fileID: 11400000, guid: ae96c7e1e96ef164890af637e219707a, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 3
+    maxAmount: 6
+    inRange: 1
+    idHero: 1
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 80
+  - rewardPrefab: {fileID: 11400000, guid: d589ef6551272434f98e6be57edd9cbe, type: 2}
+    cardReward: {fileID: 11400000, guid: 1b5fc3607a087d342a6adceeb2d0d7a0, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 3
+    maxAmount: 6
+    inRange: 1
+    idHero: 2
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 70
+  - rewardPrefab: {fileID: 11400000, guid: ae3842624953e3d438799181398495c9, type: 2}
+    cardReward: {fileID: 11400000, guid: ed27c1c09c7d40b459fa3fd9f2abe1c4, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 2
+    maxAmount: 5
+    inRange: 1
+    idHero: 3
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 55
+  - rewardPrefab: {fileID: 11400000, guid: be1d3d75fc9b74540bc650bd8eaf1b44, type: 2}
+    cardReward: {fileID: 11400000, guid: 3bd54124390cd34429789245167e0ae8, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 2
+    maxAmount: 5
+    inRange: 1
+    idHero: 4
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 45
+  - rewardPrefab: {fileID: 11400000, guid: bd27a6307b7ebe644b842f6406185918, type: 2}
+    cardReward: {fileID: 11400000, guid: fc81c213cb2a6af40a7d0fc1e03ce691, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 1
+    maxAmount: 3
+    inRange: 1
+    idHero: 5
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 23
+  - rewardPrefab: {fileID: 11400000, guid: c194fdfe13ecee048ba5ca08ba9c3c0a, type: 2}
+    cardReward: {fileID: 11400000, guid: 7e46270cf23c06b4794ec7b2d4d60dde, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 1
+    maxAmount: 2
+    inRange: 1
+    idHero: 6
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 10
+  - rewardPrefab: {fileID: 11400000, guid: addcaf4284396154592b4b2c0914167c, type: 2}
+    cardReward: {fileID: 11400000, guid: af747dbf172c14546aa7e72e88fc9575, type: 2}
+    skinReward: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
+    amount: 0
+    minAmount: 1
+    maxAmount: 2
+    inRange: 1
+    idHero: 7
+    randomHero: 0
+    idSkin: 0
+    randomSkin: 1
+    allSkin: 0
+    isRandomReward: 1
+    chance: 3

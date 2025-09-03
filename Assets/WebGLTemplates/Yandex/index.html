@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Web Empire Game</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <!-- Yandex Games SDK (будет загружен только на Яндекс.Играх) -->
+    <script src="https://sdk.games.s3.yandex.net/sdk.js"></script>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<div id="unity-container" style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%;">
+    <canvas id="unity-canvas" style="position: absolute; width: 100%; height: 100%;"></canvas>
+    <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+            <div id="unity-progress-text">0%</div>
+        </div>
+    </div>
+    <div id="unity-warning"></div>
+</div>
+
+<script>
+    let player, ysdk, payments, gameShop = [], lb, myJSON;
+    let myGameInstance = null;
+
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingBar = document.querySelector("#unity-loading-bar");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const warningBanner = document.querySelector("#unity-warning");
+
+    const buildVersion = "1.1"; 
+    const buildUrl = "Build";
+    const loaderUrl = buildUrl + "/Build.loader.js?v=" + buildVersion; 
+
+    const config = {
+        dataUrl: buildUrl + "/Build.data.unityweb?v=" + buildVersion,
+        frameworkUrl: buildUrl + "/Build.framework.js.unityweb?v=" + buildVersion,
+        codeUrl: buildUrl + "/Build.wasm.unityweb?v=" + buildVersion,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "GeeKid",
+        productName: "GenshinTest",
+        productVersion: buildVersion, // Используем ту же версию
+        showBanner: unityShowBanner,
+    };
+
+    function unityShowBanner(msg, type) {
+        const div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type === 'error') {
+            div.style = 'background: red; padding: 10px;';
+        } else if (type === 'warning') {
+            div.style = 'background: yellow; padding: 10px;';
+            setTimeout(() => {
+                warningBanner.removeChild(div);
+                updateBannerVisibility();
+            }, 5000);
+        }
+        updateBannerVisibility();
+    }
+
+    function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+    }
+
+    function initializeYandexSDK() {
+        // Проверяем, доступен ли Яндекс SDK
+        if (typeof YaGames === 'undefined') {
+            console.log('Yandex SDK not available, skipping initialization');
+            // Создаем пустой объект playerData для standalone-режима
+            myJSON = JSON.stringify({ adInapp: true, lastBuy: "allweaponandnoads" });
+            return Promise.resolve();
+        }
+
+        return YaGames.init().then(_ysdk => {
+            console.log('Yandex SDK initialized');
+            ysdk = _ysdk;
+            ysdk.getPayments({ signed: true }).then(_payments => {
+                payments = _payments;
+            });
+            return ysdk.getPlayer().then(_player => {
+                player = _player;
+                return player.getData().then(data => {
+                    myJSON = JSON.stringify(data);
+                    const playerData = JSON.parse(myJSON);
+                    if (playerData.adInapp !== undefined) {
+                        if (!playerData.adInapp && playerData.lastBuy !== "noads" && playerData.lastBuy !== "allweaponandnoads"){
+                            ysdk.adv.showBannerAdv();
+                        }
+                    }
+                });
+            });
+        }).catch(error => {
+            console.error('Yandex SDK initialization failed:', error);
+            // В случае ошибки также создаем пустой объект playerData
+            myJSON = JSON.stringify({ adInapp: true, lastBuy: "allweaponandnoads" });
+            return Promise.resolve();
+        });
+    }
+    
+    function checkBuildVersion() {
+        const cachedVersion = localStorage.getItem('unityBuildVersion');
+        if (cachedVersion !== buildVersion) {
+            console.log('New build detected, clearing cache...');
+            localStorage.setItem('unityBuildVersion', buildVersion);
+
+            // Принудительно обновляем страницу с очисткой кэша
+            window.location.href = window.location.href.split('?')[0] + '?nocache=' + Date.now();
+        }
+    }
+
+    function initializeUnity() {
+        checkBuildVersion(); // Проверяем версию перед загрузкой Unity
+
+        return new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                    progressBarFull.style.width = 100 * progress + "%";
+                    document.getElementById('unity-progress-text').textContent = Math.floor(progress * 100) + "%";
+                }).then(unityInstance => {
+                    myGameInstance = unityInstance;
+                    loadingBar.style.display = "none";
+                    resolve();
+                }).catch(reject);
+            };
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+
+    function loadGame() {
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            const meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+            document.getElementsByTagName('head')[0].appendChild(meta);
+            container.className = "unity-mobile";
+            myGameInstance.SendMessage('Init', 'ItIsMobile');
+        }
+
+        if (typeof YaGames !== 'undefined') {
+            myGameInstance.SendMessage('Init', 'LanguageLoad');
+            myGameInstance.SendMessage('Init', 'SetPlayerData', myJSON);
+        }
+        else
+        {
+            myGameInstance.SendMessage('Init', 'OurServer');
+        }
+    }
+
+    function AdInterstitial() {
+        if (!ysdk) {
+            console.log('Yandex SDK not available, skipping ad');
+            myGameInstance?.SendMessage('Init', 'ResumeMusAndGame');
+            return;
+        }
+        ysdk.adv.showFullscreenAdv({
+            callbacks: {
+                onOpen: () => myGameInstance?.SendMessage('Init', 'StopMusAndGame'),
+                onClose: () => myGameInstance?.SendMessage('Init', 'ResumeMusAndGame'),
+                onError: (error) => console.error(error)
+            }
+        });
+    }
+
+    function GetPays() {
+        if (!ysdk) {
+            console.log('Yandex SDK not available, skipping payments');
+            myGameInstance?.SendMessage('Init', 'PaysLoad');
+            return;
+        }
+        ysdk.getPayments({ signed: true }).then(_payments => {
+            payments = _payments;
+            myGameInstance?.SendMessage('Init', 'PaysLoad');
+            return payments.getCatalog().then(products => {
+                gameShop = products;
+                myGameInstance?.SendMessage('Init', 'ChangeValute');
+            });
+        }).catch(err => {
+            console.error('Payments unavailable:', err);
+        });
+    }
+
+    function GetLeaders() {
+        if (!ysdk) {
+            console.log('Yandex SDK not available, skipping leaderboards');
+            myGameInstance?.SendMessage('Init', 'LeadLoad');
+            return;
+        }
+        ysdk.getLeaderboards().then(_lb => lb = _lb);
+        myGameInstance?.SendMessage('Init', 'LeadLoad');
+    }
+
+    function consumePurchase(purchase) {
+        if (purchase === "Mora1000") {
+            myGameInstance.SendMessage('Init', 'SetPurchasedItem');
+        }
+    }
+
+    // Функция для адаптации под ориентацию устройства
+    function adjustElementsForOrientation() {
+        const logo = document.getElementById('unity-logo');
+        const progressBar = document.getElementById('unity-progress-bar-empty');
+
+        if (window.innerHeight > window.innerWidth) {
+            // Портретная ориентация
+            logo.style.height = '100px';
+            logo.style.width = '100px';
+            progressBar.style.width = '80%';
+            progressBar.style.maxWidth = '300px';
+        } else {
+            // Ландшафтная ориентация
+            logo.style.height = '150px';
+            logo.style.width = '150px';
+            progressBar.style.width = '400px';
+        }
+    }
+
+    if (!window.blurFocusHandlersInstalled) {
+        window.addEventListener('blur', function() {
+            let blockerButton = document.createElement('button');
+            blockerButton.style.position = 'fixed';
+            blockerButton.style.top = '0';
+            blockerButton.style.left = '0';
+            blockerButton.style.width = '100%';
+            blockerButton.style.height = '100%';
+            blockerButton.style.zIndex = '9999';
+            blockerButton.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+            blockerButton.style.border = 'none';
+            blockerButton.style.cursor = 'default';
+            document.body.appendChild(blockerButton);
+
+            function removeBlocker() {
+                if (blockerButton && blockerButton.parentNode) {
+                    blockerButton.parentNode.removeChild(blockerButton);
+                }
+                window.removeEventListener('focus', removeBlocker);
+            }
+            window.addEventListener('focus', removeBlocker);
+        });
+        window.blurFocusHandlersInstalled = true;
+    }
+// Контекст меню ios
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    });
+    // Основной поток выполнения
+    Promise.all([initializeYandexSDK(), initializeUnity()])
+        .then(() => {
+            loadGame();
+            
+            // Эти функции вызываются только если SDK Яндекс доступен
+            if (typeof YaGames !== 'undefined') {
+                GetPays();
+                GetLeaders();
+            }
+
+            // Вызываем функцию для адаптации при загрузке и изменении ориентации
+            adjustElementsForOrientation();
+            window.addEventListener('resize', adjustElementsForOrientation);
+            window.addEventListener('orientationchange', adjustElementsForOrientation);
+        })
+        .catch(error => {
+            console.error('Initialization failed:', error);
+        });
+</script>
+</body>
+</html>

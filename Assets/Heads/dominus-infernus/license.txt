@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dominus-Infernus
+* source:	https://sketchfab.com/3d-models/dominus-infernus-1f5675d5c9a042378a1aa6fd50de07fd
+* author:	Roblox (https://sketchfab.com/Robloxs)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dominus-Infernus" (https://sketchfab.com/3d-models/dominus-infernus-1f5675d5c9a042378a1aa6fd50de07fd) by Roblox (https://sketchfab.com/Robloxs) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

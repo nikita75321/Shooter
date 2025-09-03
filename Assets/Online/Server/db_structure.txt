@@ -1,0 +1,594 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.18 (Ubuntu 14.18-0ubuntu0.22.04.1)
+-- Dumped by pg_dump version 14.18 (Ubuntu 14.18-0ubuntu0.22.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: update_clan_level(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.update_clan_level() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    -- Определяем уровень клана на основе очков
+    NEW.clan_level := 
+        CASE 
+            WHEN NEW.clan_points < 150 THEN 0
+            WHEN NEW.clan_points BETWEEN 150 AND 499 THEN 1
+            WHEN NEW.clan_points BETWEEN 500 AND 1999 THEN 2
+            WHEN NEW.clan_points BETWEEN 2000 AND 4999 THEN 3
+            WHEN NEW.clan_points BETWEEN 5000 AND 9999 THEN 4
+            WHEN NEW.clan_points BETWEEN 10000 AND 19999 THEN 5
+            WHEN NEW.clan_points BETWEEN 20000 AND 34999 THEN 6
+            WHEN NEW.clan_points BETWEEN 35000 AND 59999 THEN 7
+            WHEN NEW.clan_points BETWEEN 60000 AND 99999 THEN 8
+            WHEN NEW.clan_points BETWEEN 100000 AND 149999 THEN 9
+            WHEN NEW.clan_points >= 150000 THEN 10
+            ELSE 0
+        END;
+    
+    -- Устанавливаем max_players в зависимости от уровня
+    -- Базовый лимит 25, увеличиваем на 5 каждые 2 уровня
+    NEW.max_players := 25 + (NEW.clan_level / 2) * 5;
+    
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_clan_level() OWNER TO postgres;
+
+--
+-- Name: update_clan_member_count(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.update_clan_member_count() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+        UPDATE clans 
+        SET player_count = (
+            SELECT COUNT(*) 
+            FROM clan_members 
+            WHERE clan_id = NEW.clan_id
+        )
+        WHERE clan_id = NEW.clan_id;
+    END IF;
+    
+    IF TG_OP = 'DELETE' OR TG_OP = 'UPDATE' THEN
+        UPDATE clans 
+        SET player_count = (
+            SELECT COUNT(*) 
+            FROM clan_members 
+            WHERE clan_id = OLD.clan_id
+        )
+        WHERE clan_id = OLD.clan_id;
+    END IF;
+    
+    RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_clan_member_count() OWNER TO postgres;
+
+--
+-- Name: update_clan_points(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.update_clan_points() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    -- При любом изменении в clan_members пересчитываем очки клана
+    UPDATE clans c
+    SET clan_points = (
+        SELECT COALESCE(SUM(p.clan_points), 0)
+        FROM clan_members cm
+        JOIN players p ON cm.player_id = p.id
+        WHERE cm.clan_id = COALESCE(NEW.clan_id, OLD.clan_id)
+    )
+    WHERE c.clan_id = COALESCE(NEW.clan_id, OLD.clan_id);
+    
+    RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_clan_points() OWNER TO postgres;
+
+--
+-- Name: update_clan_points_from_player(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.update_clan_points_from_player() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF NEW.clan_points <> OLD.clan_points THEN
+        UPDATE clans c
+        SET clan_points = (
+            SELECT COALESCE(SUM(p.clan_points), 0)
+            FROM clan_members cm
+            JOIN players p ON cm.player_id = p.id
+            WHERE cm.clan_id IN (
+                SELECT clan_id FROM clan_members 
+                WHERE player_id = NEW.id
+            )
+        )
+        WHERE c.clan_id IN (
+            SELECT clan_id FROM clan_members 
+            WHERE player_id = NEW.id
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_clan_points_from_player() OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: clan_members; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.clan_members (
+    clan_id integer NOT NULL,
+    player_name character varying(50) NOT NULL,
+    is_leader boolean DEFAULT false NOT NULL,
+    player_id integer
+);
+
+
+ALTER TABLE public.clan_members OWNER TO postgres;
+
+--
+-- Name: clans; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.clans (
+    clan_id integer NOT NULL,
+    clan_name character varying(50) NOT NULL,
+    leader_id integer NOT NULL,
+    leader_name character varying(50) NOT NULL,
+    need_rating integer DEFAULT 0,
+    is_open boolean DEFAULT true,
+    player_count integer DEFAULT 1,
+    max_players integer DEFAULT 25,
+    clan_points integer DEFAULT 0 NOT NULL,
+    clan_level integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.clans OWNER TO postgres;
+
+--
+-- Name: clans_clan_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.clans_clan_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.clans_clan_id_seq OWNER TO postgres;
+
+--
+-- Name: clans_clan_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.clans_clan_id_seq OWNED BY public.clans.clan_id;
+
+
+--
+-- Name: friends; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.friends (
+    player_id integer NOT NULL,
+    friend_ids integer[] DEFAULT '{}'::integer[] NOT NULL
+);
+
+
+ALTER TABLE public.friends OWNER TO postgres;
+
+--
+-- Name: inapps; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.inapps (
+    inapp_id integer NOT NULL,
+    player_id integer NOT NULL,
+    buy_count integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE public.inapps OWNER TO postgres;
+
+--
+-- Name: players; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.players (
+    id integer NOT NULL,
+    player_name character varying(255) NOT NULL,
+    rating integer DEFAULT 0,
+    clan_name character varying(255) DEFAULT NULL::character varying,
+    clan_points integer DEFAULT 0 NOT NULL,
+    platform character varying(20) DEFAULT 'unknown'::character varying,
+    money integer DEFAULT 0 NOT NULL,
+    donat_money integer DEFAULT 0 NOT NULL,
+    open_characters jsonb DEFAULT '{}'::jsonb NOT NULL,
+    love_hero character varying(30),
+    best_rating integer DEFAULT 0 NOT NULL,
+    overral_kill integer DEFAULT 0 NOT NULL,
+    match_count integer DEFAULT 0 NOT NULL,
+    win_count integer DEFAULT 0 NOT NULL,
+    revive_count integer DEFAULT 0 NOT NULL,
+    max_damage integer DEFAULT 0 NOT NULL,
+    shoot_count integer DEFAULT 0 NOT NULL,
+    friends_reward character varying(255) DEFAULT ''::character varying,
+    player_id character varying(255),
+    hero_card jsonb DEFAULT '{}'::jsonb NOT NULL,
+    hero_match integer[] DEFAULT ARRAY[0, 0, 0, 0, 0, 0, 0, 0],
+    hero_lvl jsonb DEFAULT '[0, 0, 0]'::jsonb,
+    hero_levels jsonb DEFAULT '[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]'::jsonb,
+    last_online timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.players OWNER TO postgres;
+
+--
+-- Name: players_player_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.players_player_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.players_player_id_seq OWNER TO postgres;
+
+--
+-- Name: players_player_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.players_player_id_seq OWNED BY public.players.id;
+
+
+--
+-- Name: clans clan_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clans ALTER COLUMN clan_id SET DEFAULT nextval('public.clans_clan_id_seq'::regclass);
+
+
+--
+-- Name: players id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.players ALTER COLUMN id SET DEFAULT nextval('public.players_player_id_seq'::regclass);
+
+
+--
+-- Data for Name: clan_members; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.clan_members (clan_id, player_name, is_leader, player_id) FROM stdin;
+2	Jmuriksc	t	\N
+3	Jmuriksc	t	\N
+4	Jmuriksc	t	\N
+2	zz	f	7
+2	test	f	8
+2	test3	f	10
+2	test4	f	11
+2	test5	f	12
+2	test6	f	13
+2	test7	f	14
+2	test8	f	15
+2	test9	f	16
+2	y     y	f	26
+2	test11	f	17
+2	ttt	f	9
+7	jmur	t	18
+2	третий	f	29
+9	второй	t	28
+2	weeew	f	23
+2	chel	f	24
+2	ss	f	25
+2	Final0.1	f	34
+\.
+
+
+--
+-- Data for Name: clans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.clans (clan_id, clan_name, leader_id, leader_name, need_rating, is_open, player_count, max_players, clan_points, clan_level) FROM stdin;
+9	Top	28	второй	0	t	1	25	0	0
+7	zxc	18	jmur	0	t	1	25	0	0
+3	Jmur	2	Jmuriksc	100	t	1	25	0	0
+4	Jmu	2	Jmuriksc	100	t	1	25	0	0
+2	kek	2	Jmuriksc	0	t	18	30	715	2
+\.
+
+
+--
+-- Data for Name: friends; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.friends (player_id, friend_ids) FROM stdin;
+\.
+
+
+--
+-- Data for Name: inapps; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.inapps (inapp_id, player_id, buy_count) FROM stdin;
+\.
+
+
+--
+-- Data for Name: players; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.players (id, player_name, rating, clan_name, clan_points, platform, money, donat_money, open_characters, love_hero, best_rating, overral_kill, match_count, win_count, revive_count, max_damage, shoot_count, friends_reward, player_id, hero_card, hero_match, hero_lvl, hero_levels, last_online) FROM stdin;
+1	s	0	\N	0	unknown	0	0	{}	\N	0	0	0	0	0	0	0		generated_1	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+2	Jmuriksc	28	\N	0	unknown	1000	4	{}	\N	0	0	1	1	1	0	71		generated_2	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+3	chel	48	\N	0	unknown	2550	10	{}	\N	48	4	8	7	3	29	169		generated_3	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+4	ko	0	\N	0	unknown	0	0	{}	\N	0	0	0	0	0	0	0		generated_4	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+5	ыы	0	\N	0	unknown	0	0	{}	\N	0	0	0	0	0	0	0		generated_5	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+6	фы	0	\N	0	unknown	0	0	{}	\N	0	0	0	0	0	0	0		generated_6	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+7	zz	0	kek	0	unknown	0	0	{"Kayel": 1}	\N	0	0	0	0	0	0	0		generated_7	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+8	test	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_8	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+10	test3	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_10	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+11	test4	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_11	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+12	test5	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_12	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+13	test6	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_13	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+14	test7	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_14	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+29	третий	48	kek	1	unknown	145950	962	{"Coco": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Rambo": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	50	4	5	5	0	16	62		29-23066	{"0": 952}	{0,2,0,0,0,0,0,4}	[0, 0, 0]	[{"rank": 1, "level": 3}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 3}]	2025-08-20 22:25:16.578965
+15	test8	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_15	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+16	test9	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_16	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+17	test11	20	kek	0	unknown	1000	4	{"Kayel": 1}	Kayel	20	1	1	1	1	24	19		generated_17	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+27	перый	20	\N	0	unknown	1000	4	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	20	0	1	1	0	0	1		27-89804	{}	{1,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+28	второй	60	Top	0	unknown	5550	12	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	60	8	3	3	9	24	66		28-50235	{"0": 5}	{3,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+25	ss	45	kek	11	unknown	4200	43	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	45	3	3	3	1	24	30		25-41433	{"0": 24}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+24	chel	0	kek	0	unknown	1900	38	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		24-98847	{"0": 6, "Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+26	y     y	198	kek	614	unknown	13450	66	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	198	50	31	31	56	70	729		26-60619	{"0": 26}	{24,0,0,0,1,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+9	ttt	0	kek	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_9	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+18	jmur	0	zxc	0	unknown	0	0	{"Kayel": 1}	Kayel	0	0	0	0	0	0	0		generated_18	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+19	z	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		19-36302	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+20	z	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		20-82179	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+21	zzzz	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		21-27639	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+22	z	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		22-70538	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+23	weeew	30	kek	13	unknown	1500	6	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	30	2	3	3	0	24	22		23-39830	{"Kayel": 0}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+35	шпек	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		35-95285	{}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+30	aaaaaaaa	5	\N	0	unknown	157950	12945	{"Ci-J": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Coco": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Mono": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Bobby": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Rambo": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Zetta": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Freddy": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	0	5	0	1	1	0	0	0		30-86398	{"0": 76, "7": 75}	{2,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 6, "level": 50}, {"rank": 6, "level": 50}, {"rank": 6, "level": 50}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 3, "level": 21}]	2025-08-20 22:25:16.578965
+32	nekto	20	\N	0	unknown	17450	71	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Rambo": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	20	4	1	1	1	20057	5		32-69956	{"0": 15, "7": 20}	{1,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 6, "level": 50}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 2}]	2025-08-20 22:25:16.578965
+33	kyk	0	\N	0	unknown	273900	663	{"Ci-J": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Coco": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Mono": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Bobby": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Rambo": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Zetta": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Freddy": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	нет	0	0	0	0	0	0	0		33-59130	{"0": 240, "1": 10213, "2": 160, "3": 117, "4": 103, "5": 18, "6": 10, "7": 124}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+31	noviy	23	\N	0	unknown	54200	246	{"Ci-J": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Coco": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Mono": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Bobby": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Rambo": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Zetta": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Freddy": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	Kayel	25	1	6	6	0	5	24		31-53099	{"0": 50, "1": 25, "2": 150, "7": 15}	{1,0,0,0,0,0,0,9}	[0, 0, 0]	[{"rank": 1, "level": 3}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+34	Final0.1	30	kek	76	unknown	795050	692109	{"Ci-J": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Coco": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Mono": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Bobby": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Kayel": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Rambo": [1, 1, 1, 1, 1, 1, 1, 1, 0], "Zetta": [1, 1, 1, 1, 1, 1, 1, 1, 1], "Freddy": [1, 1, 1, 1, 1, 1, 1, 1, 1]}	Kayel	30	7	3	3	0	16	118		34-31834	{"0": 599, "1": 514, "2": 440, "3": 317, "4": 290, "5": 154, "6": 116, "7": 3387}	{0,0,0,0,0,0,0,4}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+36	Шпек_финал	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	0	0	0	0	0	0	0	0		36-45501	{}	{1,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+37	кто-то	0	\N	0	unknown	0	0	{"Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}	0	0	0	0	0	0	0	0		37-24321	{}	{1,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-20 22:25:16.578965
+38	test_room	0	\N	0	unknown	5100	18	["{\\"Kayel\\":[1,0,0,0,0,0,0,0,0]}", {"Coco": [1, 0, 0, 0, 0, 0, 0, 0, 0], "Kayel": [1, 0, 0, 0, 0, 0, 0, 0, 0]}]	нет	0	0	0	0	0	0	0		38-22006	{"0": 10}	{0,0,0,0,0,0,0,0}	[0, 0, 0]	[{"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}, {"rank": 1, "level": 1}]	2025-08-21 00:10:48.434288
+\.
+
+
+--
+-- Name: clans_clan_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.clans_clan_id_seq', 10, true);
+
+
+--
+-- Name: players_player_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.players_player_id_seq', 38, true);
+
+
+--
+-- Name: clan_members clan_members_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clan_members
+    ADD CONSTRAINT clan_members_pkey PRIMARY KEY (clan_id, player_name);
+
+
+--
+-- Name: clans clans_clan_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clans
+    ADD CONSTRAINT clans_clan_name_key UNIQUE (clan_name);
+
+
+--
+-- Name: clans clans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clans
+    ADD CONSTRAINT clans_pkey PRIMARY KEY (clan_id);
+
+
+--
+-- Name: friends friends_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.friends
+    ADD CONSTRAINT friends_pkey PRIMARY KEY (player_id);
+
+
+--
+-- Name: inapps inapps_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inapps
+    ADD CONSTRAINT inapps_pkey PRIMARY KEY (inapp_id, player_id);
+
+
+--
+-- Name: players players_id_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.players
+    ADD CONSTRAINT players_id_unique UNIQUE (id);
+
+
+--
+-- Name: players players_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.players
+    ADD CONSTRAINT players_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: clan_members clan_member_count_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER clan_member_count_trigger AFTER INSERT OR DELETE OR UPDATE ON public.clan_members FOR EACH ROW EXECUTE FUNCTION public.update_clan_member_count();
+
+
+--
+-- Name: clan_members clan_points_delete; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER clan_points_delete AFTER DELETE ON public.clan_members FOR EACH ROW EXECUTE FUNCTION public.update_clan_points();
+
+
+--
+-- Name: clan_members clan_points_insert_update; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER clan_points_insert_update AFTER INSERT OR UPDATE OF clan_id ON public.clan_members FOR EACH ROW EXECUTE FUNCTION public.update_clan_points();
+
+
+--
+-- Name: players player_points_update_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER player_points_update_trigger AFTER UPDATE OF clan_points ON public.players FOR EACH ROW EXECUTE FUNCTION public.update_clan_points_from_player();
+
+
+--
+-- Name: clans update_clan_level_trigger; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER update_clan_level_trigger BEFORE INSERT OR UPDATE OF clan_points ON public.clans FOR EACH ROW EXECUTE FUNCTION public.update_clan_level();
+
+
+--
+-- Name: clan_members clan_members_clan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clan_members
+    ADD CONSTRAINT clan_members_clan_id_fkey FOREIGN KEY (clan_id) REFERENCES public.clans(clan_id) ON DELETE CASCADE;
+
+
+--
+-- Name: clan_members clan_members_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.clan_members
+    ADD CONSTRAINT clan_members_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.players(id);
+
+
+--
+-- Name: friends friends_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.friends
+    ADD CONSTRAINT friends_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.players(id) ON DELETE CASCADE;
+
+
+--
+-- Name: inapps inapps_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inapps
+    ADD CONSTRAINT inapps_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.players(id) ON DELETE CASCADE;
+
+
+--
+-- Name: TABLE clan_members; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.clan_members TO admin_user;
+
+
+--
+-- Name: TABLE clans; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.clans TO admin_user;
+
+
+--
+-- Name: SEQUENCE clans_clan_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.clans_clan_id_seq TO admin_user;
+
+
+--
+-- Name: TABLE friends; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.friends TO admin_user;
+
+
+--
+-- Name: TABLE inapps; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.inapps TO admin_user;
+
+
+--
+-- Name: TABLE players; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON TABLE public.players TO admin_user;
+
+
+--
+-- Name: SEQUENCE players_player_id_seq; Type: ACL; Schema: public; Owner: postgres
+--
+
+GRANT ALL ON SEQUENCE public.players_player_id_seq TO admin_user;
+
+
+--
+-- PostgreSQL database dump complete
+--

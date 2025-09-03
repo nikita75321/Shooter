@@ -1,0 +1,11 @@
+Model Information:
+* title:	Roblox Dancing Apple
+* source:	https://sketchfab.com/3d-models/roblox-dancing-apple-fb437c3652d742d8be87ac5b776f4d69
+* author:	TheShovelwareMaster (https://sketchfab.com/wt37121)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Roblox Dancing Apple" (https://sketchfab.com/3d-models/roblox-dancing-apple-fb437c3652d742d8be87ac5b776f4d69) by TheShovelwareMaster (https://sketchfab.com/wt37121) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

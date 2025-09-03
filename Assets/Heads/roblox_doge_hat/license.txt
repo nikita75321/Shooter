@@ -1,0 +1,11 @@
+Model Information:
+* title:	Roblox Doge Hat
+* source:	https://sketchfab.com/3d-models/roblox-doge-hat-a3718bf6b6734c8cafdf7f74ffe0f3d7
+* author:	RawGoldIngot (https://sketchfab.com/RawGoldIngot)
+
+Model License:
+* license type:	CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)
+* requirements:	Author must be credited. Modified versions must have the same license. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Roblox Doge Hat" (https://sketchfab.com/3d-models/roblox-doge-hat-a3718bf6b6734c8cafdf7f74ffe0f3d7) by RawGoldIngot (https://sketchfab.com/RawGoldIngot) licensed under CC-BY-SA-4.0 (http://creativecommons.org/licenses/by-sa/4.0/)

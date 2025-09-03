@@ -1,0 +1,11 @@
+Model Information:
+* title:	KRE-O Bumblebee Helmet
+* source:	https://sketchfab.com/3d-models/kre-o-bumblebee-helmet-08939dca313940bd8973d36e076525e9
+* author:	OrangeSauceu (https://sketchfab.com/orangesauceu)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "KRE-O Bumblebee Helmet" (https://sketchfab.com/3d-models/kre-o-bumblebee-helmet-08939dca313940bd8973d36e076525e9) by OrangeSauceu (https://sketchfab.com/orangesauceu) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Obby +1 Squid Game Every Seconds</title>
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<div id="unity-container" style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%;">
+  <canvas id="unity-canvas" style="position: absolute; width: 100%; height: 100%;"></canvas>
+  <div id="unity-loading-bar">
+    <div id="unity-logo"></div>
+    <div id="unity-progress-bar-empty">
+      <div id="unity-progress-bar-full"></div>
+      <div id="unity-progress-text">0%</div>
+    </div>
+  </div>
+  <div id="unity-warning"></div>
+</div>
+
+<script>
+  let myGameInstance = null;
+  const container = document.querySelector("#unity-container");
+  const canvas = document.querySelector("#unity-canvas");
+  const loadingBar = document.querySelector("#unity-loading-bar");
+  const progressBarFull = document.querySelector("#unity-progress-bar-full");
+  const warningBanner = document.querySelector("#unity-warning");
+
+  var buildUrl = "Build";
+  var loaderUrl = buildUrl + "/Build.loader.js";
+  var config = {
+    dataUrl: buildUrl + "/Build.data.unityweb",
+    frameworkUrl: buildUrl + "/Build.framework.js.unityweb",
+    codeUrl: buildUrl + "/Build.wasm.unityweb",
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: "Web Empire",
+    productName: "Ragdoll Beat - Simulator",
+    productVersion: "1.1",
+    showBanner: unityShowBanner,
+  };
+
+  function unityShowBanner(msg, type) {
+    const div = document.createElement('div');
+    div.innerHTML = msg;
+    warningBanner.appendChild(div);
+    if (type === 'error') {
+      div.style = 'background: red; padding: 10px;';
+    } else if (type === 'warning') {
+      div.style = 'background: yellow; padding: 10px;';
+      setTimeout(() => {
+        warningBanner.removeChild(div);
+        updateBannerVisibility();
+      }, 5000);
+    }
+    updateBannerVisibility();
+  }
+
+  function updateBannerVisibility() {
+    warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+  }
+
+  // Инициализация GameDistribution SDK
+  window["GD_OPTIONS"] = {
+    "gameId": "438c42d7a1374299ad3d706e359d57b8",
+    "onEvent": function(event) {
+      switch (event.name) {
+            case "AD_ERROR":
+                setLoadCheck();
+                break;
+            case "SDK_GAME_START":
+                myGameInstance.SendMessage("GameDistribution", "ResumeGameCallback");
+                break;
+            case "SDK_GAME_PAUSE":
+                myGameInstance.SendMessage("GameDistribution", "PauseGameCallback");
+                break;
+            case "SDK_REWARDED_WATCH_COMPLETE":
+                myGameInstance.SendMessage("GameDistribution", "RewardedCompleteCallback");
+                break;
+            case "SDK_ERROR":
+                break;
+          default:
+            myGameInstance.SendMessage("GameDistribution", "EventCallback", event.name);
+        }
+    },
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = 'https://html5.api.gamedistribution.com/main.min.js';
+    js.onload = function() {
+      // После загрузки SDK показываем pre-roll рекламу
+      showPreRollAd();
+    };
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'gamedistribution-jssdk'));
+
+    let adsManager; // Будем хранить ссылку на менеджер рекламы
+
+  function showPreRollAd() {
+    initializeUnity();
+    // Показываем pre-roll рекламу
+     if (typeof gdsdk !== 'undefined' && gdsdk.showAd !== 'undefined') 
+     {
+            gdsdk.showAd().then(function(response)
+            {
+              setLoadCheck();
+          });
+     }
+    }
+
+    function setLoadCheck()
+    {
+      if (myGameInstance)
+      {
+        myGameInstance.SendMessage('Init', 'LoadGDCheck');
+        return;
+      }
+      setTimeout(() => {setLoadCheck();}, 50);
+    }
+
+
+  function initializeUnity() {
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = 100 * progress + "%";
+        document.getElementById('unity-progress-text').textContent = Math.floor(progress * 100) + "%";
+      }).then(unityInstance => {
+        myGameInstance = unityInstance;
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          myGameInstance.SendMessage('Init', 'ItIsMobile');
+        }
+
+        loadingBar.style.display = "none";
+      }).catch((message) => {
+        console.error('Unity initialization failed:', message);
+      });
+    };
+
+    script.onerror = () => {
+      console.error('Failed to load Unity loader script');
+    };
+
+    document.body.appendChild(script);
+  };
+</script>
+</body>
+</html>
