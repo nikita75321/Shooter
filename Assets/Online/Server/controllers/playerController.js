@@ -6,8 +6,137 @@ const { isValidMessage,
         updatePlayerInRedis } = require('../services/utils');
 
 const playerRedisService = require('../services/playerRedisService')
+
 //Регистрация нового игрока
- 
+async function handleRegisterPlayer(ws, data) {
+    const requiredFields = ['player_name'];
+    if (!isValidMessage(data, requiredFields)) {
+        return sendError(ws, 'Missing required field: player_name');
+    }
+
+    const client = await shooterPool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // 1. Проверяем, не занято ли имя
+        const nameCheck = await client.query(
+            'SELECT 1 FROM players WHERE player_name = $1',
+            [data.player_name]
+        );
+        if (nameCheck.rows.length > 0) {
+            throw new Error('Player name already taken');
+        }
+
+        // 2. Регистрируем нового игрока (id не передаём — он генерируется автоматически)
+        const insertResult = await client.query(
+            `INSERT INTO players
+            (player_name, platform, open_characters, love_hero, rating, best_rating,
+             money, donat_money, overral_kill, match_count, win_count, revive_count,
+             max_damage, shoot_count, friends_reward, hero_card, hero_match, hero_levels)
+            VALUES
+            ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+            RETURNING id`,
+            [
+                data.player_name,
+                data.platform || 'unknown',
+                data.open_characters || '{"Kayel":[1,0,0,0,0,0,0,0,0]}',
+                data.love_hero || '0',
+                0, // rating
+                0, // best_rating
+                0, // money
+                0, // donat_money
+                0, // overral_kill
+                0, // match_count
+                0, // win_count
+                0, // revive_count
+                0, // max_damage
+                0, // shoot_count
+                '', // friends_reward
+                '{}', // hero_card
+                [0,0,0,0,0,0,0,0], // hero_match
+                JSON.stringify(Array(8).fill({rank:1, level:1})) // hero_levels
+            ]
+        );
+
+        // 3. Генерируем player_id на основе нового id
+        const playerId = `${insertResult.rows[0].id}-${Math.floor(10000 + Math.random() * 90000)}`;
+
+        // 4. Обновляем запись с player_id
+        await client.query(
+            'UPDATE players SET player_id = $1 WHERE id = $2',
+            [playerId, insertResult.rows[0].id]
+        );
+
+        // 5. Получаем полные данные игрока
+        const result = await client.query(
+            `SELECT id, player_name, player_id, rating, money, donat_money,
+                    platform, open_characters, love_hero
+             FROM players WHERE id = $1`,
+            [insertResult.rows[0].id]
+        );
+
+        await client.query('COMMIT');
+
+        // 6. Сохраняем данные в Redis
+        const playerData = {
+            player_id: playerId,
+            player_name: data.player_name,
+            rating: 0,
+            best_rating: 0,
+            money: 0,
+            donat_money: 0,
+            platform: data.platform || 'unknown',
+            open_characters: data.open_characters || {"Kayel":[1,0,0,0,0,0,0,0,0]},
+            love_hero: data.love_hero || '0',
+            overral_kill: 0,
+            match_count: 0,
+            win_count: 0,
+            revive_count: 0,
+            max_damage: 0,
+            shoot_count: 0,
+            friends_reward: '',
+            hero_card: {},
+            hero_match: [0,0,0,0,0,0,0,0],
+            hero_levels: Array(8).fill({rank:1, level:1})
+        };
+        await playerRedisService.savePlayerProfileToRedis(playerId, playerData);
+
+        // 7. Подключаем игрока
+        ws.playerId = playerId;
+        ws.playerName = data.player_name;
+        global.connectedPlayers.set(playerId, ws);
+
+        // 8. Отправляем ответ клиенту
+        ws.send(JSON.stringify({
+            action: 'register_player_response',
+            success: true,
+            id: result.rows[0].id,
+            player_name: result.rows[0].player_name,
+            player_id: result.rows[0].player_id,
+            rating: result.rows[0].rating,
+            money: result.rows[0].money,
+            donat_money: result.rows[0].donat_money,
+            platform: result.rows[0].platform,
+            open_characters: typeof result.rows[0].open_characters === 'string'
+                ? JSON.parse(result.rows[0].open_characters)
+                : result.rows[0].open_characters,
+            favorite_hero: result.rows[0].love_hero,
+            connected: true
+        }));
+
+        console.log(`Player ${data.player_name} (${playerId}) registered and connected successfully`);
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Register player error:', error);
+        if (error.message.includes('unique constraint') || error.message.includes('already taken')) {
+            sendError(ws, 'Player name already exists');
+        } else {
+            sendError(ws, error.message);
+        }
+    } finally {
+        client.release();
+    }
+}
 
 // Создание/обновление игрока
 async function handlePlayerConnect(ws, data) {

@@ -1610,10 +1610,7 @@ public class WebSocketBase : MonoBehaviour
 
 
     #region Player
-    public void RegisterPlayer(string playerName,
-                          string platform = "unknown",
-                          Dictionary<string, int[]> initialCharacters = null,
-                          string favoriteHero = "нет")
+    public void RegisterPlayer(string playerName, string platform = "unknown")
     {
         if (string.IsNullOrEmpty(playerName))
         {
@@ -1621,24 +1618,13 @@ public class WebSocketBase : MonoBehaviour
             return;
         }
 
-        var openCharacters = new Dictionary<string, int[]>
-        {
-            // Пример для одного персонажа с 9 скинами (0 - закрыт, 1 - открыт)
-            // Первый скин открыт (1), остальные закрыты (0)
-            { "Kayel", new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0 } }
-        };
-
-        string openCharactersJson = JsonConvert.SerializeObject(openCharacters);
-
         // Normalize platform
-        string normalizedPlatform = string.IsNullOrEmpty(platform) ? "неизвестно" : platform.ToLower();
+        string normalizedPlatform = string.IsNullOrEmpty(platform) ? "unknown" : platform.ToLower();
 
         var data = new Dictionary<string, object>
         {
             { "player_name", playerName },
             { "platform", normalizedPlatform },
-            { "open_characters", openCharactersJson },
-            { "love_hero", favoriteHero }
         };
 
         SendWebSocketRequest("register_player", data);
