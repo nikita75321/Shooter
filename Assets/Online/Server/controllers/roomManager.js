@@ -456,7 +456,7 @@ class RoomManager {
             if (!playerInfo) continue;
             playersWithInfo.push({
                 playerId: pid,
-                username: playerInfo.player_name || 'Unknown',
+                player_name: playerInfo.player_name || 'Unknown',
                 rating: playerInfo.rating ?? -1,
                 heroId: heroIds[pid] ?? 0
             });
