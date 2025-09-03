@@ -317,7 +317,6 @@ async function handleUpdatePlayerName(ws, data) {
         await client.query('COMMIT');
         await updatePlayerInRedis(data.player_id, {
             player_name: data.new_name,
-            username: data.new_name
         });
         
         ws.send(JSON.stringify({
@@ -446,7 +445,7 @@ async function handleGetPlayerData(ws, data) {
             from_cache: fromRedis,
             player: {
                 id: playerData.player_id,
-                username: playerData.username || playerData.player_name || "",
+                player_name: playerData.player_name || "",
                 rating: Number(playerData.rating) || 0,
                 bestRating: Number(playerData.best_rating) || 0,
                 money: Number(playerData.money) || 0,

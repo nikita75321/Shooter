@@ -66,7 +66,7 @@ public class RoomInfo
 public class PlayerInGameInfo
 {
     public string playerId;
-    public string username;
+    public string player_name;
     public int rating;
     public int heroId;
     public int heroSkin;
@@ -80,10 +80,10 @@ public class PlayerInGameInfo
     public int rank;
     public int level;
 
-    public PlayerInGameInfo(string playerId, string username, int rating = -1, int heroId = -1)
+    public PlayerInGameInfo(string playerId, string player_name, int rating = -1, int heroId = -1)
     {
         this.playerId = playerId;
-        this.username = username;
+        this.player_name = player_name;
         this.rating = rating;
         this.heroId = heroId;
         this.isReady = false;
@@ -317,7 +317,7 @@ public class OnlineRoom : MonoBehaviour
                 CurrentRoom.players.Clear();
                 foreach (var playerInfo in response.players)
                 {
-                    Debug.Log(playerInfo.username);
+                    Debug.Log(playerInfo.player_name);
                     CurrentRoom.AddPlayer(playerInfo);
                 }
 
@@ -563,7 +563,7 @@ public class OnlineRoom : MonoBehaviour
                 // Обновляем визуальное представление
                 UpdatePlayerVisualization(player);
 
-                Debug.Log($"Updated other player: {player.username}");
+                Debug.Log($"Updated other player: {player.player_name}");
             }
             else
             {
@@ -608,7 +608,7 @@ public class OnlineRoom : MonoBehaviour
             // Обновляем визуальное представление
             UpdatePlayerVisualization(player);
 
-            Debug.Log($"Updated local player transform: {player.username}");
+            Debug.Log($"Updated local player transform: {player.player_name}");
         }
     }
 
@@ -628,7 +628,7 @@ public class OnlineRoom : MonoBehaviour
                     player.deaths = response.stats.deaths;
                     player.isAlive = response.stats.is_alive;
 
-                    Debug.Log($"Updated stats for {player.username}: K{player.kills}/D{player.deaths}");
+                    Debug.Log($"Updated stats for {player.player_name}: K{player.kills}/D{player.deaths}");
 
                     // Обновляем визуальное представление
                     UpdatePlayerVisualization(player);
@@ -662,7 +662,7 @@ public class OnlineRoom : MonoBehaviour
                 Debug.Log(2);
                 // Добавляем нового игрока в комнату
                 CurrentRoom.AddPlayer(playerInfo);
-                Debug.Log($"Added new player to room: {playerInfo.username}");
+                Debug.Log($"Added new player to room: {playerInfo.player_name}");
             }
 
             // Обновляем визуальное представление
@@ -692,6 +692,8 @@ public class OnlineRoom : MonoBehaviour
             var player = CurrentRoom.GetPlayer(response.target_id);
             if (player == null) return;
 
+            Debug.Log($"Deal damage to {player.player_name}");
+
             // Если это локальный игрок
             if (player.playerId == Geekplay.Instance.PlayerData.id)
             {
@@ -709,7 +711,7 @@ public class OnlineRoom : MonoBehaviour
 
             if (!player.isAlive)
             {
-                Debug.Log($"{player.username} died from {response.attacker_id}");
+                Debug.Log($"{player.player_name} died from {response.attacker_id}");
                 // Можно вызвать анимацию смерти и прочее
             }
         });

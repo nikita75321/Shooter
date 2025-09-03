@@ -24,8 +24,8 @@ public class LevelPrefab : MonoBehaviour
         {
             foreach (var player in response.players)
             {
-                Debug.Log("player.username - "+player.username);
-                if (player.username == Geekplay.Instance.PlayerData.name)
+                Debug.Log("player.username - "+player.player_name);
+                if (player.player_name == Geekplay.Instance.PlayerData.name)
                 {
                     Debug.Log("This is me");
                     var pos = spawnPoints.GetRandomSpawnPoint().position;

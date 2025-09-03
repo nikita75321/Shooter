@@ -1206,7 +1206,7 @@ public class WebSocketBase : MonoBehaviour
             {
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
-                    playerResp.username,
+                    playerResp.player_name,
                     playerResp.rating,
                     playerResp.heroId
                 )

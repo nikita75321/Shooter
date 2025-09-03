@@ -163,7 +163,7 @@ public class MainMenu : MonoBehaviour
             {
                 // 1. Основная информация игрока
                 Geekplay.Instance.PlayerData.id = serverData.GetValueOrDefault("id", Geekplay.Instance.PlayerData.id).ToString();
-                Geekplay.Instance.PlayerData.name = serverData.GetValueOrDefault("username", Geekplay.Instance.PlayerData.name).ToString();
+                Geekplay.Instance.PlayerData.name = serverData.GetValueOrDefault("player_name", Geekplay.Instance.PlayerData.name).ToString();
 
                 // 2. Статистика и рейтинг
                 Geekplay.Instance.PlayerData.rate = serverData.GetValueOrDefault("rating", Geekplay.Instance.PlayerData.rate).ToInt();
