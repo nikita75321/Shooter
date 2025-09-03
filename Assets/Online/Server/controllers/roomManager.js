@@ -321,20 +321,20 @@ class RoomManager {
 
         // Для каждого игрока публикуем событие в Redis
         for (const player of allPlayers) {
-            await this.notifyRoomPlayers(room, {
-                action: 'match_start',
-                room_id: room.id,
-                match_id: roomData.matchId,
-                players: allPlayers,
-                bots: room.bots || []
-            });
-            // await this.publishToPlayer(player.playerId, {
+            // await this.notifyRoomPlayers(room, {
             //     action: 'match_start',
             //     room_id: room.id,
             //     match_id: roomData.matchId,
             //     players: allPlayers,
             //     bots: room.bots || []
-            // }, room.id);
+            // });
+            await this.publishToPlayer(player.playerId, {
+                action: 'match_start',
+                room_id: room.id,
+                match_id: roomData.matchId,
+                players: allPlayers,
+                bots: room.bots || []
+            }, room.id);
         }
 
         console.log(`Game started in room ${room.id} with ${allPlayers.length} players`);

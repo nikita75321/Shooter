@@ -24,6 +24,7 @@ public class LevelPrefab : MonoBehaviour
         {
             foreach (var player in response.players)
             {
+                Debug.Log("Init models");
                 Debug.Log("player.username - "+player.player_name);
                 if (player.player_name == Geekplay.Instance.PlayerData.name)
                 {

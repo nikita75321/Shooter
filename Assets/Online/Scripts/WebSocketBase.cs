@@ -593,7 +593,7 @@ public class WebSocketBase : MonoBehaviour
                 HandlePlayerTransformUpdateResponse(message);
                 break;
 
-            case "player_damaged":
+            case "damage_dealt_response":
                 HandlePlayerDamaged(message);
                 break;
             case "player_death_response":
@@ -1839,6 +1839,7 @@ public class WebSocketBase : MonoBehaviour
     #region DamageInfo
     public void SendDealDamage(Vector3 origin, Vector3 direction, int damage)
     {
+
         var data = new Dictionary<string, object>
         {
             { "attacker_id", Geekplay.Instance.PlayerData.id },

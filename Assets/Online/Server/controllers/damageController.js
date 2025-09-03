@@ -13,7 +13,6 @@ class DamageController {
 
     async handleDealDamage(ws, data) {
         try {
-            // Проверяем все нужные поля
             const requiredFields = [
                 'attacker_id', 'room_id',
                 'shot_origin_x', 'shot_origin_y', 'shot_origin_z',
@@ -21,6 +20,7 @@ class DamageController {
                 'damage'
             ];
 
+            // Проверка всех обязательных полей
             for (const field of requiredFields) {
                 if (data[field] === undefined || data[field] === null) {
                     return Utils.sendError(ws, `Missing damage data field: ${field}`);
@@ -29,7 +29,6 @@ class DamageController {
 
             const { attacker_id, room_id, damage } = data;
 
-            // Собираем объекты из плоских полей
             const shot_origin = {
                 x: data.shot_origin_x,
                 y: data.shot_origin_y,
@@ -42,20 +41,22 @@ class DamageController {
                 z: data.shot_dir_z
             };
 
-            // Нормализуем направление выстрела
             const dir = this.normalize(shot_direction);
 
             const room = await roomManager.getRoomInfo(room_id);
             if (!room) return Utils.sendError(ws, 'Room not found');
 
-            // Перебор всех игроков комнаты
             for (const player of room.players) {
-                if (player.player_id === attacker_id) continue; // не стрелять в себя
+                // Пропускаем игроков без player_id или стрелка
+                if (!player.player_id) {
+                    console.warn(`Skipping player without ID in room ${room_id}`, player);
+                    continue;
+                }
+                if (player.player_id === attacker_id) continue;
 
                 const targetTransform = await playerInGameController.getPlayerTransform(player.player_id);
                 if (!targetTransform || !targetTransform.is_alive) continue;
 
-                // Проверка попадания
                 const hit = this.checkHit(shot_origin, dir, targetTransform.position);
                 if (!hit) continue;
 
@@ -67,7 +68,7 @@ class DamageController {
                 const newHp = Math.max(0, currentHp - damage);
                 await global.redisClient.setEx(hpKey, this.matchTTL, newHp.toString());
 
-                // Обновляем статистику стрелка
+                // Статистика стрелка
                 const attackerStats = await playerInGameController.getPlayerStats(attacker_id, room_id);
                 await playerInGameController.updatePlayerStats(attacker_id, room_id, {
                     damage: attackerStats.damage + damage
@@ -82,7 +83,7 @@ class DamageController {
                     });
                 }
 
-                // Рассылаем всем игрокам в комнате
+                // 🔹 Рассылаем всем игрокам событие player_damaged только если есть target_id
                 await roomManager.notifyRoomPlayers(room, {
                     action: 'player_damaged',
                     attacker_id,

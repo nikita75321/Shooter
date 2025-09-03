@@ -689,6 +689,13 @@ public class OnlineRoom : MonoBehaviour
         {
             if (!IsInRoom) return;
 
+            // 🔹 Проверка target_id
+            if (string.IsNullOrEmpty(response.target_id))
+            {
+                Debug.LogWarning("Received player_damaged event without target_id. Ignoring.");
+                return;
+            }
+
             var player = CurrentRoom.GetPlayer(response.target_id);
             if (player == null) return;
 
