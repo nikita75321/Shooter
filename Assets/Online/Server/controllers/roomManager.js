@@ -85,10 +85,13 @@ class RoomManager {
             const [mode] = roomId.split('-').map(Number);
             const roomsKey = `rooms:${mode}`;
             const roomRaw = await global.redisClient.hGet(roomsKey, roomId);
+            // console.log(`roomRaw ${roomRaw}`);
+            
             if (!roomRaw) return null;
 
             const roomData = JSON.parse(roomRaw);
             const players = await this.getRoomPlayers(roomId);
+            // const players = await this.getAllPlayersHeroInfo();
 
             let bots = [];
             return {
@@ -128,7 +131,6 @@ class RoomManager {
 
     // === Добавление игрока ===
     async addPlayerToRoom(room, playerId, heroId, heroSkin, heroLevel, heroRank) {
-        // Проверяем, что игрок подключен
         const client = this.getPlayerConnection(playerId);
         if (!client || client.readyState !== WebSocket.OPEN) {
             console.log(`Player ${playerId} is not connected, skipping room join`);
@@ -179,6 +181,9 @@ class RoomManager {
 
         await pipeline.exec();
 
+        // ⚡️ Инициализация боевых статов игрока
+        await this.initPlayerStats(room.id, playerId, heroId, heroLevel, heroRank);
+
         const updatedRoom = await this.getRoomInfo(room.id);
         console.log(`Room ${room.id} now has ${updatedRoom.playerCount} players, max: ${updatedRoom.maxPlayers}`);
 
@@ -206,6 +211,46 @@ class RoomManager {
         }
 
         return updatedRoom;
+    }
+    async initPlayerStats(roomId, playerId, heroId, level, rank) {
+        // 1. Берём данные о герое
+        const heroKey = `hero:${heroId}`;
+        const hero = await global.redisClient.hGetAll(heroKey);
+
+        if (!hero || !hero.max_hp) {
+            throw new Error(`Hero data not found for ${heroId}`);
+        }
+
+        // 2. Базовые статы
+        let health = parseFloat(hero.max_hp);
+        let armor = parseFloat(hero.armor);
+        let damage = parseFloat(hero.damage);
+        const vision = parseFloat(hero.vision);
+
+        // 3. Rank multiplier (50% per rank)
+        health *= Math.pow(1.5, rank);
+        armor *= Math.pow(1.5, rank);
+        damage *= Math.pow(1.5, rank);
+
+        // 4. Level multiplier (10% per level)
+        health *= Math.pow(1.1, level);
+        armor *= Math.pow(1.1, level);
+        damage *= Math.pow(1.1, level);
+
+        // 5. Сохраняем в player_stats
+        const statsKey = `player_stats:${roomId}:${playerId}`;
+        await global.redisClient.hSet(statsKey, {
+            hp: health,
+            max_hp: health,
+            armor: armor,
+            damage: damage,
+            vision: vision,
+            deaths: 0,
+            kills: 0,
+            respawn_time: 0,
+        });
+
+        console.log(`✅ Stats initialized for player ${playerId} in room ${roomId}`);
     }
 
     async removePlayerFromRoom(playerId) {
