@@ -539,7 +539,7 @@ public class WebSocketBase : MonoBehaviour
                 break;
 
 
-            case "matchmaking_joined":
+            case "join_matchmaking_response":
                 HandleMatchmakingJoinedResponse(message);
                 break;
             case "room_left":
@@ -1198,36 +1198,47 @@ public class WebSocketBase : MonoBehaviour
         var response = JsonConvert.DeserializeObject<MatchStartResponse>(
             JsonConvert.SerializeObject(message));
 
-        // Конвертируем список PlayerInfoResponse в словарь PlayerInfo
         if (response.players != null)
         {
             var playersDict = new Dictionary<string, PlayerInGameInfo>();
+
             foreach (var playerResp in response.players)
             {
+                Debug.Log($"playerResp: playerResp.heroId - {playerResp.hero_id}");
+                Debug.Log($"playerResp.heroSkin - {playerResp.hero_skin}");
+                Debug.Log($"playerResp.hero_level - {playerResp.hero_level}");
+                Debug.Log($"playerResp.hero_rank - {playerResp.hero_rank}");
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,
                     playerResp.rating,
-                    playerResp.heroId
+                    playerResp.hero_id
                 )
                 {
+                    hero_skin = playerResp.hero_skin,
+                    hero_level = playerResp.hero_level,
+                    hero_rank = playerResp.hero_rank,
                     isReady = playerResp.isReady,
                     isAlive = playerResp.isAlive,
                     kills = playerResp.kills,
-                    deaths = playerResp.deaths
+                    deaths = playerResp.deaths,
+                    position = playerResp.position != null ? playerResp.position : Vector3.zero,
+                    rotation = playerResp.rotation != null ? playerResp.rotation : Quaternion.identity,
+                    animationState = !string.IsNullOrEmpty(playerResp.animationState) ? playerResp.animationState : "idle"
                 };
+
                 playersDict[playerResp.playerId] = playerInfo;
             }
 
-            // Создаем RoomInfo   правильной структурой
+            // Создаем RoomInfo с правильной структурой
             var roomInfo = new RoomInfo
             {
                 id = response.room_id,
                 state = "in_progress",
                 players = playersDict,
-                bots = response.bots,
-                maxPlayers = OnlineRoom.Instance.CurrentRoom?.maxPlayers ?? 4, // или из настроек
-                matchId = response.match_id
+                bots = response.bots ?? new List<string>(),
+                maxPlayers = OnlineRoom.Instance.CurrentRoom?.maxPlayers ?? 4,
+                matchId = response.match_id,
             };
 
             // Обновляем комнату
@@ -1957,35 +1968,14 @@ public class WebSocketBase : MonoBehaviour
 
 
 
-
-    #region Matchmaking
-    public void JoinMatchmaking(int mode, int heroId)
-    {
-        var data = new Dictionary<string, object>
-        {
-            { "player_id", Geekplay.Instance.PlayerData.id },
-            { "mode", mode },
-            { "hero_id", heroId },
-            { "username", Geekplay.Instance.PlayerData.name },
-            { "rating", Geekplay.Instance.PlayerData.rate }
-        };
-        SendWebSocketRequest("join_matchmaking", data);
-    }
-    #endregion
-
-
-
-
-
-
-
     #region Room Management Requests
     public void JoinMatchmaking(int mode)
     {
         var data = new Dictionary<string, object>
         {
             { "player_id", Geekplay.Instance.PlayerData.id },
-            { "hero_id", Geekplay.Instance.PlayerData.currentHero},
+            { "hero_id", Geekplay.Instance.PlayerData.currentHero },
+            { "hero_skin", Geekplay.Instance.PlayerData.persons[Geekplay.Instance.PlayerData.currentHero].currentBody },
             { "mode", mode }
         };
         SendWebSocketRequest("join_matchmaking", data);

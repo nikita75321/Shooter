@@ -40,7 +40,7 @@ public class LevelPrefab : MonoBehaviour
                 else
                 {
                     Debug.Log("This is new enemy player");
-                    enemiesInGame.InitEnemies(player.heroId, player.playerId);
+                    enemiesInGame.InitEnemies(player.hero_id, player.playerId);
                 }
             }
         });

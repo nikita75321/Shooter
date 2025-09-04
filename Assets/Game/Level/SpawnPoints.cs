@@ -26,6 +26,6 @@ public class SpawnPoints : MonoBehaviour
             tempPoints.Remove(t);
             return t;
         }
-        return spawnPoints[0];
+        return null;
     }
 }

@@ -68,8 +68,8 @@ public class PlayerInGameInfo
     public string playerId;
     public string player_name;
     public int rating;
-    public int heroId;
-    public int heroSkin;
+    public int hero_id;
+    public int hero_skin;
     public bool isReady;
     public Vector3 position;
     public Quaternion rotation;
@@ -77,15 +77,15 @@ public class PlayerInGameInfo
     public bool isAlive;
     public int kills;
     public int deaths;
-    public int rank;
-    public int level;
+    public int hero_rank;
+    public int hero_level;
 
     public PlayerInGameInfo(string playerId, string player_name, int rating = -1, int heroId = -1)
     {
         this.playerId = playerId;
         this.player_name = player_name;
         this.rating = rating;
-        this.heroId = heroId;
+        this.hero_id = heroId;
         this.isReady = false;
         this.position = Vector3.zero;
         this.rotation = Quaternion.identity;
@@ -237,6 +237,14 @@ public class OnlineRoom : MonoBehaviour
     private void Start()
     {
 
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Debug.Log(Geekplay.Instance.PlayerData.persons[Geekplay.Instance.PlayerData.currentHero].currentBody);
+        }
     }
 
     private void OnDestroy()
