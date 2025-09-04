@@ -153,7 +153,7 @@ public class CharacterControllerCustom : MonoBehaviour
         currentSpeed = Mathf.Lerp(currentSpeed, moveDirection.magnitude * moveSpeed, 3 * Time.fixedDeltaTime);
 
         // Move the character
-        controller.Move(moveDirection * currentSpeed * Time.fixedDeltaTime);
+        controller.Move(currentSpeed * Time.fixedDeltaTime * moveDirection);
 
         // Update movement state with threshold
         player.IsMoving = moveDirection.magnitude > 0.1f;

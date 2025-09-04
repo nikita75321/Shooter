@@ -107,7 +107,7 @@ class PlayerInGameController {
 
             return {
                 player_id: playerId,
-                username: playerInfo.username,
+                player_name: playerInfo.player_name,
                 position: {
                     x: parseFloat(transformData.p_x || '0'),
                     y: parseFloat(transformData.p_y || '0'),
@@ -133,8 +133,9 @@ class PlayerInGameController {
         try {
             const playerInfo = await playerRedisService.getPlayerFromRedis(playerId);
             if (playerInfo) {
+                
                 return {
-                    username: playerInfo.username || 'Unknown',
+                    player_name: playerInfo.player_name || 'Unknown',
                     rating: playerInfo.rating || 1000,
                     hero_id: playerInfo.hero_id || 0
                 };

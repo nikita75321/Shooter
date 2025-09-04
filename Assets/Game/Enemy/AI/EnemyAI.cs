@@ -35,7 +35,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (enemy.health.CurrentHealth > 0)
+        if (enemy.Health.CurrentHealth > 0)
         {
             if (patrol)
             {

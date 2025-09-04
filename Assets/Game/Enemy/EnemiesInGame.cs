@@ -31,17 +31,17 @@ public class EnemiesInGame : MonoBehaviour
 
     }
 
-    public void InitEnemies(int idHero, string playerId, int idSkin = 0)
+    public void InitEnemies(PlayerInGameInfo playerInfo)
     {
         var spawnpoint = spawnPoints.GetRandomSpawnPoint();
         var enemy = Instantiate(enemyPrefab, spawnpoint.position, Quaternion.identity);
 
         enemy.transform.SetParent(transform);
         // enemies.Add(enemy);
-        Debug.Log($"playerId - {playerId}, enemy - {enemy}");
-        enemyModel.TryAdd(playerId, enemy);
+        // Debug.Log($"playerId - {playerInfo.playerId}, enemy - {enemy}");
+        enemyModel.TryAdd(playerInfo.playerId, enemy);
 
-        enemy.InitHero(idHero, idSkin);
+        enemy.InitHero(playerInfo);
     }
 
     public Enemy GetEnemy(string id)

@@ -1204,10 +1204,10 @@ public class WebSocketBase : MonoBehaviour
 
             foreach (var playerResp in response.players)
             {
-                Debug.Log($"playerResp: playerResp.heroId - {playerResp.hero_id}");
-                Debug.Log($"playerResp.heroSkin - {playerResp.hero_skin}");
-                Debug.Log($"playerResp.hero_level - {playerResp.hero_level}");
-                Debug.Log($"playerResp.hero_rank - {playerResp.hero_rank}");
+                // Debug.Log($"playerResp: playerResp.heroId - {playerResp.hero_id}");
+                // Debug.Log($"playerResp.heroSkin - {playerResp.hero_skin}");
+                // Debug.Log($"playerResp.hero_level - {playerResp.hero_level}");
+                // Debug.Log($"playerResp.hero_rank - {playerResp.hero_rank}");
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,

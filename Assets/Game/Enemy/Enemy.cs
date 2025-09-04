@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Player player;
 
     [Header("Main component")]
-    public Health health;
+    public Health Health;
+    public Armor Armor;
     public Animator animator;
     [SerializeField] private Collider col;
     [SerializeField] private CharacterController controller;
@@ -47,7 +48,7 @@ public class Enemy : MonoBehaviour
 
     private void OnValidate()
     {
-        if (health == null) health = GetComponentInChildren<Health>();
+        if (Health == null) Health = GetComponentInChildren<Health>();
         // if (animator == null) animator = GetComponentInChildren<Animator>();
         if (col == null) col = GetComponentInChildren<Collider>();
         if (controller == null) controller = GetComponentInChildren<CharacterController>();
@@ -124,17 +125,17 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        health.OnDie.AddListener(HideUI);
-        health.OnDie.AddListener(healthbar.Hide);
-        health.OnDie.AddListener(armorBar.Hide);
+        Health.OnDie.AddListener(HideUI);
+        Health.OnDie.AddListener(healthbar.Hide);
+        Health.OnDie.AddListener(armorBar.Hide);
 
-        health.OnTakeDamage.AddListener(TakeDamageAnim);
+        Health.OnTakeDamage.AddListener(TakeDamageAnim);
         HideTraces();
     }
 
-    public void InitHero(int idHero, int idSkin = 0)
+    public void InitHero(PlayerInGameInfo playerInfo)
     {
-        Debug.Log($"idHero-{idHero}, idSkin-{idSkin}");
+        Debug.Log($"idHero-{playerInfo.hero_id}, idSkin-{playerInfo.hero_skin}");
         if (level == null) level = GetComponentInParent<LevelPrefab>();
         if (player == null) player = level.player;
 
@@ -142,10 +143,37 @@ public class Enemy : MonoBehaviour
         {
             hero.SetActive(false);
         }
-        heroes[idHero].SetActive(true);
+        heroes[playerInfo.hero_id].SetActive(true);
 
-        heroDummy = heroes[idHero].GetComponent<HeroDummy>();
-        heroDummy.SelectSkin(idSkin);
+        heroDummy = heroes[playerInfo.hero_id].GetComponent<HeroDummy>();
+        heroDummy.SelectSkin(playerInfo.hero_skin);
+
+        InitStats(playerInfo);
+    }
+
+    private void InitStats(PlayerInGameInfo playerInfo)
+    {
+        float health = Level.Instance.heroDatas[playerInfo.hero_id].health;
+        float armor = Level.Instance.heroDatas[playerInfo.hero_id].armor;
+        // float damage = Level.Instance.heroDatas[playerInfo.hero_id].damage;
+
+        // Apply rank multiplier (50% per rank)
+        health *= Mathf.Pow(1.5f, playerInfo.hero_rank);
+        armor *= Mathf.Pow(1.5f, playerInfo.hero_rank);
+        // damage *= Mathf.Pow(1.5f, playerInfo.hero_rank);
+
+        // Apply level multiplier (10% per level)
+        health *= Mathf.Pow(1.1f, playerInfo.hero_level);
+        armor *= Mathf.Pow(1.1f, playerInfo.hero_level);
+        // damage *= Mathf.Pow(1.1f, playerInfo.hero_level);
+
+        // Set character stats
+        Armor.MaxArmor = armor;
+        Health.MaxHealth = health;
+
+        // Set weapon damage (main - full damage, secondary - 1/3)
+        // MainWeapon.damage = damage;
+        // SecondaryWeapon.damage = damage / 3f;
     }
 
     public void Die()
@@ -196,11 +224,11 @@ public class Enemy : MonoBehaviour
 
     private void OnDestroy()
     {
-        health.OnDie.RemoveListener(HideUI);
-        health.OnDie.RemoveListener(healthbar.Hide);
-        health.OnDie.RemoveListener(armorBar.Hide);
+        Health.OnDie.RemoveListener(HideUI);
+        Health.OnDie.RemoveListener(healthbar.Hide);
+        Health.OnDie.RemoveListener(armorBar.Hide);
 
-        health.OnTakeDamage.RemoveListener(TakeDamageAnim);
+        Health.OnTakeDamage.RemoveListener(TakeDamageAnim);
     }
 
     public void UpdateNoizeState(float value)

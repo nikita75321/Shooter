@@ -164,10 +164,6 @@ public class Player : MonoBehaviour
         visibilityZone = heroes[idCurrentHero].GetComponentInChildren<VisibilityZone>();
 
         heroes[idCurrentHero].GetComponent<HeroDummy>().SelectSkin(Geekplay.Instance.PlayerData.persons[idCurrentHero].currentBody);
-        
-        // Geekplay.Instance.PlayerData.currentHeroHeadSkin = Geekplay.Instance.PlayerData.persons[idCurrentHero].currentBody;
-        // Geekplay.Instance.PlayerData.currentHeroBodySkin = Geekplay.Instance.PlayerData.persons[idCurrentHero].currentBody;
-        // Geekplay.Instance.Save();
 
         Character.Health.aidKit.player = this;
         Controller.topDownCamera.target = Controller.transform;
@@ -212,10 +208,6 @@ public class Player : MonoBehaviour
         // Set weapon damage (main - full damage, secondary - 1/3)
         Character.MainWeapon.damage = damage;
         Character.SecondaryWeapon.damage = damage / 3f;
-
-        // Restore current health and armor values
-        Character.Armor.MaxArmor = armor;
-        Character.Health.MaxHealth = health;
     }
 
     private void StartPlay()
