@@ -11,7 +11,11 @@ class DamageController {
         this.playerHitRadius = 0.8;  // радиус попадания
     }
 
-    async handleDealDamage(ws, data) {
+    // console.log('handleDealDamage called', data);
+    // console.log('Target player:', playerId, 'transform:', targetTransform, 'is_alive:', targetTransform?.is_alive);
+    // console.log('Check hit result:', hit);
+    // console.log('Saving to Redis:', statsKey, 'hp:', hp, 'armor:', armor);
+   async handleDealDamage(ws, data) {
         try {
             const requiredFields = [
                 'attacker_id', 'room_id',
@@ -20,14 +24,15 @@ class DamageController {
                 'damage'
             ];
 
-            // Проверка всех обязательных полей
             for (const field of requiredFields) {
                 if (data[field] === undefined || data[field] === null) {
+                    console.warn(`Missing damage data field: ${field}`);
                     return Utils.sendError(ws, `Missing damage data field: ${field}`);
                 }
             }
 
             const { attacker_id, room_id, damage } = data;
+            console.log('handleDealDamage called', data);
 
             const shot_origin = {
                 x: data.shot_origin_x,
@@ -44,63 +49,127 @@ class DamageController {
             const dir = this.normalize(shot_direction);
 
             const room = await roomManager.getRoomInfo(room_id);
-            if (!room) return Utils.sendError(ws, 'Room not found');
+            if (!room) {
+                console.warn(`Room not found: ${room_id}`);
+                return Utils.sendError(ws, 'Room not found');
+            }
+            
+            const pipeline = global.redisClient.multi();
+            console.log(`Room loaded: ${room_id}, players: ${room.players.join(', ')}`);
 
-            for (const player of room.players) {
-                // Пропускаем игроков без player_id или стрелка
-                if (!player.player_id) {
-                    console.warn(`Skipping player without ID in room ${room_id}`, player);
+            for (const playerId of room.players) {
+                if (!playerId) continue; // защита от пустых значений
+                if (playerId === attacker_id) continue;
+
+                console.log(`Processing target player: ${playerId}`);
+
+                const targetTransform = await playerInGameController.getPlayerTransform(playerId);
+                if (!targetTransform) {
+                    console.log(`No transform for player: ${playerId}`);
                     continue;
                 }
-                if (player.player_id === attacker_id) continue;
+                if (!targetTransform.is_alive) {
+                    console.log(`Player ${playerId} is dead, skipping`);
+                    continue;
+                }
 
-                const targetTransform = await playerInGameController.getPlayerTransform(player.player_id);
-                if (!targetTransform || !targetTransform.is_alive) continue;
-
-                const hit = this.checkHit(shot_origin, dir, targetTransform.position);
+                // const hit = this.checkHit(shot_origin, dir, targetTransform.position);
+                const hit = true;
+                console.log(`Check hit for player ${playerId}: ${hit}`);
                 if (!hit) continue;
 
-                // --- обновляем HP ---
-                const hpKey = `${Constants.matchKey}${room_id}:${player.player_id}:hp`;
-                let currentHp = await global.redisClient.get(hpKey);
-                currentHp = currentHp ? parseInt(currentHp) : 100;
+                const statsKey = `player_stats:${room_id}:${playerId}`;
+                const targetStats = await global.redisClient.hGetAll(statsKey);
 
-                const newHp = Math.max(0, currentHp - damage);
-                await global.redisClient.setEx(hpKey, this.matchTTL, newHp.toString());
+                if (!targetStats || !targetStats.hp) {
+                    console.warn(`Stats not found for player: ${playerId}`);
+                    continue;
+                }
 
-                // Статистика стрелка
+                let hp = parseFloat(targetStats.hp);
+                let armor = parseFloat(targetStats.armor);
+                const maxArmor = parseFloat(targetStats.max_armor);
+
+                console.log(`Before damage: player=${playerId}, hp=${hp}, armor=${armor}`);
+
+                let damageToHp = 0;
+                if (armor > 0) {
+                    const damageToArmor = Math.min(damage, armor);
+                    armor -= damageToArmor;
+                    damageToHp = damage - damageToArmor;
+                    hp -= damageToHp;
+                } else {
+                    hp -= damage;
+                    damageToHp = damage;
+                }
+
+                console.log(`After damage: player=${playerId}, hp=${hp}, armor=${armor}`);
+
+                // Запись в Redis
+                // await global.redisClient.hSet(statsKey,
+                //     'hp', hp.toString(),
+                //     'armor', armor.toString()
+                // );
+                // --- запись в Redis через pipeline ---
+                pipeline.hSet(statsKey, 'hp', hp.toString());
+                pipeline.hSet(statsKey, 'armor', armor.toString());
+
+                console.log(`Updated Redis for player ${playerId}: hp=${hp}, armor=${armor}`);
+
+                // Обновляем статистику стрелка
                 const attackerStats = await playerInGameController.getPlayerStats(attacker_id, room_id);
                 await playerInGameController.updatePlayerStats(attacker_id, room_id, {
                     damage: attackerStats.damage + damage
                 });
+                console.log(`Updated attacker ${attacker_id} total damage: ${attackerStats.damage + damage}`);
 
-                // Смерть игрока
-                if (newHp <= 0) {
+                // Проверка смерти
+                if (hp <= 0) {
+                    const deaths = parseInt(targetStats.deaths || "0", 10) + 1;
+                    const respawnTime = Date.now() + 5000; // респаун через 5 секунд
+
+                    await global.redisClient.hSet(statsKey, {
+                        deaths,
+                        respawn_time: respawnTime,
+                        hp: 0,
+                        armor: 0
+                    });
+                    console.log(`Player ${playerId} died. Respawn at ${new Date(respawnTime).toLocaleTimeString()}`);
+
+                    if (attacker_id !== playerId) {
+                        const attackerStatsKey = `player_stats:${room_id}:${attacker_id}`;
+                        const attackerKills = parseInt(attackerStats.kills || "0", 10) + 1;
+                        await global.redisClient.hSet(attackerStatsKey, 'kills', attackerKills);
+                        console.log(`Attacker ${attacker_id} kills incremented: ${attackerKills}`);
+                    }
+
                     await playerInGameController.handlePlayerDeath(ws, {
-                        player_id: player.player_id,
+                        player_id: playerId,
                         room_id,
                         killer_id: attacker_id
                     });
                 }
 
-                // 🔹 Рассылаем всем игрокам событие player_damaged только если есть target_id
+                // Уведомляем всех игроков
                 await roomManager.notifyRoomPlayers(room, {
                     action: 'player_damaged',
                     attacker_id,
-                    target_id: player.player_id,
+                    target_id: playerId,
                     amount: damage,
-                    new_hp: newHp,
+                    new_hp: Math.max(hp, 0),
+                    new_armor: Math.max(armor, 0),
                     timestamp: Date.now()
                 });
+                console.log(`Notified room players about damage to ${playerId}`);
             }
 
-            // Ответ стрелку
             ws.send(JSON.stringify({
-                action: 'damage_dealt_response',
+                action: 'deal_damage_response',
                 success: true,
                 attacker_id,
                 room_id
             }));
+            console.log(`Damage response sent to attacker ${attacker_id}`);
 
         } catch (error) {
             console.error('Damage handling error:', error);
@@ -110,6 +179,8 @@ class DamageController {
 
     // Проверка попадания (луч → сфера)
     checkHit(origin, dir, targetPos) {
+        console.log('CheckHit:', { origin, dir, targetPos, proj, distSq, maxShotDistance: this.maxShotDistance, playerHitRadius: this.playerHitRadius });
+
         const toTarget = {
             x: targetPos.x - origin.x,
             y: targetPos.y - origin.y,

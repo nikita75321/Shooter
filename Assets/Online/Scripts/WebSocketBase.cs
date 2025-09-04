@@ -593,7 +593,7 @@ public class WebSocketBase : MonoBehaviour
                 HandlePlayerTransformUpdateResponse(message);
                 break;
 
-            case "damage_dealt_response":
+            case "deal_damage_response":
                 HandlePlayerDamaged(message);
                 break;
             case "player_death_response":

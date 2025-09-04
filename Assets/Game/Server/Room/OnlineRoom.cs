@@ -695,17 +695,35 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            if (!IsInRoom) return;
+            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            if (!IsInRoom)
+            {
+                Debug.Log(0);
+                return;
+            }
+            else
+            {
+                Debug.Log(1);
+            }            
 
             // 🔹 Проверка target_id
             if (string.IsNullOrEmpty(response.target_id))
             {
+                Debug.Log(2);
                 Debug.LogWarning("Received player_damaged event without target_id. Ignoring.");
                 return;
             }
 
             var player = CurrentRoom.GetPlayer(response.target_id);
-            if (player == null) return;
+            if (player == null)
+            {
+                Debug.Log("player != null");
+                return;
+            }
+            else
+            {
+                Debug.Log("player == null");
+            }
 
             Debug.Log($"Deal damage to {player.player_name}");
 

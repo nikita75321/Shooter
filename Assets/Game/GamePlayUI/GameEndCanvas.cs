@@ -184,7 +184,7 @@ public class GameEndCanvas : MonoBehaviour
     {
         statsPanel.SetActive(false);
     }
-    
+
     private void ClaimWin()
     {
         // Локальное обновление
@@ -206,8 +206,9 @@ public class GameEndCanvas : MonoBehaviour
             favoriteHero: MainMenu.Instance.GetHeroNameById(Geekplay.Instance.PlayerData.favoriteHero),
             clanPointsChange: Geekplay.Instance.PlayerData.clanPoints
         );
-        
+
         level.LevelFinish();
+        InstanceSoundUI.Instance.PlayMenuBack();
     }
 
     private void ClaimLose()
@@ -232,6 +233,7 @@ public class GameEndCanvas : MonoBehaviour
         );
 
         level.LevelFinish();
+        InstanceSoundUI.Instance.PlayMenuBack();
     }
 
     private void RewardLose()

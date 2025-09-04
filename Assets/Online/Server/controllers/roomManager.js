@@ -213,41 +213,32 @@ class RoomManager {
         return updatedRoom;
     }
     async initPlayerStats(roomId, playerId, heroId, level, rank) {
-        // 1. Берём данные о герое
         const heroKey = `hero:${heroId}`;
         const hero = await global.redisClient.hGetAll(heroKey);
 
-        if (!hero || !hero.max_hp) {
-            throw new Error(`Hero data not found for ${heroId}`);
-        }
+        if (!hero || !hero.max_hp) throw new Error(`Hero data not found: ${heroId}`);
 
-        // 2. Базовые статы
-        let health = parseFloat(hero.max_hp);
-        let armor = parseFloat(hero.armor);
+        let maxHp = parseFloat(hero.max_hp);
+        let maxArmor = parseFloat(hero.armor);
         let damage = parseFloat(hero.damage);
-        const vision = parseFloat(hero.vision);
+        let vision = parseFloat(hero.vision);
 
-        // 3. Rank multiplier (50% per rank)
-        health *= Math.pow(1.5, rank);
-        armor *= Math.pow(1.5, rank);
-        damage *= Math.pow(1.5, rank);
+        // Применяем формулы ранга и уровня
+        maxHp *= Math.pow(1.5, rank) * Math.pow(1.1, level);
+        maxArmor *= Math.pow(1.5, rank) * Math.pow(1.1, level);
+        damage *= Math.pow(1.5, rank) * Math.pow(1.1, level);
 
-        // 4. Level multiplier (10% per level)
-        health *= Math.pow(1.1, level);
-        armor *= Math.pow(1.1, level);
-        damage *= Math.pow(1.1, level);
-
-        // 5. Сохраняем в player_stats
         const statsKey = `player_stats:${roomId}:${playerId}`;
         await global.redisClient.hSet(statsKey, {
-            hp: health,
-            max_hp: health,
-            armor: armor,
-            damage: damage,
-            vision: vision,
+            hp: maxHp,          // текущие HP
+            max_hp: maxHp,      // макс HP
+            armor: 0,           // текущая броня
+            max_armor: maxArmor,// макс броня
+            damage,
+            vision,
             deaths: 0,
             kills: 0,
-            respawn_time: 0,
+            respawn_time: 0
         });
 
         console.log(`✅ Stats initialized for player ${playerId} in room ${roomId}`);

@@ -12,13 +12,27 @@ public class InitSocket : MonoBehaviour
     private Action<bool> socketConnectedHandler;
     private void Awake()
     {
-        // socketConnected += status =>
-        // {
-        //     if (status)
-        //     {
-        //         WebSocketBase.Instance.RequestPlayerData(Geekplay.Instance.PlayerData.id);
-        //     }
-        // };
+        Debug.Log("00");
+        socketConnectedHandler = status =>
+        {
+            Debug.Log(0);
+            if (status)
+            { Debug.Log(1);
+                if (!string.IsNullOrEmpty(Geekplay.Instance.PlayerData.id))
+                {
+                    Debug.Log("connect");
+                    // Подключаем игрока к серверу
+                    WebSocketBase.Instance.ConnectPlayer(
+                        Geekplay.Instance.PlayerData.id,
+                        Geekplay.Instance.PlayerData.name
+                    );
+                } else
+                Debug.Log(2);
+            }
+        };
+        
+        socketConnected += socketConnectedHandler;
+
         InitializeWebSocket();
         DG.Tweening.DOTween.SetTweensCapacity(500, 50);
         DG.Tweening.DOTween.logBehaviour = DG.Tweening.LogBehaviour.Verbose;
@@ -35,28 +49,14 @@ public class InitSocket : MonoBehaviour
 
         WebSocketBase.Load(status =>
         {
-            socketConnected?.Invoke(status);
+            Debug.Log("aaa");
+            socketConnected.Invoke(status);
         });
     }
 
     private void Start()
     {
-        socketConnectedHandler = status =>
-        {
-            if (status)
-            {
-                if (!string.IsNullOrEmpty(Geekplay.Instance.PlayerData.id))
-                {
-                    // Подключаем игрока к серверу
-                        WebSocketBase.Instance.ConnectPlayer(
-                        Geekplay.Instance.PlayerData.id,
-                        Geekplay.Instance.PlayerData.name
-                    );
-                }
-            }
-        };
         
-        socketConnected += socketConnectedHandler;
     }
 
     private void SocketClosed()

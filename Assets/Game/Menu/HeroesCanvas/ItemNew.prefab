@@ -403,6 +403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5841338451455771843}
   - component: {fileID: 2831110225735058653}
+  - component: {fileID: 3429490582005297356}
   m_Layer: 5
   m_Name: ItemNew
   m_TagString: Untagged
@@ -449,6 +450,18 @@ MonoBehaviour:
   skinArr: {fileID: 11400000, guid: e84041edabb0dcc46b7199319b418584, type: 2}
   focusFrame: {fileID: 5009762328989742987}
   focusIcon: {fileID: 2127036716189908571}
+--- !u!114 &3429490582005297356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4928170339257497900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdefb559ac0cb84b98df943d0e567cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5009762328989742987
 GameObject:
   m_ObjectHideFlags: 0

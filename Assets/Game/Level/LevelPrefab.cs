@@ -22,6 +22,8 @@ public class LevelPrefab : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
+            InstanceSoundUI.Instance.PlayGameBack();
+            
             foreach (var player in response.players)
             {
                 Debug.Log("Init models");

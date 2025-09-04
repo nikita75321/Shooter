@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 5367006711893430731}
   - component: {fileID: 4357692047476274736}
   - component: {fileID: 39890192964655733}
+  - component: {fileID: 6049334698848108934}
   m_Layer: 5
   m_Name: Leader_Slot
   m_TagString: Untagged
@@ -497,6 +498,18 @@ MonoBehaviour:
   ratingTXT: {fileID: 6458008614795405169}
   clanRatingTXT: {fileID: 2736527840619307957}
   leaveButton: {fileID: 5098987513833061817}
+--- !u!114 &6049334698848108934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956454089541372868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdefb559ac0cb84b98df943d0e567cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3609938325259897596
 GameObject:
   m_ObjectHideFlags: 0

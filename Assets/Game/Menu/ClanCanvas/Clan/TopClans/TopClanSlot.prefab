@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4639026609498374269}
   - component: {fileID: 8432564863737242240}
   - component: {fileID: 5810525007544477741}
+  - component: {fileID: 1606153240332273122}
   m_Layer: 5
   m_Name: TopClanSlot
   m_TagString: Untagged
@@ -102,6 +103,18 @@ MonoBehaviour:
   clanPlaceText: {fileID: 2666660867021985042}
   clanLevelIcon: {fileID: 6806247817319356492}
   clanLevelText: {fileID: 4671342632419183392}
+--- !u!114 &1606153240332273122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101311827405968739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdefb559ac0cb84b98df943d0e567cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3374519486179748279
 GameObject:
   m_ObjectHideFlags: 0
