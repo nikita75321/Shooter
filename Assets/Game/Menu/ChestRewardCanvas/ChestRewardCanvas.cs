@@ -401,29 +401,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
         if (rewardCard.rewardPrefab.rewardType == RewardInChestType.Hero)
         {
-            // Debug.Log(1);
-            // if (rewardCard.cardReward == null && rewardCard.skinReward != null)
-            // {
-            //     Debug.Log(2);
-            //     int indexHero = rewardCard.randomHero ? (int)Random.Range(0, 8f) : rewardCard.idHero;
-            //     int indexSkin = rewardCard.randomSkin ? (int)Random.Range(0, 7f) : rewardCard.idSkin;
-
-            //     rewardCard.idHero = indexHero;
-            //     rewardCard.idSkin = indexSkin;
-
-            //     Debug.Log($"rewardCard.idHero - {rewardCard.idHero}, rewardCard.idSkin - {rewardCard.idSkin}");
-
-            //     if (Geekplay.Instance.PlayerData.persons[indexHero].openSkinBody[indexSkin] == 1)
-            //     {
-            //         Debug.Log($"Current Skin we have");
-            //         OpenCurrentChest();
-            //         return;
-            //     }
-            //     else
-            //     {
-            //         // Debug.Log($"indexHero {indexHero}, indexSkin {indexSkin}");
-            //     }
-            // }
             Debug.Log(1);
             if (rewardCard.cardReward != null && rewardCard.skinReward == null)
             {
@@ -448,19 +425,33 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
             }
             if (rewardCard.cardReward != null && rewardCard.skinReward != null)
             {
-                Debug.Log(4);
-                
-                int indexHero = rewardCard.randomHero ? (int)Random.Range(0, 8f) : rewardCard.cardReward.id;
-                int indexSkin = rewardCard.randomSkin ? (int)Random.Range(1, 7f) : rewardCard.cardReward.id;
-                
-                rewardCard.idHero = indexHero;
-                rewardCard.idSkin = indexSkin;
+                // Debug.Log(4);
 
-                if (Geekplay.Instance.PlayerData.persons[rewardCard.idHero].openSkinBody[rewardCard.idSkin] == 1)
+                // int indexHero = rewardCard.randomHero ? (int)Random.Range(0, 8f) : rewardCard.cardReward.id;
+                // int indexSkin = rewardCard.randomSkin ? (int)Random.Range(1, 7f) : rewardCard.cardReward.id;
+
+                // rewardCard.idHero = indexHero;
+                // rewardCard.idSkin = indexSkin;
+
+                // if (Geekplay.Instance.PlayerData.persons[rewardCard.idHero].openSkinBody[rewardCard.idSkin] == 1)
+                // {
+                //     Debug.Log($"2 Current Skin we have, idHero - {rewardCard.idHero}, idSkin - {rewardCard.idSkin}");
+                //     OpenCurrentChest();
+                //     return;
+                // }
+                // Есть оба варианта - случайный выбор
+                if (Random.Range(0f, 1f) > 0.5f)
                 {
-                    Debug.Log($"2 Current Skin we have, idHero - {rewardCard.idHero}, idSkin - {rewardCard.idSkin}");
-                    OpenCurrentChest();
-                    return;
+                    if (Geekplay.Instance.PlayerData.persons[rewardCard.idHero].openSkinBody[rewardCard.idSkin] == 1)
+                    {
+                        Debug.Log($"2 Current Skin we have, idHero - {rewardCard.idHero}, idSkin - {rewardCard.idSkin}");
+                        OpenCurrentChest();
+                        return;
+                    }
+                }
+                else
+                {
+                    // Меняем тип на карточки
                 }
             }
         }
@@ -486,19 +477,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
         if (rewardCard.rewardPrefab.rewardType == RewardInChestType.RandomSkin)
         {
 
-            // int indexHero = rewardCard.randomHero ? (int)Random.Range(0, 8f) : rewardCard.idHero;
-            // int indexSkin = rewardCard.randomSkin ? (int)Random.Range(0, 7f) : rewardCard.idSkin;
-
-            // if (Geekplay.Instance.PlayerData.persons[indexHero].openSkinBody[indexSkin] == 1)
-            // {
-            //     Debug.Log($"Current Skin we have");
-            //     OpenCurrentChest();
-            //     return;
-            // }
-            // else
-            // {
-            //     // Debug.Log($"indexHero {indexHero}, indexSkin {indexSkin}");
-            // }
         }
 
         // Показываем награду
@@ -694,6 +672,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
         gainSequence.Join(card.itemImage.DOFade(0, rewardGainDuration * 2));
         gainSequence.Join(card.shine.DOFade(0, rewardGainDuration));
+        gainSequence.Join(card.heroCardSlider.transform.DOScale(0, rewardGainDuration));
 
         gainSequence.Join(card.rewardAmountTXT.DOFade(0, rewardGainDuration));
 

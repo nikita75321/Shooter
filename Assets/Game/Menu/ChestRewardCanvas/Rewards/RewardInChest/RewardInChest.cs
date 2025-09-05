@@ -39,6 +39,17 @@ public class RewardInChest : MonoBehaviour
     private Vector3 originalScale = Vector3.one;
     private Sequence _appearSequence;
 
+    [Header("HeroCard")]
+    public Slider heroCardSlider;
+    public TMP_Text sliderText;
+    private string example = "9,999 <#AFD9E9>/ 9,999";
+
+    [SerializeField] private float animationDuration = 1.5f;
+    [SerializeField] private Ease easeType = Ease.OutQuad;
+    private Tween _currentTween;
+    private int _targetValue;
+    private int _currentDisplayedValue;
+
     private void Awake()
     {
         originalScale = transform.localScale;
@@ -48,12 +59,14 @@ public class RewardInChest : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopCurrentAnimation();
         // Очищаем все твины при уничтожении объекта
         CleanupTweens();
     }
 
     private void OnDisable()
     {
+        StopCurrentAnimation();
         // Очищаем твины при деактивации объекта
         CleanupTweens();
     }
@@ -146,6 +159,14 @@ public class RewardInChest : MonoBehaviour
 
 
         Debug.Log($"Type after - {type}");
+        if (type == RewardInChestType.HeroCard)
+        {
+            InitSliderHeroCard(rewardValue);
+        }
+        else
+        {
+            heroCardSlider.gameObject.SetActive(false);
+        }
 
         // Оригинальные проверки для размеров изображений
         if (type == RewardInChestType.Hero || type == RewardInChestType.HeroCard)
@@ -206,6 +227,122 @@ public class RewardInChest : MonoBehaviour
                 itemFinalImage.SetNativeSize();
             }
         }
+    }
+
+    private void InitSliderHeroCard(int value)
+    {
+        Debug.Log("Карточки");
+        var maxValue = GetMaxValueHeroCard(id);
+        var curHeroCard = Geekplay.Instance.PlayerData.persons[id].heroCard;
+        // Debug.Log($"{Geekplay.Instance.PlayerData.persons[idHero].}");
+
+        rewardAmountTXT.gameObject.SetActive(false);
+        heroCardSlider.gameObject.SetActive(true);
+        // heroCardSlider.transform.DOScale(1, 2.5f);
+        heroCardSlider.maxValue = maxValue;
+        heroCardSlider.value = 0;
+
+        sliderText.text = $"0/{maxValue}";
+        // Запускаем анимацию
+        AnimateSlider(curHeroCard, value, maxValue);
+    }
+    
+    private void AnimateSlider(int currentValue, int addValue, int maxValue)
+    {
+        // Останавливаем предыдущую анимацию, если она есть
+        StopCurrentAnimation();
+
+        _targetValue = currentValue + addValue;
+
+        // Устанавливаем начальное значение
+        heroCardSlider.value = 0;
+        _currentDisplayedValue = 0;
+
+        // Создаем анимацию
+        _currentTween = DOTween.To(
+                () => _currentDisplayedValue,
+                x =>
+                {
+                    _currentDisplayedValue = x;
+                    heroCardSlider.value = x;
+                },
+                _targetValue,
+                animationDuration)
+            .SetEase(easeType)
+            .OnUpdate(() =>
+            {
+                // Дополнительная логика при обновлении, если нужно
+                OnSliderValueUpdated(_currentDisplayedValue, maxValue);
+            })
+            .OnComplete(() =>
+            {
+                OnAnimationComplete();
+                _currentTween = null;
+            })
+            .OnKill(() =>
+            {
+                _currentTween = null;
+            });
+    }
+
+    // Метод для принудительной остановки анимации
+    public void StopAnimation()
+    {
+        StopCurrentAnimation();
+        
+        // Устанавливаем финальное значение сразу
+        if (heroCardSlider != null)
+        {
+            heroCardSlider.value = _targetValue;
+            _currentDisplayedValue = _targetValue;
+        }
+    }
+    // Метод для получения текущего анимированного значения
+    public int GetCurrentAnimatedValue()
+    {
+        return _currentDisplayedValue;
+    }
+
+    // Метод для проверки, идет ли сейчас анимация
+    public bool IsAnimating()
+    {
+        return _currentTween != null && _currentTween.IsActive() && _currentTween.IsPlaying();
+    }
+
+    private void StopCurrentAnimation()
+    {
+        if (_currentTween != null && _currentTween.IsActive())
+        {
+            _currentTween.Kill();
+        }
+        _currentTween = null;
+    }
+    private void OnSliderValueUpdated(int currentValue, int maxValue)
+    {
+        // Здесь можно добавить дополнительную логику при обновлении значения
+        // Например, обновление текста, визуальных эффектов и т.д.
+        sliderText.text = $"{currentValue}/{maxValue}";
+        // Debug.Log($"Current slider value: {currentValue}");
+    }
+
+    private void OnAnimationComplete()
+    {
+        // Логика при завершении анимации
+        // heroCardSlider.transform.DOScale(1.1f, 0.5f);
+        Debug.Log("Slider animation completed!");
+    }
+    
+    private int GetMaxValueHeroCard(int id)
+    {
+        return Geekplay.Instance.PlayerData.persons[id].rank switch
+        {
+            1 => 25,
+            2 => 50,
+            3 => 75,
+            4 => 100,
+            5 => 150,
+            _ => 0,
+        };
     }
 
     public void SetNativeSizeWithMultiplier(float multiplier)
