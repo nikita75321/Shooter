@@ -1,9 +1,16 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
 {
+    public static PlayerInfo Instance;
+
+    [Header("Regerencess")]
+    [SerializeField] private Skins skins;
+
     [Header("Change name")]
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private GameObject changeNamePanel;
@@ -24,7 +31,16 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField] private TMP_Text maxDamageBattle;
     [SerializeField] private TMP_Text totalShots;
 
+    [Header("PlayerLogo")]
+    [SerializeField] private Image menuLogo;
+    [SerializeField] private Image playerInfoLogo;
+
     private PlayerData playerData;
+
+    public void Awake()
+    {
+        Instance = this;
+    }
 
     private void OnEnable()
     {
@@ -172,25 +188,6 @@ public class PlayerInfo : MonoBehaviour
         WebSocketBase.Instance.UpdatePlayerName(Geekplay.Instance.PlayerData.id, newName);
     }
 
-    // private void HandleNameCheckResult(bool isAvailable, string name)
-    // {
-    //     WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
-    //     {
-    //         if (isAvailable)
-    //         {
-    //             Debug.Log("isAvailable");
-    //             WebSocketBase.Instance.UpdatePlayerName(
-    //                 Geekplay.Instance.PlayerData.id,
-    //                 name
-    //             );
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("Имя не может быть пустым");
-    //         }
-    //     });
-    // }
-
     private void HandleNameUpdateResult(bool success, string newName)
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
@@ -209,15 +206,15 @@ public class PlayerInfo : MonoBehaviour
             }
         });
     }
-    
+
     private void OnValueChanged(string text)
     {
         // Оставляем только допустимые символы
         string filteredText = System.Text.RegularExpressions.Regex.Replace(
-        text, 
-        @"[^a-zA-Zа-яА-ЯёЁ0-9 ]", 
+        text,
+        @"[^a-zA-Zа-яА-ЯёЁ0-9 ]",
         "");
-        
+
         if (filteredText != text)
         {
             inputField.text = filteredText;

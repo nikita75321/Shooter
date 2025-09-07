@@ -8,7 +8,7 @@ public class Kycha : MonoBehaviour
     public Sprite[] heroIcons;
 
     [Header("Chest Icons")]
-    public Sprite[] chestIcons;
+    // public Sprite[] chestIcons;
     public Sprite Uncommon_chest;
     public Sprite Rare_chest;
     public Sprite Epic_chest;

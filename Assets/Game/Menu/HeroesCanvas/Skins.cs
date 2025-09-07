@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [Serializable]
@@ -25,6 +26,10 @@ public class Skins : MonoBehaviour
 
     [SerializeField] private GameObject buyButtonMoneyInfo, buyButtonDonatMoneyInf, buyButtonRewardInfo, buyButtonInAppInfo;
 
+    [Header("PlayerLogo")]
+    [SerializeField] private Image menuLogo;
+    [SerializeField] private Image playerInfoLogo;
+
     private void OnValidate()
     {
         // if (heroSlots.Length == 0) heroSlots = GetComponentsInChildren<HeroSlotSkin>(true);
@@ -32,7 +37,8 @@ public class Skins : MonoBehaviour
 
     private void Start()
     {
-        DOVirtual.DelayedCall(0.2f, () =>
+        // var curSkinId = Geekplay.Instance.PlayerData.persons[Geekplay.Instance.PlayerData.currentHero].
+        DOVirtual.DelayedCall(0.1f, () =>
         {
             var person = Geekplay.Instance.PlayerData.persons[Geekplay.Instance.PlayerData.currentHero];
             heroes[Geekplay.Instance.PlayerData.currentHero].SelectBody(person.currentBody);
@@ -41,8 +47,10 @@ public class Skins : MonoBehaviour
             heroSlots[0].DeselectSlot();
             currentSelectClot = heroSlots[person.currentBody];
             currentSelectClot.SelectSlot();
+
+            ChangeLogo(Geekplay.Instance.PlayerData.currentHero, person.currentBody);
         });
-    }
+    } 
 
     public void InitSlots()
     {
@@ -75,6 +83,9 @@ public class Skins : MonoBehaviour
         hero.currentBody = currentSelectClot.id;
         hero.currentHead = currentSelectClot.id;
 
+        Geekplay.Instance.PlayerData.currentHeroBodySkin = currentSelectClot.id;
+        Geekplay.Instance.PlayerData.currentHeroHeadSkin = currentSelectClot.id;
+
         Geekplay.Instance.Save();
     }
 
@@ -85,7 +96,7 @@ public class Skins : MonoBehaviour
 
     public void SelectHero(int id)
     {
-        Debug.Log("SelectHero");
+        // Debug.Log("SelectHero "+ id);
         currentHero = heroes[id];
         var playerData = Geekplay.Instance.PlayerData;
 
@@ -140,5 +151,14 @@ public class Skins : MonoBehaviour
         {
             Debug.Log("CheckCurSkin 2");
         }
+    }
+
+    public void ChangeLogo(int idHero, int idSkin)
+    {
+        menuLogo.sprite = skinsIcons[idHero].icon[idSkin];
+        playerInfoLogo.sprite = skinsIcons[idHero].icon[idSkin];
+
+        menuLogo.SetNativeSize();
+        playerInfoLogo.SetNativeSize();
     }
 }

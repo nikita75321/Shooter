@@ -36,7 +36,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text favoriteHeroText;
 
     [Header("Start game")]
-    [SerializeField] private OnlineRoom onlineRoom;
     [SerializeField] private GameObject loadCanvas;
 
     [Header("Object To Init")]

@@ -208,7 +208,10 @@ public class HeroesCanvas : MonoBehaviour
     public void SelectChar()
     {
         Geekplay.Instance.PlayerData.currentHero = curHeroData.id;
+        // Geekplay.Instance.PlayerData.currentHeroBodySkin = curHeroData
         Geekplay.Instance.Save();
+        Debug.Log($"HeroId - {curHeroData.id}, HeroSkin - {Geekplay.Instance.PlayerData.currentHeroBodySkin}");
+        skins.ChangeLogo(curHeroData.id, Geekplay.Instance.PlayerData.persons[curHeroData.id].currentBody);
     }
 
     public void CheckCurHero()
