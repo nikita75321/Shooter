@@ -155,20 +155,31 @@ class PlayerInGameController {
 
         const currentStats = await this.getPlayerStats(playerId, roomId);
 
+        const kills  = Number.isFinite(parseInt(data.kills))  ? parseInt(data.kills)  : (currentStats.kills  ?? 0);
+        const deaths = Number.isFinite(parseInt(data.deaths)) ? parseInt(data.deaths) : (currentStats.deaths ?? 0);
+        const damage = Number.isFinite(parseFloat(data.damage)) ? parseFloat(data.damage) : (currentStats.damage ?? 0);
+
         const updatedStats = {
-            kills: parseInt(data.kills ?? currentStats.kills),
-            deaths: parseInt(data.deaths ?? currentStats.deaths),
-            damage: parseInt(data.damage ?? currentStats.damage),
-            is_alive: Boolean(data.is_alive),
-            score: (parseInt(data.kills ?? 0) * 100) + (parseInt(data.damage ?? 0)),
+            kills,
+            deaths,
+            damage,
+            is_alive: (typeof data.is_alive === "boolean") ? data.is_alive : (currentStats.is_alive ?? true),
+            score: (kills * 100) + damage,
             last_update: Date.now()
         };
+
+        // Подстраховка от NaN
+        if (!Number.isFinite(updatedStats.score)) {
+            updatedStats.score = 0;
+        }
 
         const pipeline = global.redisClient.multi();
         pipeline.hSet(matchKey, 'stats', JSON.stringify(updatedStats));
         pipeline.expire(matchKey, this.matchTTL);
 
-        pipeline.zAdd(statsKey, { score: updatedStats.score, value: playerId.toString() });
+        console.log("ZADD debug:", statsKey, updatedStats.score, playerId.toString(), typeof updatedStats.score);
+
+        pipeline.zAdd(statsKey, [{ score: updatedStats.score, value: playerId.toString() }]);
         pipeline.expire(statsKey, this.matchTTL);
 
         await pipeline.exec();
@@ -176,47 +187,54 @@ class PlayerInGameController {
         return updatedStats;
     }
 
-    async updatePlayerStats(playerId, roomId, data) {
-        const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
-        const statsKey = `${Constants.matchKey}${roomId}:stats`;
+    // async updatePlayerStats(playerId, roomId, data) {
+    //     const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
+    //     const statsKey = `${Constants.matchKey}${roomId}:stats`;
 
-        const currentStats = await this.getPlayerStats(playerId, roomId);
+    //     const currentStats = await this.getPlayerStats(playerId, roomId);
         
-        const updatedStats = {
-            kills: parseInt(data.kills) || currentStats.kills,
-            deaths: parseInt(data.deaths) || currentStats.deaths,
-            damage: parseInt(data.damage) || currentStats.damage,
-            is_alive: Boolean(data.is_alive),
-            score: (parseInt(data.kills) * 100) + (parseInt(data.damage) || 0),
-            last_update: Date.now()
-        };
+    //     const updatedStats = {
+    //         kills: parseInt(data.kills) || currentStats.kills,
+    //         deaths: parseInt(data.deaths) || currentStats.deaths,
+    //         damage: parseInt(data.damage) || currentStats.damage,
+    //         is_alive: Boolean(data.is_alive),
+    //         score: (parseInt(data.kills) * 100) + (parseInt(data.damage) || 0),
+    //         last_update: Date.now()
+    //     };
 
-        const pipeline = global.redisClient.multi();
+    //     const pipeline = global.redisClient.multi();
         
-        // Сохраняем индивидуальную статистику
-        pipeline.hSet(matchKey, 'stats', JSON.stringify(updatedStats));
-        pipeline.expire(matchKey, this.matchTTL);
+    //     // Сохраняем индивидуальную статистику
+    //     pipeline.hSet(matchKey, 'stats', JSON.stringify(updatedStats));
+    //     pipeline.expire(matchKey, this.matchTTL);
         
-        // Обновляем общую статистику комнаты
-        pipeline.zAdd(statsKey, { score: updatedStats.score, value: playerId });
-        pipeline.expire(statsKey, this.matchTTL);
+    //     // Обновляем общую статистику комнаты
+    //     pipeline.zAdd(statsKey, { score: updatedStats.score, value: playerId });
+    //     pipeline.expire(statsKey, this.matchTTL);
         
-        await pipeline.exec();
+    //     await pipeline.exec();
 
-        return updatedStats;
-    }
+    //     return updatedStats;
+    // }
 
     async getPlayerStats(playerId, roomId) {
         try {
-            const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
+            const matchKey = `player_stats:${roomId}:${playerId}`;
             const statsJson = await global.redisClient.hGet(matchKey, 'stats');
-
+            
+            console.log(`[getPlayerStats] matchKey - ${matchKey}`);
+            
             return statsJson ? JSON.parse(statsJson) : {
+                hp,
+                max_hp,
+                armor,
+                max_armor,
+                vision,
                 kills: 0,
                 deaths: 0,
                 damage: 0,
-                is_alive: true,
-                score: 0,
+                // is_alive: true,
+                // score: 0,
                 last_update: Date.now()
             };
         } catch (error) {

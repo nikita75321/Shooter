@@ -447,7 +447,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1385183424484668988
@@ -585,7 +585,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &3511426091998264328
@@ -923,6 +923,7 @@ GameObject:
   - component: {fileID: 5011976250848763840}
   - component: {fileID: 7308233803248185639}
   - component: {fileID: 6325728309603677063}
+  - component: {fileID: 141006768302393264}
   m_Layer: 5
   m_Name: Button_Create
   m_TagString: Untagged
@@ -1056,6 +1057,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &141006768302393264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4032109279854682054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdefb559ac0cb84b98df943d0e567cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4039537139122193675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,8 +1103,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -262.399, y: -100.216}
-  m_SizeDelta: {x: 550.535, y: 58.024}
+  m_AnchoredPosition: {x: -232.34421, y: -89.8003}
+  m_SizeDelta: {x: 486.918, y: 58.024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7897507673031695815
 CanvasRenderer:
@@ -1206,7 +1219,7 @@ GameObject:
   - component: {fileID: 8882891566525618868}
   - component: {fileID: 1625665970664890089}
   m_Layer: 5
-  m_Name: Button_Invite
+  m_Name: Button_Join
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1653,6 +1666,7 @@ GameObject:
   - component: {fileID: 491375177786201272}
   - component: {fileID: 4069810555329365678}
   - component: {fileID: 3344182510415441127}
+  - component: {fileID: 6366001496632299457}
   m_Layer: 5
   m_Name: Button_Search
   m_TagString: Untagged
@@ -1774,6 +1788,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &6366001496632299457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5952437162241999751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdefb559ac0cb84b98df943d0e567cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6179878400283024908
 GameObject:
   m_ObjectHideFlags: 0
@@ -2179,7 +2205,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &7068773405642703768
@@ -2315,7 +2341,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &7828329258262773105

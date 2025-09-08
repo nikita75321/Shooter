@@ -8,7 +8,7 @@ class DamageController {
     constructor() {
         this.matchTTL = 60 * 60 * 2;
         this.maxShotDistance = 50;   // дальность стрельбы
-        this.playerHitRadius = 0.8;  // радиус попадания
+        this.playerHitRadius = 1.8;  // радиус попадания
     }
 
     // console.log('handleDealDamage called', data);
@@ -68,13 +68,13 @@ class DamageController {
                     console.log(`No transform for player: ${playerId}`);
                     continue;
                 }
-                if (!targetTransform.is_alive) {
-                    console.log(`Player ${playerId} is dead, skipping`);
-                    continue;
-                }
+                // if (!targetTransform.is_alive) {
+                //     console.log(`Player ${playerId} is dead, skipping`);
+                //     continue;
+                // }
 
-                // const hit = this.checkHit(shot_origin, dir, targetTransform.position);
-                const hit = true;
+                const hit = this.checkHit(shot_origin, dir, targetTransform.position);
+                // const hit = true;
                 console.log(`Check hit for player ${playerId}: ${hit}`);
                 if (!hit) continue;
 
@@ -88,7 +88,6 @@ class DamageController {
 
                 let hp = parseFloat(targetStats.hp);
                 let armor = parseFloat(targetStats.armor);
-                const maxArmor = parseFloat(targetStats.max_armor);
 
                 console.log(`Before damage: player=${playerId}, hp=${hp}, armor=${armor}`);
 
@@ -111,13 +110,16 @@ class DamageController {
                 //     'armor', armor.toString()
                 // );
                 // --- запись в Redis через pipeline ---
-                pipeline.hSet(statsKey, 'hp', hp.toString());
-                pipeline.hSet(statsKey, 'armor', armor.toString());
+                console.log("Saving to redis:", { hp, armor });
+                pipeline.hSet(statsKey, 'hp', hp);
+                pipeline.hSet(statsKey, 'armor', armor);
 
                 console.log(`Updated Redis for player ${playerId}: hp=${hp}, armor=${armor}`);
 
                 // Обновляем статистику стрелка
                 const attackerStats = await playerInGameController.getPlayerStats(attacker_id, room_id);
+                console.log(attackerStats);
+                
                 await playerInGameController.updatePlayerStats(attacker_id, room_id, {
                     damage: attackerStats.damage + damage
                 });
@@ -167,6 +169,7 @@ class DamageController {
                 action: 'deal_damage_response',
                 success: true,
                 attacker_id,
+                damage,
                 room_id
             }));
             console.log(`Damage response sent to attacker ${attacker_id}`);
@@ -179,7 +182,7 @@ class DamageController {
 
     // Проверка попадания (луч → сфера)
     checkHit(origin, dir, targetPos) {
-        console.log('CheckHit:', { origin, dir, targetPos, proj, distSq, maxShotDistance: this.maxShotDistance, playerHitRadius: this.playerHitRadius });
+        // console.log('CheckHit:', { origin, dir, targetPos, proj, distSq, maxShotDistance: this.maxShotDistance, playerHitRadius: this.playerHitRadius });
 
         const toTarget = {
             x: targetPos.x - origin.x,
@@ -197,6 +200,9 @@ class DamageController {
         };
 
         const distSq = this.distanceSquared(closestPoint, targetPos);
+
+        console.log('CheckHit:', { origin, dir, targetPos, proj, distSq });
+
         return distSq <= this.playerHitRadius * this.playerHitRadius;
     }
 

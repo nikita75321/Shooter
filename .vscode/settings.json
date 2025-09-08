@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Top_down_temp.sln"
+    "dotnet.defaultSolution": "Shooter_new.sln"
 }

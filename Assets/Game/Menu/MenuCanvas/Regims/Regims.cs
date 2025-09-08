@@ -98,18 +98,15 @@ public class Regims : MonoBehaviour
 
         if (isAvailable)
         {
-            Debug.Log(1);
-            timerText.text = $"{modeName}\n<color=green>Доступен {FormatTime(timeLeft)}</color>";
+            // timerText.text = $"{modeName}\n<color=green>Доступен {FormatTime(timeLeft)}</color>";
+            timerText.text = $"<color=green>Доступен {FormatTime(timeLeft)}</color>";
         }
         else
         {
-            Debug.Log(2);
-            // timerText.text = timeLeft > 0
-            //     ? $"{modeName}\n<color=red>Откроется через {FormatTime(timeLeft)}</color>"
-            //     : $"{modeName}\n<color=red>Закрыт</color>";
             if (timeLeft > 0)
             {
-                timerText.text = $"{modeName}\n<color=red>Откроется через {FormatTime(timeLeft)}</color>";
+                // timerText.text = $"{modeName}\n<color=red>Откроется через {FormatTime(timeLeft)}</color>";
+                timerText.text = $"<color=red>Откроется через {FormatTime(timeLeft)}</color>";
             }
         }
     }

@@ -79,6 +79,8 @@ public class PlayerInGameInfo
     public int deaths;
     public int hero_rank;
     public int hero_level;
+    public int hp;
+    public int armor;
 
     public PlayerInGameInfo(string playerId, string player_name, int rating = -1, int heroId = -1)
     {
@@ -232,6 +234,8 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnPlayerStatsUpdateResponse += HandlePlayerStatsUpdateResponse;
 
         WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;
+
+        
     }
 
     private void Start()
@@ -695,56 +699,50 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             if (!IsInRoom)
             {
-                Debug.Log(0);
                 return;
-            }
-            else
-            {
-                Debug.Log(1);
-            }            
+            }          
 
-            // 🔹 Проверка target_id
             if (string.IsNullOrEmpty(response.target_id))
             {
-                Debug.Log(2);
                 Debug.LogWarning("Received player_damaged event without target_id. Ignoring.");
                 return;
             }
 
-            var player = CurrentRoom.GetPlayer(response.target_id);
-            if (player == null)
+            var target = CurrentRoom.GetPlayer(response.target_id);
+            if (target == null)
             {
-                Debug.Log("player != null");
+                Debug.Log("target == null");
                 return;
             }
             else
             {
-                Debug.Log("player == null");
+                Debug.Log("target != null");
             }
 
-            Debug.Log($"Deal damage to {player.player_name}");
+            Debug.Log($"Deal damage to {target.player_name}");
 
             // Если это локальный игрок
-            if (player.playerId == Geekplay.Instance.PlayerData.id)
+            if (target.playerId == Geekplay.Instance.PlayerData.id)
             {
                 Debug.Log($"You were hit by {response.attacker_id} for {response.amount} damage. New HP: {response.new_hp}");
                 // Можно обновить визуальный HUD, эффекты и т.д.
             }
 
             // Обновляем HP игрока
-            player.isAlive = response.new_hp > 0;
+            target.isAlive = response.new_hp > 0;
+            target.hp = response.new_hp;
+            target.armor = response.new_armor;
             // Можно добавить поле currentHP, если его нет:
             // player.currentHP = response.new_hp;
 
             // Визуализация
-            UpdatePlayerVisualization(player);
+            UpdatePlayerVisualization(target);
 
-            if (!player.isAlive)
+            if (!target.isAlive)
             {
-                Debug.Log($"{player.player_name} died from {response.attacker_id}");
+                Debug.Log($"{target.player_name} died from {response.attacker_id}");
                 // Можно вызвать анимацию смерти и прочее
             }
         });

@@ -2,6 +2,7 @@
 const { GameConstants, Constants } = require('../config/constants');
 const WebSocket = require('ws');
 const playerRedisService = require('../services/playerRedisService');
+const playerInGameController = require('./playerInGameController');
 
 class RoomManager {
     constructor() {
@@ -352,7 +353,8 @@ class RoomManager {
         const realPlayers = room.players || [];
         const allPlayersInfo = await this.getPlayersWithInfo(realPlayers, room.id);
         
-        console.log(allPlayersInfo);
+        console.log(`[Hp & Armor] ${allPlayersInfo.hp} ${allPlayersInfo.armor}`);
+        console.log(`[allPlayersInfo] ${allPlayersInfo}`);
         
         // Формируем payload в старом формате
         const matchStartPayload = {
@@ -370,7 +372,9 @@ class RoomManager {
                 isReady: p.isReady || false,
                 isAlive: p.isAlive || true,
                 kills: p.kills || 0,
-                deaths: p.deaths || 0
+                deaths: p.deaths || 0,
+                hp: p.hp,
+                armor: p.armor
             })),
             bots: room.bots || []
         };
@@ -478,6 +482,11 @@ class RoomManager {
             const playerInfo = await playerRedisService.getPlayerFromRedis(pid);
             if (!playerInfo) continue;
 
+            const playerStats = await playerInGameController.getPlayerStats(pid, roomId);
+            if (!playerStats) continue;
+            
+           console.log(`✅[playerStats] ${playerStats}`);
+
             const heroData = heroDataMap[pid] || {};
 
             playersWithInfo.push({
@@ -487,7 +496,9 @@ class RoomManager {
                 hero_id: heroData.hero_id || 0,
                 hero_skin: heroData.hero_skin || 0,
                 hero_level: heroData.hero_level || 1,
-                hero_rank: heroData.hero_rank || 1
+                hero_rank: heroData.hero_rank || 1,
+                hp: playerStats.hp,
+                armor: playerStats.armor
             });
         }
 

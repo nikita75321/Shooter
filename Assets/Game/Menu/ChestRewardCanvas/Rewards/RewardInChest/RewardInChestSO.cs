@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -29,8 +28,22 @@ public class RewardInChestSO : ScriptableObject
     public int id;
     private bool IsShoodIdShow => (rewardType == RewardInChestType.HeroCard || rewardType == RewardInChestType.Hero)
                                     || (!IsRandomSkin);
-    
+
     [ShowIf("IsRandomSkin")]
     public RandomSkin[] randomSkins;
     private bool IsRandomSkin => rewardType == RewardInChestType.RandomSkin;
+
+    public int weight = 1;
+
+    public void OnValidate()
+    {
+        switch (rewardType)
+        {
+            case RewardInChestType.Money: weight = 15; break;
+            case RewardInChestType.DonatMoney: weight = 25; break;
+            case RewardInChestType.HeroCard: weight = 40; break;
+            case RewardInChestType.RandomSkin: weight = 60; break;
+            case RewardInChestType.Hero: weight = 90; break;
+        }
+    }
 }

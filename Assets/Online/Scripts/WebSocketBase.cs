@@ -599,7 +599,7 @@ public class WebSocketBase : MonoBehaviour
             case "player_death_response":
                 HandlePlayerDeath(message);
                 break;
-
+            case "player_damaged": Debug.Log("666"); break;
 
             case "player_stats_update_response":
                 HandlePlayerStatsUpdateResponse(message);
@@ -1394,6 +1394,7 @@ public class WebSocketBase : MonoBehaviour
         public string target_id;
         public int amount;
         public int new_hp;
+        public int new_armor;
     }
 
     [Serializable]
