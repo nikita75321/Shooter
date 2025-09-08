@@ -4,6 +4,8 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System;
+using Newtonsoft.Json;
+using SingularityGroup.HotReload;
 
 [Serializable]
 public class RoomInfo
@@ -700,7 +702,7 @@ public class OnlineRoom : MonoBehaviour
     private void HandlePlayerDamaged(WebSocketBase.PlayerDamagedResponse response)
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
-        {
+        {        
             if (!IsInRoom)
             {
                 return;
@@ -728,7 +730,7 @@ public class OnlineRoom : MonoBehaviour
             // Если это локальный игрок
             if (target.playerId == Geekplay.Instance.PlayerData.id)
             {
-                Debug.Log($"You were hit by {response.attacker_id} for {response.amount} damage. New HP: {response.new_hp}");
+                Debug.Log($"You were hit by {response.attacker_id} for {response.damage} damage. New HP: {response.new_hp}");
                 // Можно обновить визуальный HUD, эффекты и т.д.
             }
 

@@ -109,6 +109,7 @@ class DamageController {
                 //     'hp', hp.toString(),
                 //     'armor', armor.toString()
                 // );
+
                 // --- запись в Redis через pipeline ---
                 console.log("Saving to redis:", { hp, armor });
                 pipeline.hSet(statsKey, 'hp', hp);
@@ -163,16 +164,22 @@ class DamageController {
                     timestamp: Date.now()
                 });
                 console.log(`Notified room players about damage to ${playerId}`);
+                
+                ws.send(JSON.stringify({
+                    action: 'deal_damage_response',
+                    success: true,
+                    attacker_id,
+                    target_id: playerId,
+                    damage,
+                    new_hp: hp,
+                    new_armor: armor,
+                    room_id
+                }));
+                console.log(`Damage response sent to attacker ${attacker_id}`);
             }
 
-            ws.send(JSON.stringify({
-                action: 'deal_damage_response',
-                success: true,
-                attacker_id,
-                damage,
-                room_id
-            }));
-            console.log(`Damage response sent to attacker ${attacker_id}`);
+            // вот тут выполняем все команды разом
+            await pipeline.exec();
 
         } catch (error) {
             console.error('Damage handling error:', error);

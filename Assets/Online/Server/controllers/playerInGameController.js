@@ -1,12 +1,12 @@
 // playerInGameController.js
-const { Constants } = require('../config/constants');
+const {Constants,GameConstants} = require('../config/constants');
 
 const Utils = require('../services/utils');
 const playerRedisService = require('../services/playerRedisService')
 
 class PlayerInGameController {
     constructor() {
-        this.matchTTL = 60 * 60 * 2; // 2 часа для данных матча
+        this.matchTTL = 30 * 30; // 15 минут для данных матча
     }
 
     async handleUpdatePlayerTransform(ws, data) {
@@ -151,21 +151,24 @@ class PlayerInGameController {
 
     async updatePlayerStats(playerId, roomId, data) {
         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
-        const statsKey = `${Constants.matchKey}${roomId}:stats`;
-
+        const statsKey = `${Constants.playerStats}${roomId}:stats`;
+        
         const currentStats = await this.getPlayerStats(playerId, roomId);
 
         const kills  = Number.isFinite(parseInt(data.kills))  ? parseInt(data.kills)  : (currentStats.kills  ?? 0);
         const deaths = Number.isFinite(parseInt(data.deaths)) ? parseInt(data.deaths) : (currentStats.deaths ?? 0);
         const damage = Number.isFinite(parseFloat(data.damage)) ? parseFloat(data.damage) : (currentStats.damage ?? 0);
+        const new_hp = parseFloat(data.new_hp);
+        const new_armor = parseFloat(data.new_armor);
 
         const updatedStats = {
-            kills,
-            deaths,
-            damage,
-            is_alive: (typeof data.is_alive === "boolean") ? data.is_alive : (currentStats.is_alive ?? true),
-            score: (kills * 100) + damage,
-            last_update: Date.now()
+            new_hp: new_hp.toString(),
+            new_armor: new_armor.toString(),
+            kills: kills.toString(),
+            deaths: deaths.toString(),
+            damage: damage.toString(),
+            is_alive: ((typeof data.is_alive === "boolean") ? data.is_alive : (currentStats.is_alive ?? true)).toString(),
+            last_update: Date.now().toString()
         };
 
         // Подстраховка от NaN
@@ -174,12 +177,13 @@ class PlayerInGameController {
         }
 
         const pipeline = global.redisClient.multi();
-        pipeline.hSet(matchKey, 'stats', JSON.stringify(updatedStats));
+        pipeline.hSet(matchKey, updatedStats);
         pipeline.expire(matchKey, this.matchTTL);
 
-        console.log("ZADD debug:", statsKey, updatedStats.score, playerId.toString(), typeof updatedStats.score);
+        // console.log("ZADD debug:", statsKey, updatedStats.score, playerId.toString());
         
-        pipeline.zAdd(statsKey, [{ score: updatedStats.score, value: playerId.toString() }]);
+        // pipeline.zAdd(statsKey, [{ score: updatedStats.score, value: playerId.toString() }]);
+        pipeline.hSet(statsKey, updatedStats);
         pipeline.expire(statsKey, this.matchTTL);
 
         await pipeline.exec();
@@ -243,7 +247,7 @@ class PlayerInGameController {
             const matchKey = `player_stats:${roomId}:${playerId}`;
             const stats = await global.redisClient.hGetAll(matchKey);
 
-            console.log(`[getPlayerStats] matchKey - ${matchKey}`, stats);
+            // console.log(`[getPlayerStats] matchKey - ${matchKey}`, stats);
 
             if (!stats || Object.keys(stats).length === 0) {
                 return {
