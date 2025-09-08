@@ -237,9 +237,7 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnPlayerTransformUpdateResponse += HandlePlayerTransformUpdateResponse;
         WebSocketBase.Instance.OnPlayerStatsUpdateResponse += HandlePlayerStatsUpdateResponse;
 
-        WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;
-
-        
+        WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;        
     }
 
     private void Start()
@@ -437,6 +435,22 @@ public class OnlineRoom : MonoBehaviour
         if (enemy == null) return;
 
         enemy.SetNetworkState(player.position, player.rotation);
+    }
+    private void UpdatePlayerHp(WebSocketBase.PlayerDamagedResponse response)
+    {
+        if (response.target_id == Geekplay.Instance.PlayerData.id)
+        {
+            var player = GetLocalPlayerInfo();
+            player.hp = response.new_hp;
+            Level.Instance.currentLevel.player.Character.Health.TakeDamage(response.damage);
+        }
+        else
+        {
+            Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
+            var player = GetPlayerInfo(response.target_id);
+            Debug.Log(enemy);
+            enemy.Health.TakeDamage(response.damage);
+        }
     }
 
     public PlayerInGameInfo GetLocalPlayerInfo()
@@ -722,10 +736,8 @@ public class OnlineRoom : MonoBehaviour
             }
             else
             {
-                Debug.Log("target != null");
+                Debug.Log($"Deal damage to {target.player_name}");
             }
-
-            Debug.Log($"Deal damage to {target.player_name}");
 
             // Если это локальный игрок
             if (target.playerId == Geekplay.Instance.PlayerData.id)
@@ -743,6 +755,12 @@ public class OnlineRoom : MonoBehaviour
 
             // Визуализация
             UpdatePlayerVisualization(target);
+            // Обработка Здоровья и брони
+            // if (response.attacker_id != Geekplay.Instance.PlayerData.id)
+            // {
+                UpdatePlayerHp(response);
+                Debug.Log("??????????????");
+            // }
 
             if (!target.isAlive)
             {

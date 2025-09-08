@@ -158,7 +158,7 @@ class DamageController {
                     action: 'player_damaged',
                     attacker_id,
                     target_id: playerId,
-                    amount: damage,
+                    damage: damage,
                     new_hp: Math.max(hp, 0),
                     new_armor: Math.max(armor, 0),
                     timestamp: Date.now()

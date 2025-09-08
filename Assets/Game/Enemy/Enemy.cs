@@ -195,6 +195,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamageAnim()
     {
+        Debug.Log("TakeDamageAnim - enemy");
         int randomAnimation = Random.Range(0, 2); // 0 или 1
         animator.SetInteger("RandomHit", randomAnimation);
         animator.SetTrigger("Hit");

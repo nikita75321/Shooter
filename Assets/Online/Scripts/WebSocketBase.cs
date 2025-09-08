@@ -594,15 +594,15 @@ public class WebSocketBase : MonoBehaviour
                 break;
 
             case "deal_damage_response":
-                // Debug.Log("000");
-                HandlePlayerDamaged(message);
+                Debug.Log("000");
+                // HandlePlayerDamaged(message);
                 break;
             case "player_death_response":
                 HandlePlayerDeath(message);
                 break;
             case "player_damaged":
-                Debug.Log("666");
-                // HandlePlayerDamaged(message);
+                // Debug.Log("666");
+                HandlePlayerDamaged(message);
                 break;
 
             case "player_stats_update_response":
@@ -1417,8 +1417,10 @@ public class WebSocketBase : MonoBehaviour
         {
             var response = JsonConvert.DeserializeObject<PlayerDamagedResponse>(
                 JsonConvert.SerializeObject(message));
-            Debug.Log(JsonConvert.ToString(response));
-            OnPlayerDamaged?.Invoke(response); // можно через ивент повесить UI
+
+            // Debug.Log(JsonConvert.SerializeObject(response, Formatting.Indented));
+
+            OnPlayerDamaged?.Invoke(response);
         }
         catch (Exception e)
         {

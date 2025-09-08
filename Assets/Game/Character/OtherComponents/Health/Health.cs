@@ -42,7 +42,7 @@ public class Health : MonoBehaviour
     public UnityEvent OnRevive;
     public event Action<float> OnHealthChanged;
 
-    private float currentHealth;
+    [SerializeField] private float currentHealth;
     private float timeSinceLastDamage;
     private bool isInvulnerable;
 
@@ -168,9 +168,16 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage, float armorPenetration)
+    public void TakeDamage(float damage, float armorPenetration = 0)
     {
-        if (damage < 0 || IsDead) return;
+        if (damage < 0 || IsDead)
+        {
+            return;
+        }
+        else
+        {
+            Debug.Log("Allive");
+        }
 
         timeSinceLastDamage = 0f;
         OnTakeDamage?.Invoke();
