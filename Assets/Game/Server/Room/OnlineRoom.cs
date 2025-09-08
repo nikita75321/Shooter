@@ -79,8 +79,10 @@ public class PlayerInGameInfo
     public int deaths;
     public int hero_rank;
     public int hero_level;
-    public int hp;
-    public int armor;
+    public float hp;
+    public float armor;
+    public float max_hp;
+    public float max_armor;
 
     public PlayerInGameInfo(string playerId, string player_name, int rating = -1, int heroId = -1)
     {

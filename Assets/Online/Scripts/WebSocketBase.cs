@@ -1204,10 +1204,6 @@ public class WebSocketBase : MonoBehaviour
 
             foreach (var playerResp in response.players)
             {
-                // Debug.Log($"playerResp: playerResp.heroId - {playerResp.hero_id}");
-                // Debug.Log($"playerResp.heroSkin - {playerResp.hero_skin}");
-                // Debug.Log($"playerResp.hero_level - {playerResp.hero_level}");
-                // Debug.Log($"playerResp.hero_rank - {playerResp.hero_rank}");
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,
@@ -1215,6 +1211,10 @@ public class WebSocketBase : MonoBehaviour
                     playerResp.hero_id
                 )
                 {
+                    hp = playerResp.hp,
+                    armor = playerResp.armor,
+                    max_hp = playerResp.max_hp,
+                    max_armor = playerResp.max_armor,
                     hero_skin = playerResp.hero_skin,
                     hero_level = playerResp.hero_level,
                     hero_rank = playerResp.hero_rank,

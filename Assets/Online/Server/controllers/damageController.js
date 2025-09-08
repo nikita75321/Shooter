@@ -118,7 +118,7 @@ class DamageController {
 
                 // Обновляем статистику стрелка
                 const attackerStats = await playerInGameController.getPlayerStats(attacker_id, room_id);
-                console.log(attackerStats);
+                console.log(`[attackerStats] ` + attackerStats);
                 
                 await playerInGameController.updatePlayerStats(attacker_id, room_id, {
                     damage: attackerStats.damage + damage

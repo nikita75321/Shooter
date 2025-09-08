@@ -374,7 +374,9 @@ class RoomManager {
                 kills: p.kills || 0,
                 deaths: p.deaths || 0,
                 hp: p.hp,
-                armor: p.armor
+                armor: p.armor,
+                max_hp: p.max_hp,
+                max_armor: p.max_armor
             })),
             bots: room.bots || []
         };
@@ -484,8 +486,7 @@ class RoomManager {
 
             const playerStats = await playerInGameController.getPlayerStats(pid, roomId);
             if (!playerStats) continue;
-            
-           console.log(`✅[playerStats] ${playerStats}`);
+            console.log(`✅[playerStats] - `, playerStats);
 
             const heroData = heroDataMap[pid] || {};
 
@@ -498,7 +499,9 @@ class RoomManager {
                 hero_level: heroData.hero_level || 1,
                 hero_rank: heroData.hero_rank || 1,
                 hp: playerStats.hp,
-                armor: playerStats.armor
+                armor: playerStats.armor,
+                max_hp: playerStats.max_hp,
+                max_armor: playerStats.max_armor,
             });
         }
 
@@ -525,11 +528,10 @@ class RoomManager {
         }
     }
 
-    async publishToPlayer(playerId, data, roomId, heroId) {
+    async publishToPlayer(playerId, data, roomId) {
         if (!global.redisClient) return;
 
         const message = { playerId, data, roomId };
-        if (heroId !== undefined) message.heroId = heroId;
 
         await global.redisClient.publish('websocket_messages', JSON.stringify(message));
         console.log(`Published ${data.action} to Redis for player ${playerId}`);

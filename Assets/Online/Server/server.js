@@ -74,7 +74,7 @@ global.connectedPlayers = new Map();
             } catch (err) {
                 console.error('Periodic clan sync failed:', err);
             }
-        }, 1 * 60 * 1000); // каждую 1 минут
+        }, 1 * 60 * 5000); // каждые 5 минут
 
         // ================== Start server ==================
         server.listen(port, () => console.log(`Server running on port ${port}`));

@@ -178,7 +178,7 @@ class PlayerInGameController {
         pipeline.expire(matchKey, this.matchTTL);
 
         console.log("ZADD debug:", statsKey, updatedStats.score, playerId.toString(), typeof updatedStats.score);
-
+        
         pipeline.zAdd(statsKey, [{ score: updatedStats.score, value: playerId.toString() }]);
         pipeline.expire(statsKey, this.matchTTL);
 
@@ -217,29 +217,75 @@ class PlayerInGameController {
     //     return updatedStats;
     // }
 
+    //======================Рабочий вариавнт======================
+    // async getPlayerStats(playerId, roomId) {
+    //     try {
+    //         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
+    //         const statsJson = await global.redisClient.hGet(matchKey, 'stats');
+
+    //         return statsJson ? JSON.parse(statsJson) : {
+    //             kills: 0,
+    //             deaths: 0,
+    //             damage: 0,
+    //             is_alive: true,
+    //             score: 0,
+    //             last_update: Date.now()
+    //         };
+    //     } catch (error) {
+    //         console.error(`Error getting stats for player ${playerId}:`, error);
+    //         return { kills: 0, deaths: 0, damage: 0, is_alive: true, score: 0, last_update: Date.now() };
+    //     }
+    // }
+    //======================Рабочий вариавнт======================
+
     async getPlayerStats(playerId, roomId) {
         try {
             const matchKey = `player_stats:${roomId}:${playerId}`;
-            const statsJson = await global.redisClient.hGet(matchKey, 'stats');
-            
-            console.log(`[getPlayerStats] matchKey - ${matchKey}`);
-            
-            return statsJson ? JSON.parse(statsJson) : {
-                hp,
-                max_hp,
-                armor,
-                max_armor,
-                vision,
-                kills: 0,
-                deaths: 0,
-                damage: 0,
-                // is_alive: true,
-                // score: 0,
+            const stats = await global.redisClient.hGetAll(matchKey);
+
+            console.log(`[getPlayerStats] matchKey - ${matchKey}`, stats);
+
+            if (!stats || Object.keys(stats).length === 0) {
+                return {
+                    hp: 0,
+                    max_hp: 0,
+                    armor: 0,
+                    max_armor: 0,
+                    vision: 0,
+                    kills: 0,
+                    deaths: 0,
+                    damage: 0,
+                    respawn_time: 0,
+                    last_update: Date.now()
+                };
+            }
+
+            return {
+                hp: parseFloat(stats.hp ?? 0),
+                max_hp: parseFloat(stats.max_hp ?? 0),
+                armor: parseFloat(stats.armor ?? 0),
+                max_armor: parseFloat(stats.max_armor ?? 0),
+                vision: parseInt(stats.vision ?? 0, 10),
+                kills: parseInt(stats.kills ?? 0, 10),
+                deaths: parseInt(stats.deaths ?? 0, 10),
+                damage: parseFloat(stats.damage ?? 0),
+                respawn_time: parseInt(stats.respawn_time ?? 0, 10),
                 last_update: Date.now()
             };
         } catch (error) {
             console.error(`Error getting stats for player ${playerId}:`, error);
-            return { kills: 0, deaths: 0, damage: 0, is_alive: true, score: 0, last_update: Date.now() };
+            return {
+                hp: 0,
+                max_hp: 0,
+                armor: 0,
+                max_armor: 0,
+                vision: 0,
+                kills: 0,
+                deaths: 0,
+                damage: 0,
+                respawn_time: 0,
+                last_update: Date.now()
+            };
         }
     }
 
