@@ -8,7 +8,7 @@ class DamageController {
     constructor() {
         this.matchTTL = 60 * 60 * 2;
         this.maxShotDistance = 50;   // дальность стрельбы
-        this.playerHitRadius = 1.2;  // радиус попадания
+        this.playerHitRadius = 1.3;  // радиус попадания
     }
 
     // console.log('handleDealDamage called', data);
@@ -187,28 +187,32 @@ class DamageController {
         }
     }
 
-    // Проверка попадания (луч → сфера)
     checkHit(origin, dir, targetPos) {
-        // console.log('CheckHit:', { origin, dir, targetPos, proj, distSq, maxShotDistance: this.maxShotDistance, playerHitRadius: this.playerHitRadius });
-
+        // Игнорируем высоту (y)
         const toTarget = {
             x: targetPos.x - origin.x,
-            y: targetPos.y - origin.y,
             z: targetPos.z - origin.z
         };
 
-        const proj = this.dot(toTarget, dir);
+        const dir2D = { x: dir.x, z: dir.z };
+        const len = Math.sqrt(dir2D.x * dir2D.x + dir2D.z * dir2D.z);
+        if (len === 0) return false;
+
+        // нормализуем
+        dir2D.x /= len;
+        dir2D.z /= len;
+
+        const proj = toTarget.x * dir2D.x + toTarget.z * dir2D.z;
         if (proj < 0 || proj > this.maxShotDistance) return false;
 
         const closestPoint = {
-            x: origin.x + dir.x * proj,
-            y: origin.y + dir.y * proj,
-            z: origin.z + dir.z * proj
+            x: origin.x + dir2D.x * proj,
+            z: origin.z + dir2D.z * proj
         };
 
-        const distSq = this.distanceSquared(closestPoint, targetPos);
-
-        console.log('CheckHit:', { origin, dir, targetPos, proj, distSq });
+        const dx = closestPoint.x - targetPos.x;
+        const dz = closestPoint.z - targetPos.z;
+        const distSq = dx * dx + dz * dz;
 
         return distSq <= this.playerHitRadius * this.playerHitRadius;
     }
