@@ -68,7 +68,9 @@ public class PlayerData
     public int killsCount;
 
     [Title("GAME SETTINGS")]
-    public float volume;
+    public float masterVolume;
+    public float musicVolume;
+    public float sfxVolume;
     public float sensativity;
     public int graphics;
     

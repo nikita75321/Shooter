@@ -40,6 +40,7 @@ public class Cheat : MonoBehaviour
     [ShowInInspector] private readonly KeyCode[] _ammoAdd = { KeyCode.R, KeyCode.UpArrow, KeyCode.UpArrow };
     [ShowInInspector] private readonly KeyCode[] _ammoAddValue = { KeyCode.R, KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.UpArrow };
     [ShowInInspector] private readonly KeyCode[] _getDamage = { KeyCode.Z, KeyCode.X, KeyCode.C };
+    public float damage;
     [ShowInInspector] private readonly KeyCode[] _timeScale01f = { KeyCode.DownArrow, KeyCode.Alpha0, KeyCode.Alpha1 };
     [ShowInInspector] private readonly KeyCode[] _timeScale05f = { KeyCode.DownArrow, KeyCode.Alpha0, KeyCode.Alpha5 };
     [ShowInInspector] private readonly KeyCode[] _timeScaleNormalMotion = { KeyCode.UpArrow, KeyCode.UpArrow, KeyCode.UpArrow };
@@ -206,7 +207,7 @@ public class Cheat : MonoBehaviour
         }
         if (CheckSequence(_getDamage))
         {
-            health.TakeDamage(20, 0);
+            health.NewTakeDamage(damage);
             Debug.Log("(Cheat) Take Damage!");
             return;
         }

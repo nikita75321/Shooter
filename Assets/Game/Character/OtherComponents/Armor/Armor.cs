@@ -56,12 +56,12 @@ public class Armor : MonoBehaviour
 
     public float TakeDamage(float damage, float armorPenetration)
     {
-        float remainingDamage = damage * ( 1 + armorPenetration);
+        float remainingDamage = damage * (1 + armorPenetration);
         if (currentArmor > 0)
         {
-            var armorDamage = Mathf.Min(remainingDamage , currentArmor);
+            var armorDamage = Mathf.Min(remainingDamage, currentArmor);
 
-            Debug.Log(armorDamage +" - armor damage");
+            Debug.Log(armorDamage + " - armor damage");
             currentArmor -= armorDamage;
             remainingDamage -= armorDamage;
         }
@@ -84,5 +84,10 @@ public class Armor : MonoBehaviour
         {
             currentArmor = MaxArmor;
         }
+    }
+
+    public void UpdateArmor()
+    {
+        currentArmor = initMaxArmor;
     }
 }

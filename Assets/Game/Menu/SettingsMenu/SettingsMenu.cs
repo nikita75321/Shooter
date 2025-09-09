@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class SettingsMenu : MonoBehaviour
 {
     [Header("Volume Settings")]
-    [SerializeField] private Slider volumeSlider;
+    [SerializeField] private Slider masterSlider;
+    [SerializeField] private Slider musicSlider;
+    [SerializeField] private Slider sfxSlider;
 
     [Header("Camera Sensitivity")]
     [SerializeField] private Slider sensitivitySlider;
@@ -27,8 +29,12 @@ public class SettingsMenu : MonoBehaviour
         playerData = Geekplay.Instance.PlayerData;
 
         // Настройка громкости
-        volumeSlider.value = playerData.volume;
-        volumeSlider.onValueChanged.AddListener(SetVolume);
+        masterSlider.value = playerData.masterVolume;
+        masterSlider.onValueChanged.AddListener(SetMasterVolume);
+        musicSlider.value = playerData.musicVolume;
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxSlider.value = playerData.sfxVolume;
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
 
         // Настройка чувствительности
         sensitivitySlider.value = playerData.sensativity;
@@ -37,14 +43,24 @@ public class SettingsMenu : MonoBehaviour
         // Настройка графики
         InitGraphicsSettings();
     }
+    private void OnDestroy()
+    {
+        masterSlider.onValueChanged.RemoveListener(SetMasterVolume);
+        musicSlider.onValueChanged.RemoveListener(SetMusicVolume);
+        sfxSlider.onValueChanged.RemoveListener(SetSFXVolume);
+
+        lowGraphicsToggle.onValueChanged.RemoveAllListeners();
+        mediumGraphicsToggle.onValueChanged.RemoveAllListeners();
+        highGraphicsToggle.onValueChanged.RemoveAllListeners();
+    }
 
     private void InitGraphicsSettings()
     {
-        lowGraphicsToggle.onValueChanged.AddListener((isOn) => { if(isOn) SetGraphicsQuality(0); });
-        mediumGraphicsToggle.onValueChanged.AddListener((isOn) => { if(isOn) SetGraphicsQuality(1); });
-        highGraphicsToggle.onValueChanged.AddListener((isOn) => { if(isOn) SetGraphicsQuality(2); });
+        lowGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(0); });
+        mediumGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(1); });
+        highGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(2); });
 
-        switch(playerData.graphics)
+        switch (playerData.graphics)
         {
             case 0: lowGraphicsToggle.isOn = true; break;
             case 1: mediumGraphicsToggle.isOn = true; break;
@@ -52,10 +68,22 @@ public class SettingsMenu : MonoBehaviour
         }
     }
 
-    public void SetVolume(float value)
+    public void SetMasterVolume(float value)
     {
-        playerData.volume = value;
-        AudioListener.volume = value;
+        playerData.masterVolume = value;
+        AudioManager.Instance.SetMasterVolume(value);
+        Geekplay.Instance.Save();
+    }
+    public void SetMusicVolume(float value)
+    {
+        playerData.musicVolume = value;
+        AudioManager.Instance.SetMusicVolume(value);
+        Geekplay.Instance.Save();
+    }
+    public void SetSFXVolume(float value)
+    {
+        playerData.sfxVolume = value;
+        AudioManager.Instance.SetSFXVolume(value);
         Geekplay.Instance.Save();
     }
 

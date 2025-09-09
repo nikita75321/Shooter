@@ -143,7 +143,7 @@ public class GameEndCanvas : MonoBehaviour
         int clanPoint = playerData.clanPoints; 
         if (playerData.clanName != string.Empty)
         {
-            Debug.Log("111111");
+            // Debug.Log("111111");
             if (playerData.isParty)
             {
                 clanPoint = player.overallKills * 5 + player.reviveCount * 5 + 1 + 2;

@@ -129,7 +129,7 @@ public class Health : MonoBehaviour
         if (!isEnemy && !isAlly)
         OnDie.AddListener(() =>
         {
-            Debug.Log(101);
+            // Debug.Log(101);
             player.Character.aimingCone.gameObject.SetActive(false);
             player.Character.Health.aidKit.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.None;
@@ -206,9 +206,14 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void NewTakeDamage(float value)
+    {
+        currentHealth =- value;
+        ChangeHp(currentHealth);
+    }
     public void ChangeHp(float value)
     {
-        Debug.Log($"ChangeHp: new Hp - {value}");
+        // Debug.Log($"ChangeHp: new Hp - {value}");
 
         if (value > 0)
         {

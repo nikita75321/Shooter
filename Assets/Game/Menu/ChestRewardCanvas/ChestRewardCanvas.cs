@@ -86,6 +86,10 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
     private List<Tween> activeRewardTweens = new();
     private Sequence rewardsSequence;
 
+    // [Header("Sounds")]
+    // [SerializeField] private AudioSource audioSource;
+    // [SerializeField] private AudioClip 
+
     private void Awake()
     {
         Instance = this;
@@ -307,7 +311,8 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
     public void OpenCurrentChest()
     {
-        // Debug.Log("Open Chest");        
+        InstanceSoundUI.Instance.PlayOpenChestSound();
+        // Debug.Log("Open Chest");
         if (rewardsInChest.Count == 0)
         {
             Debug.Log("No chest or rewards left");
@@ -352,6 +357,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
     private void ShowReward(RewardConfig rewardCard)
     {
+        InstanceSoundUI.Instance.PlayGetItemSound();
         // Debug.Log(rewardCard.idSkin);
         if (currentReward != null)
             currentReward.SetActive(false);

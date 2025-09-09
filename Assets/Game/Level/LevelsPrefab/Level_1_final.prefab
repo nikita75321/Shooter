@@ -15106,7 +15106,7 @@ Transform:
   m_GameObject: {fileID: 4166632961033100140}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -20.46, y: 0.6, z: -1.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33897,6 +33897,10 @@ PrefabInstance:
       propertyPath: OnDie.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 8311292777050953594}
+    - target: {fileID: 2708785207497487065, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 3426944974293793793, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -33933,6 +33937,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 4252819531430718443, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 4636950745459428417, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -35245,6 +35253,14 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 428514365441564287, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 3270166620360052292, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 3505231976036458752, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.53
@@ -36085,6 +36101,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 4509455442201801425, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 4813552433093131943, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: m_Camera
       value: 
@@ -36101,6 +36121,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7368125086377429053, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 7442168858788926201, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
       value: 
@@ -38987,6 +39011,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8921048830314778565}
     m_Modifications:
+    - target: {fileID: 60802222986102936, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 2723928806071193080, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: aidKit
       value: 
@@ -39239,6 +39267,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 8142346360778947449, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -40663,6 +40695,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 5311223279537568009, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 5984245578970565109, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: player
       value: 
@@ -40687,6 +40723,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 7956714067432971466, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 8963534402530933435, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: m_Camera
       value: 
@@ -41939,6 +41979,10 @@ PrefabInstance:
       propertyPath: skinsHead.Array.data[8].skinPrefab
       value: 
       objectReference: {fileID: 610771637658481831}
+    - target: {fileID: 3013464667186960487, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 4085893109431772590, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.0200005
@@ -42087,6 +42131,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 8180050042251990058, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -42488,6 +42536,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 4003585136991374891, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 4508389070707430449, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: aidKit
       value: 
@@ -42552,6 +42604,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7552825390510647004, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 8681422359673565844, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: m_Camera
       value: 
@@ -43280,6 +43336,14 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 6089000797292195973, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: animatorSecondary
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 6429848181521552190, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
     - target: {fileID: 6983039827411719334, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_Camera
       value: 

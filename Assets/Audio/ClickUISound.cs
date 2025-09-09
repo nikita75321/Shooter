@@ -5,6 +5,6 @@ public class ClickUISound : MonoBehaviour, IPointerClickHandler
 {
     public void OnPointerClick(PointerEventData eventData)
     {
-        InstanceSoundUI.Instance.PlaySound();
+        InstanceSoundUI.Instance.PlayClickSound();
     }
 }

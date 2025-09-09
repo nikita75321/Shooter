@@ -39810,7 +39810,7 @@ Animator:
   m_GameObject: {fileID: 6774261562347116277}
   m_Enabled: 0
   m_Avatar: {fileID: 9000000, guid: 9f078227c6f09b54392514bfaa25c741, type: 3}
-  m_Controller: {fileID: 9100000, guid: a76731393e6ac1245ac1095ab2f84c86, type: 2}
+  m_Controller: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -39889,6 +39889,7 @@ MonoBehaviour:
   OnRevive:
     m_PersistentCalls:
       m_Calls: []
+  currentHealth: 0
   isEnemy: 1
   isAlly: 0
 --- !u!136 &8764323603134821349
