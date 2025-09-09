@@ -8,7 +8,7 @@ class DamageController {
     constructor() {
         this.matchTTL = 60 * 60 * 2;
         this.maxShotDistance = 50;   // дальность стрельбы
-        this.playerHitRadius = 1.8;  // радиус попадания
+        this.playerHitRadius = 1.2;  // радиус попадания
     }
 
     // console.log('handleDealDamage called', data);
