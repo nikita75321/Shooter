@@ -36,6 +36,11 @@ public class ArmorBar : MonoBehaviour
         UpdatePositionAndRotation();
     }
 
+    public void Init()
+    {
+        armorbarTxt.text = $"{Mathf.RoundToInt(currentValue)} / {Mathf.RoundToInt(Armor.MaxArmor)}";
+    }
+
     private void Update()
     {
         UpdatePositionAndRotation();

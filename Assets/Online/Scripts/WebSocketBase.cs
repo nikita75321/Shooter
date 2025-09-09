@@ -1208,6 +1208,8 @@ public class WebSocketBase : MonoBehaviour
 
             foreach (var playerResp in response.players)
             {
+                Debug.Log("playerResp.max_hp "+ playerResp.max_hp);
+                Debug.Log("playerResp.max_armor "+ playerResp.max_armor);
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,

@@ -140,7 +140,7 @@ public class Health : MonoBehaviour
         if (!isEnemy && !isAlly)
         OnDie.RemoveListener(() =>
         {
-            Debug.Log(202);
+            // Debug.Log(202);
             player.Character.aimingCone.gameObject.SetActive(false);
             player.Character.Health.aidKit.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.None;
@@ -172,6 +172,7 @@ public class Health : MonoBehaviour
     {
         if (damage < 0 || IsDead)
         {
+            Debug.Log("IsDead");
             return;
         }
         else
@@ -193,7 +194,7 @@ public class Health : MonoBehaviour
         {
             CurrentHealth -= damageToHealth;
             PlaySound(damageSound);
-            // Debug.Log($"{gameObject.name} took {damageToHealth} damage. Health: {currentHealth}");
+            Debug.Log($"{gameObject.name} took {damageToHealth} damage. Health: {currentHealth}");
         }
 
         if (player != null && damage < 100000)
@@ -202,6 +203,24 @@ public class Health : MonoBehaviour
             {
                 player.maxDamage = (int)damage;
             }
+        }
+    }
+
+    public void ChangeHp(float value)
+    {
+        Debug.Log($"ChangeHp: new Hp - {value}");
+
+        if (value > 0)
+        {
+            OnTakeDamage?.Invoke();
+
+            PlaySound(damageSound);
+
+            CurrentHealth = value;
+        }
+        else
+        {
+            Die();
         }
     }
 

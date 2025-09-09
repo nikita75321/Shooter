@@ -68,7 +68,11 @@ public class Armor : MonoBehaviour
 
         Debug.Log($"{gameObject.name} took {damage} damage. Armor left: {currentArmor} Final damage:{remainingDamage}");
         return remainingDamage;
-    }    
+    }
+    public void ChangeArmor(float value)
+    {
+        currentArmor = value;
+    }
 
     public void ArmorIncrease(float value)
     {

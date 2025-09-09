@@ -34,9 +34,14 @@ public class Healthbar : MonoBehaviour
     {
         mainCamera = Camera.main;
         // UpdatePositionAndRotation();
-        
+
         // Инициализируем начальное значение
         fillImage.fillAmount = Health.CurrentHealth / Health.MaxHealth;
+        hpbarTxt.text = $"{Mathf.RoundToInt(Health.CurrentHealth)} / {Mathf.RoundToInt(Health.MaxHealth)}";
+    }
+
+    public void Init()
+    {
         hpbarTxt.text = $"{Mathf.RoundToInt(Health.CurrentHealth)} / {Mathf.RoundToInt(Health.MaxHealth)}";
     }
 
@@ -65,15 +70,16 @@ public class Healthbar : MonoBehaviour
 
     private void HandleHealthChanged(float newHealth)
     {
+        Debug.Log($"HandleHealthChanged (slider) - {newHealth}");
         // Отменяем предыдущую анимацию, если она была
         healthTween?.Kill();
-        
+
         // Анимация заполнения healthbar
         healthTween = DOVirtual.Float(
-            fillImage.fillAmount, 
-            newHealth / Health.MaxHealth, 
-            animationDuration, 
-            value => 
+            fillImage.fillAmount,
+            newHealth / Health.MaxHealth,
+            animationDuration,
+            value =>
             {
                 fillImage.fillAmount = value;
                 hpbarTxt.text = $"{Mathf.RoundToInt(value * Health.MaxHealth)} / {Mathf.RoundToInt(Health.MaxHealth)}";

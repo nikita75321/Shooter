@@ -2,10 +2,12 @@ using DG.Tweening;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Animator))]
 public class CharacterControllerCustom : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Player player;
+    public CharacterController characterController;
     public Revive revive;
     public GameObject revievButton;
     public Ally ally;
@@ -60,6 +62,7 @@ public class CharacterControllerCustom : MonoBehaviour
     private void OnValidate()
     {
         if (animator == null) animator = GetComponent<Animator>();
+        if (characterController == null) characterController = GetComponent<CharacterController>();
         // if (joystick == null) joystick = FindAnyObjectByType<JoystickCanvas>().GetJoystick();
         // if (CurrentWeapon == null) CurrentWeapon = GetComponentInChildren<Weapon>();
         // if (Health == null) Health = GetComponent<Health>();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -52,7 +53,7 @@ public class Enemy : MonoBehaviour
         // if (animator == null) animator = GetComponentInChildren<Animator>();
         if (col == null) col = GetComponentInChildren<Collider>();
         if (controller == null) controller = GetComponentInChildren<CharacterController>();
-        if (healthbar == null) healthbar = GetComponentInChildren<Healthbar>();
+        if (healthbar == null) healthbar = GetComponentInChildren<Healthbar>(false);
         if (armorBar == null) armorBar = GetComponentInChildren<ArmorBar>();
         if (level == null) level = GetComponentInParent<LevelPrefab>();
         if (level != null && player == null) player = level.player;
@@ -149,6 +150,8 @@ public class Enemy : MonoBehaviour
         heroDummy.SelectSkin(playerInfo.hero_skin);
 
         InitStats(playerInfo);
+        InitHpBar();
+        InitArmorBar();
     }
 
     private void InitStats(PlayerInGameInfo playerInfo)
@@ -174,6 +177,14 @@ public class Enemy : MonoBehaviour
         // Set weapon damage (main - full damage, secondary - 1/3)
         // MainWeapon.damage = damage;
         // SecondaryWeapon.damage = damage / 3f;
+    }
+    public void InitHpBar()
+    {
+        healthbar.Init();
+    }
+    public void InitArmorBar()
+    {
+        armorBar.Init();
     }
 
     public void Die()

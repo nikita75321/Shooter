@@ -46,7 +46,7 @@ public class EnemiesInGame : MonoBehaviour
 
     public Enemy GetEnemy(string id)
     {
-        Debug.Log($"GetEnemy: id-{id}");
+        // Debug.Log($"GetEnemy: id-{id}");
         if (enemyModel.TryGetValue(id, out var enemy))
             return enemy;
         else

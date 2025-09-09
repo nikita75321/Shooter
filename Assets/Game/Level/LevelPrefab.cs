@@ -32,17 +32,21 @@ public class LevelPrefab : MonoBehaviour
                 {
                     Debug.Log("This is me");
                     var pos = spawnPoints.GetRandomSpawnPoint().position;
-                    // Debug.Log(pos + " " + this.player.Controller.transform.position);
-                    this.player.Controller.enabled = false;
+                    this.player.Controller.characterController.enabled = false;
                     this.player.Controller.transform.position = pos;
-                    // this.player.Controller.enabled = true;
-                    // Debug.Log(pos + " " + this.player.Controller.transform.position);
-                    DOVirtual.DelayedCall(0.1f, () => this.player.Controller.enabled = true);
+                    // DOVirtual.DelayedCall(0.1f, () => this.player.Controller.enabled = true);
+                    this.player.Controller.characterController.enabled = true;
+                    // Форсируем обновление
+                    this.player.Controller.characterController.Move(Vector3.zero);
                 }
                 else
                 {
                     Debug.Log("This is new enemy player");
                     enemiesInGame.InitEnemies(player);
+
+                    Enemy enemy = EnemiesInGame.Instance.GetEnemy(player.playerId);
+                    enemy.Health.MaxHealth = player.max_hp;
+                    enemy.Armor.MaxArmor = player.max_armor;
                 }
             }
         });

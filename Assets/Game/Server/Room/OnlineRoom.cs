@@ -4,9 +4,8 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System;
-using Newtonsoft.Json;
-using SingularityGroup.HotReload;
 
+#region Class struct
 [Serializable]
 public class RoomInfo
 {
@@ -92,13 +91,13 @@ public class PlayerInGameInfo
         this.player_name = player_name;
         this.rating = rating;
         this.hero_id = heroId;
-        this.isReady = false;
-        this.position = Vector3.zero;
-        this.rotation = Quaternion.identity;
-        this.animationState = "idle";
-        this.isAlive = true;
-        this.kills = 0;
-        this.deaths = 0;
+        // this.isReady = false;
+        // this.position = Vector3.zero;
+        // this.rotation = Quaternion.identity;
+        // this.animationState = "idle";
+        // this.isAlive = true;
+        // this.kills = 0;
+        // this.deaths = 0;
     }
 
     public void UpdateTransform(Vector3 newPosition, Quaternion newRotation, string newAnimation)
@@ -198,7 +197,7 @@ public class MatchmakingFullResponse
 {
     public string message;
 }
-
+#endregion
 public class OnlineRoom : MonoBehaviour
 {
     public static OnlineRoom Instance { get; private set; }
@@ -440,16 +439,38 @@ public class OnlineRoom : MonoBehaviour
     {
         if (response.target_id == Geekplay.Instance.PlayerData.id)
         {
+            Debug.Log("Damage to us");
             var player = GetLocalPlayerInfo();
             player.hp = response.new_hp;
-            Level.Instance.currentLevel.player.Character.Health.TakeDamage(response.damage);
+
+            Level.Instance.currentLevel.player.Character.Health.ChangeHp(response.new_hp);
         }
         else
         {
-            Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
+            Debug.Log("Damage to enemy");
             var player = GetPlayerInfo(response.target_id);
-            Debug.Log(enemy);
-            enemy.Health.TakeDamage(response.damage);
+            player.hp = response.new_hp;
+
+            Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
+            enemy.Health.ChangeHp(response.new_hp);
+        }
+    }
+    private void UpdatePlayerArmor(WebSocketBase.PlayerDamagedResponse response)
+    {
+        if (response.target_id == Geekplay.Instance.PlayerData.id)
+        {
+            var player = GetLocalPlayerInfo();
+            player.hp = response.new_hp;
+
+            Level.Instance.currentLevel.player.Character.Armor.ChangeArmor(response.new_armor);
+        }
+        else
+        {
+            var player = GetPlayerInfo(response.target_id);
+            player.hp = response.new_hp;
+
+            Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
+            enemy.Armor.ChangeArmor(response.new_armor);
         }
     }
 
@@ -543,7 +564,7 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log($"Received transform update - Success: {response.success}, My transform: {response.my_transform != null}, Other transforms: {response.other_transforms?.Count}");
+            // Debug.Log($"Received transform update - Success: {response.success}\n   My transform: {response.my_transform != null}\n   Other transforms: {response.other_transforms?.Count}");
 
             if (response.success)
             {
@@ -638,7 +659,7 @@ public class OnlineRoom : MonoBehaviour
             // Обновляем визуальное представление
             UpdatePlayerVisualization(player);
 
-            Debug.Log($"Updated local player transform: {player.player_name}");
+            // Debug.Log($"Updated local player transform: {player.player_name}");
         }
     }
 
@@ -711,65 +732,48 @@ public class OnlineRoom : MonoBehaviour
         existingPlayer.kills = newPlayerInfo.kills;
         existingPlayer.deaths = newPlayerInfo.deaths;
     }
+    #endregion
+    
+
+
+
 
     #region DamageLogic
     private void HandlePlayerDamaged(WebSocketBase.PlayerDamagedResponse response)
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
-        {        
-            if (!IsInRoom)
+        {
+            // if (response.success)
             {
-                return;
-            }          
+                if (!IsInRoom)
+                    {
+                        return;
+                    }
 
-            if (string.IsNullOrEmpty(response.target_id))
-            {
-                Debug.LogWarning("Received player_damaged event without target_id. Ignoring.");
-                return;
-            }
+                if (string.IsNullOrEmpty(response.target_id))
+                {
+                    Debug.LogWarning("Received player_damaged event without target_id. Ignoring.");
+                    return;
+                }
 
-            var target = CurrentRoom.GetPlayer(response.target_id);
-            if (target == null)
-            {
-                Debug.Log("target == null");
-                return;
-            }
-            else
-            {
-                Debug.Log($"Deal damage to {target.player_name}");
-            }
+                var target = CurrentRoom.GetPlayer(response.target_id);
+                if (target == null)
+                {
+                    Debug.Log("target == null");
+                    return;
+                }
+                else
+                {
+                    Debug.Log($"Deal damage to {target.player_name}");
+                }
 
-            // Если это локальный игрок
-            if (target.playerId == Geekplay.Instance.PlayerData.id)
-            {
-                Debug.Log($"You were hit by {response.attacker_id} for {response.damage} damage. New HP: {response.new_hp}");
-                // Можно обновить визуальный HUD, эффекты и т.д.
-            }
+                // Визуализация
+                UpdatePlayerVisualization(target);
 
-            // Обновляем HP игрока
-            target.isAlive = response.new_hp > 0;
-            target.hp = response.new_hp;
-            target.armor = response.new_armor;
-            // Можно добавить поле currentHP, если его нет:
-            // player.currentHP = response.new_hp;
-
-            // Визуализация
-            UpdatePlayerVisualization(target);
-            // Обработка Здоровья и брони
-            // if (response.attacker_id != Geekplay.Instance.PlayerData.id)
-            // {
+                UpdatePlayerArmor(response);
                 UpdatePlayerHp(response);
-                Debug.Log("??????????????");
-            // }
-
-            if (!target.isAlive)
-            {
-                Debug.Log($"{target.player_name} died from {response.attacker_id}");
-                // Можно вызвать анимацию смерти и прочее
             }
         });
     }
-    #endregion
-    
     #endregion
 }
