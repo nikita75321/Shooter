@@ -18,16 +18,6 @@ class BoostController {
         try {
             for (const boost of boosts) {
                 const { boost_id, type, p_x, p_y, p_z } = boost;
-
-                // сохраняем буст в Redis
-                // await boostRedisService.addBoost(room_id, bo{
-                //     boost_id: boost_id,
-                //     type: type,
-                //     p_x: p_x,
-                //     p_y: p_y,
-                //     p_z: p_z,
-                //     is_taken: false
-                // });
                 await boostRedisService.addBoost(room_id, boost);
             }
 
@@ -71,17 +61,35 @@ class BoostController {
                 return Utils.sendError(ws, 'Player stats not found');
             }
 
-            // 3. Если буст типа "armor" → обновляем броню
-            let updatedStats = {};
-            if (boost.type === "armor") {
-                updatedStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
-                    new_hp: playerStats.hp, // оставляем текущее
-                    new_armor: playerStats.max_armor, // даём максимум брони
-                    kills: playerStats.kills,
-                    deaths: playerStats.deaths,
-                    damage: playerStats.damage,
-                    is_alive: true
-                });
+            // 3. Обработка разных типов бустов
+            let updatedStats = null;
+
+            switch (boost.type) {
+                case "armor":
+                    updatedStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
+                        new_hp: playerStats.hp,
+                        new_armor: playerStats.max_armor,
+                        kills: playerStats.kills,
+                        deaths: playerStats.deaths,
+                        damage: playerStats.damage,
+                        is_alive: true
+                    });
+                    console.log(`new armor = ${playerStats.max_armor}`);
+                    
+                    break;
+
+                case "aidkit":
+                    // ничего не обновляем, просто успех
+                    updatedStats = playerStats;
+                    break;
+
+                case "ammo":
+                    // ничего не обновляем, просто успех
+                    updatedStats = playerStats;
+                    break;
+
+                default:
+                    return Utils.sendError(ws, `Unknown boost type: ${boost.type}`);
             }
 
             // 4. Помечаем буст как "подобран"
@@ -101,6 +109,7 @@ class BoostController {
 
             // 6. Отправляем ответ игроку
             ws.send(JSON.stringify({
+                action: 'boost_pickup_response',
                 success: true,
                 player_id: player_id,
                 boost_id: boost_id,

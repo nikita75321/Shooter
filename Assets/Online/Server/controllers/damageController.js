@@ -11,10 +11,6 @@ class DamageController {
         this.playerHitRadius = 1.3;  // радиус попадания
     }
 
-    // console.log('handleDealDamage called', data);
-    // console.log('Target player:', playerId, 'transform:', targetTransform, 'is_alive:', targetTransform?.is_alive);
-    // console.log('Check hit result:', hit);
-    // console.log('Saving to Redis:', statsKey, 'hp:', hp, 'armor:', armor);
    async handleDealDamage(ws, data) {
         try {
             const requiredFields = [
@@ -68,10 +64,6 @@ class DamageController {
                     console.log(`No transform for player: ${playerId}`);
                     continue;
                 }
-                // if (!targetTransform.is_alive) {
-                //     console.log(`Player ${playerId} is dead, skipping`);
-                //     continue;
-                // }
 
                 const hit = this.checkHit(shot_origin, dir, targetTransform.position);
                 // const hit = true;
@@ -92,23 +84,22 @@ class DamageController {
                 console.log(`Before damage: player=${playerId}, hp=${hp}, armor=${armor}`);
 
                 let damageToHp = 0;
+
                 if (armor > 0) {
-                    const damageToArmor = Math.min(damage, armor);
-                    armor -= damageToArmor;
-                    damageToHp = damage - damageToArmor;
-                    hp -= damageToHp;
+                    if (damage <= armor) {
+                        armor -= damage; // урон уходит в броню
+                    } else {
+                        const remainingDamage = damage - armor;
+                        armor = 0;
+                        hp -= remainingDamage; // остаток урона по хп
+                        damageToHp = remainingDamage;
+                    }
                 } else {
                     hp -= damage;
                     damageToHp = damage;
                 }
 
                 console.log(`After damage: player=${playerId}, hp=${hp}, armor=${armor}`);
-
-                // Запись в Redis
-                // await global.redisClient.hSet(statsKey,
-                //     'hp', hp.toString(),
-                //     'armor', armor.toString()
-                // );
 
                 // --- запись в Redis через pipeline ---
                 console.log("Saving to redis:", { hp, armor });

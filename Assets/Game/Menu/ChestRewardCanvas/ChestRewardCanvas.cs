@@ -311,7 +311,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
     public void OpenCurrentChest()
     {
-        InstanceSoundUI.Instance.PlayOpenChestSound();
         // Debug.Log("Open Chest");
         if (rewardsInChest.Count == 0)
         {
@@ -497,6 +496,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
         }
 
         // Показываем награду
+        InstanceSoundUI.Instance.PlayOpenChestSound();
         var card = Instantiate(rewardPrefab, RewardPanel.transform);
 
         card.type = rewardCard.rewardPrefab.rewardType;

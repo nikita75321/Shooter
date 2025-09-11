@@ -14,7 +14,7 @@ public class ArmorBoost : Boost
         if (player != null)
         {
             BoostsManager.Instance.PickUpBoost(id);
-            player.Character.Armor.ArmorIncrease(armorAmount);
+            // player.Character.Armor.ArmorIncrease(armorAmount);
             // Character.Health.ArmorIncrease(armorAmount);
         }
     }

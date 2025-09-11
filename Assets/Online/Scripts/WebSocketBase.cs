@@ -326,7 +326,7 @@ public class BoostTakenResponse
 {
     public string player_id;
     public int boost_id;
-    public string boost_type;
+    public string boost_type; 
 }
 #endregion
 

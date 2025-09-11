@@ -13,7 +13,7 @@ public class AmmoBoost : Boost
         if (player != null)
         {
             // Debug.Log(player);
-            player.Character.AddAmmo();
+            BoostsManager.Instance.PickUpBoost(id);
         }
     }
 

@@ -33944,6 +33944,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 1526243003169825997, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2306938901333334533, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -33980,6 +33984,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 2708785207497487065, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3426944974293793793, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -35474,10 +35482,18 @@ PrefabInstance:
       propertyPath: animatorSecondary
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 1365552576188547928, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 3270166620360052292, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 3270166620360052292, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3505231976036458752, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.53
@@ -36403,6 +36419,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1927222764833486775, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2592298835906813235, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
       value: 
@@ -36487,6 +36507,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 7368125086377429053, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7442168858788926201, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
       value: 
@@ -36933,6 +36957,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 2230449786480749726, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2571003117283992870, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: player
       value: 
@@ -36965,6 +36993,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 3144888084221037905, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 3159713959248646742, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: player
       value: 
@@ -36973,6 +37005,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 3332317038460118255, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 3446842016557939268, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: level
       value: 
@@ -37033,6 +37069,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 7003257268544821486}
+    - target: {fileID: 4382955078117097852, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4513562799235144302, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -37133,6 +37173,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 6179640848081003470, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 6319246836928526556, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -37140,6 +37184,10 @@ PrefabInstance:
     - target: {fileID: 6319246836928526556, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6528883044392913739, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6574337080094703139, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: player
@@ -37217,6 +37265,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 7003257268544821486}
+    - target: {fileID: 7505457812710822184, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 7565377315249300856, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: player
       value: 
@@ -37754,6 +37806,10 @@ PrefabInstance:
     - target: {fileID: 5388927430576968139, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5449125817593654643, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 5456310993391934013, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -39802,6 +39858,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 60802222986102936, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2723928806071193080, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: aidKit
       value: 
@@ -39882,6 +39942,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 4128009870249305998, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4288931468898643667, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: player
       value: 
@@ -41686,6 +41750,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 7956714067432971466, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8030213838614172920, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 8963534402530933435, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: m_Camera
       value: 
@@ -43076,6 +43148,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 3013464667186960487, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4085893109431772590, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.0200005
@@ -43120,6 +43196,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7653273816918627362}
+    - target: {fileID: 4393712330567137342, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4753656409883833401, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_Camera
       value: 
@@ -43513,6 +43593,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2308491906061990788, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 2427041197732466412, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: player
       value: 
@@ -43701,6 +43785,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 7552825390510647004, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8681422359673565844, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: m_Camera
       value: 
@@ -44479,6 +44567,10 @@ PrefabInstance:
       propertyPath: OnDie.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 8311292777050953594}
+    - target: {fileID: 4078940964277607862, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: changeSpeed
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 4754946274673779744, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.25
@@ -44575,6 +44667,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 003dec428e269604a91f27e0f402bff8, type: 2}
+    - target: {fileID: 6429848181521552190, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6983039827411719334, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_Camera
       value: 

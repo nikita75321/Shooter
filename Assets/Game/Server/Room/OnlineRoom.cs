@@ -464,14 +464,14 @@ public class OnlineRoom : MonoBehaviour
         if (response.target_id == Geekplay.Instance.PlayerData.id)
         {
             var player = GetLocalPlayerInfo();
-            player.hp = response.new_hp;
+            player.armor = response.new_armor;
 
             Level.Instance.currentLevel.player.Character.Armor.ChangeArmor(response.new_armor);
         }
         else
         {
             var player = GetPlayerInfo(response.target_id);
-            player.hp = response.new_hp;
+            player.armor = response.new_armor;
 
             Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
             enemy.Armor.ChangeArmor(response.new_armor);

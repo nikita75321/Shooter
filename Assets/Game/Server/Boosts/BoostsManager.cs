@@ -56,7 +56,7 @@ public class BoostsManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        WebSocketBase.Instance.OnBoostPickupResponse += UpdateBoosts;
+        WebSocketBase.Instance.OnBoostPickupResponse -= UpdateBoosts;
     }
 
     private void Start()
@@ -76,17 +76,60 @@ public class BoostsManager : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            
+            var player = Level.Instance.currentLevel.player;
+
+            switch (response.boost_type)
+            {
+                case "armor":
+                    player.Character.Armor.ArmorIncrease(float.PositiveInfinity);
+                    
+                    break;
+                case "health":
+                    player.Character.currentHealthKits++;
+                    // Обновляем UI через AidKit
+                    AidKit aidKit = player.Character.Health.aidKit;
+                    if (aidKit != null)
+                    {
+                        aidKit.UpdateKitText();
+                        // Если достигли максимума, останавливаем заполнение
+                        if (player.Character.currentHealthKits >= player.Character.maxHealthKits)
+                        {
+                            aidKit.StopFilling();
+                        }
+                        else if (!aidKit.isFilling)
+                        {
+                            aidKit.StartFilling();
+                        }
+                    }
+                    break;
+                case "ammo":
+                    player.Character.AddAmmo();
+                    break;
+            }
         });
     }
 
     public void UpdateVisualBoosts(BoostTakenResponse response)
     {
-        Debug.Log(response.boost_id);
         var curBoost = boostList[response.boost_id].boost;
 
         boostList[response.boost_id].isPickingUp = true;
         curBoost.isPickingUp = true;
         boostList[response.boost_id].boost.gameObject.SetActive(false);
+
+        if (response.player_id == Geekplay.Instance.PlayerData.id)
+        {
+            var player = OnlineRoom.Instance.GetLocalPlayerInfo();
+            player.armor = player.max_armor;
+            Level.Instance.currentLevel.player.Character.Armor.ChangeArmor(player.armor);
+        }
+        else
+        {
+            var player = OnlineRoom.Instance.GetPlayerInfo(response.player_id);
+            player.armor = player.max_armor;
+
+            Enemy enemy = EnemiesInGame.Instance.GetEnemy(player.playerId);
+            enemy.Armor.ChangeArmor(player.armor);
+        }
     }
 }

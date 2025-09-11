@@ -15,7 +15,7 @@ public class ArmorBar : MonoBehaviour
 
     [SerializeField, Min(25f)]
     [Header("Strip change speed")]
-    private float changeSpeed = 100;
+    private float changeSpeed = 1000;
 
     private float currentValue;
     private Camera mainCamera;
@@ -34,6 +34,7 @@ public class ArmorBar : MonoBehaviour
         currentValue = Armor.CurrentArmor;
         mainCamera = Camera.main;
         UpdatePositionAndRotation();
+        changeSpeed = 1000;
     }
 
     public void Init()

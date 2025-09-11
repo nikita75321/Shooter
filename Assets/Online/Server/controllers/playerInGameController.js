@@ -151,19 +151,22 @@ class PlayerInGameController {
 
     async updatePlayerStats(playerId, roomId, data) {
         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
-        const statsKey = `${Constants.playerStats}${roomId}:stats`;
+        const statsKey = `${Constants.playerStats}${roomId}:${playerId}`;
         
         const currentStats = await this.getPlayerStats(playerId, roomId);
 
         const kills  = Number.isFinite(parseInt(data.kills))  ? parseInt(data.kills)  : (currentStats.kills  ?? 0);
         const deaths = Number.isFinite(parseInt(data.deaths)) ? parseInt(data.deaths) : (currentStats.deaths ?? 0);
         const damage = Number.isFinite(parseFloat(data.damage)) ? parseFloat(data.damage) : (currentStats.damage ?? 0);
-        const new_hp = parseFloat(data.new_hp);
-        const new_armor = parseFloat(data.new_armor);
+        const new_hp = Number.isFinite(parseFloat(data.new_hp)) ? parseFloat(data.new_hp) : parseFloat(currentStats.hp);
+        const new_armor = Number.isFinite(parseFloat(data.new_armor)) ? parseFloat(data.new_armor) : parseFloat(currentStats.armor);
 
+        console.log(data.new_hp, data.new_armor);
+        console.log(`after parse ${new_hp}, ${new_armor}`);
+        
         const updatedStats = {
-            new_hp: new_hp.toString(),
-            new_armor: new_armor.toString(),
+            hp: new_hp.toString(),
+            armor: new_armor.toString(),
             kills: kills.toString(),
             deaths: deaths.toString(),
             damage: damage.toString(),
