@@ -357,8 +357,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
     private void ShowReward(RewardConfig rewardCard)
     {
-        InstanceSoundUI.Instance.PlayGetItemSound();
-        // Debug.Log(rewardCard.idSkin);
         if (currentReward != null)
             currentReward.SetActive(false);
 
@@ -371,6 +369,9 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
                 return;
             }
         }
+
+        Debug.Log("PlaySound?");
+        // InstanceSoundUI.Instance.PlayGetItemSound();
 
         if (rewardCard.rewardPrefab.rewardType == RewardInChestType.Money ||
             rewardCard.rewardPrefab.rewardType == RewardInChestType.DonatMoney ||
@@ -415,7 +416,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
                 rewardCard.idHero = indexHero;
                 // Debug.Log(rewardCard.idHero);
             }
-            if (rewardCard.skinReward != null && rewardCard.cardReward == null)
+            if (rewardCard.cardReward == null && rewardCard.skinReward != null)
             {
                 Debug.Log(3);
                 int indexSkin = rewardCard.randomSkin ? (int)Random.Range(0, 7f) : rewardCard.cardReward.id;
@@ -432,19 +433,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
             if (rewardCard.cardReward != null && rewardCard.skinReward != null)
             {
                 // Debug.Log(4);
-
-                // int indexHero = rewardCard.randomHero ? (int)Random.Range(0, 8f) : rewardCard.cardReward.id;
-                // int indexSkin = rewardCard.randomSkin ? (int)Random.Range(1, 7f) : rewardCard.cardReward.id;
-
-                // rewardCard.idHero = indexHero;
-                // rewardCard.idSkin = indexSkin;
-
-                // if (Geekplay.Instance.PlayerData.persons[rewardCard.idHero].openSkinBody[rewardCard.idSkin] == 1)
-                // {
-                //     Debug.Log($"2 Current Skin we have, idHero - {rewardCard.idHero}, idSkin - {rewardCard.idSkin}");
-                //     OpenCurrentChest();
-                //     return;
-                // }
                 // Есть оба варианта - случайный выбор
                 if (Random.Range(0f, 1f) > 0.5f)
                 {
@@ -457,7 +445,19 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 {
+                    Debug.Log($"2 Current Skin close, idHero - {rewardCard.idHero}, idSkin - {rewardCard.idSkin}\nTunr into HeroCard");
+                    
+                    rewardCard.rewardPrefab.rewardType = RewardInChestType.HeroCard;
                     // Меняем тип на карточки
+                }
+            }
+            if (rewardCard.cardReward == null && rewardCard.skinReward == null)
+            {
+                if (Geekplay.Instance.PlayerData.openHeroes[rewardCard.rewardPrefab.id] == 1)
+                {
+                    Debug.Log($"3 Current Hero already open, idHero - {rewardCard.rewardPrefab.id}");
+                    OpenCurrentChest();
+                    return;
                 }
             }
         }
@@ -482,7 +482,18 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
         if (rewardCard.rewardPrefab.rewardType == RewardInChestType.RandomSkin)
         {
+            var person = Geekplay.Instance.PlayerData.persons[rewardCard.idHero];
 
+            if (person.openSkinBody[rewardCard.idSkin] == 1)
+            {
+                Debug.Log("Current skin is already open");
+                OpenCurrentChest();
+                return;
+            }
+            else
+            {
+                Debug.Log($"Current skin closed skinId={rewardCard.idSkin}");
+            }
         }
 
         // Показываем награду
@@ -547,8 +558,9 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
         card.Init(rewardCard);
 
-        if (card.rewardValue == 0 && card.type != RewardInChestType.RandomSkin)
+        if (card.rewardValue == 0 && card.type != RewardInChestType.RandomSkin && card.type != RewardInChestType.Hero)
         {
+            Debug.Log("Удаляем не нужную награду");
             Destroy(card.gameObject);
             OpenCurrentChest();
             return;

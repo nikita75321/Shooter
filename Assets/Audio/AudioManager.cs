@@ -16,6 +16,13 @@ public class AudioManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        SetMasterVolume(Geekplay.Instance.PlayerData.masterVolume);
+        SetMusicVolume(Geekplay.Instance.PlayerData.musicVolume);
+        SetSFXVolume(Geekplay.Instance.PlayerData.sfxVolume);
+    }
+
     private void SetVolume(string parameterName, float volume)
     {
         // Преобразуем 0-100 в 0-1

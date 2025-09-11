@@ -206,14 +206,24 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void NewTakeDamage(float value)
+    public void NewTakeDamage(float damage)
     {
-        currentHealth =- value;
+        Debug.Log($"NewTakeDamage currentHealth={currentHealth}, damage={damage}");
+        if (armor != null && armor.CurrentArmor > 0)
+        {
+            var damageToHealth = armor.TakeDamage(damage, 0);
+
+            currentHealth -= damageToHealth;
+        }
+        else
+        {
+            currentHealth -= damage;
+        }
         ChangeHp(currentHealth);
     }
     public void ChangeHp(float value)
     {
-        // Debug.Log($"ChangeHp: new Hp - {value}");
+        Debug.Log($"ChangeHp: new Hp - {value}");
 
         if (value > 0)
         {

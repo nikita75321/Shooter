@@ -191,57 +191,6 @@ class PlayerInGameController {
         return updatedStats;
     }
 
-    // async updatePlayerStats(playerId, roomId, data) {
-    //     const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
-    //     const statsKey = `${Constants.matchKey}${roomId}:stats`;
-
-    //     const currentStats = await this.getPlayerStats(playerId, roomId);
-        
-    //     const updatedStats = {
-    //         kills: parseInt(data.kills) || currentStats.kills,
-    //         deaths: parseInt(data.deaths) || currentStats.deaths,
-    //         damage: parseInt(data.damage) || currentStats.damage,
-    //         is_alive: Boolean(data.is_alive),
-    //         score: (parseInt(data.kills) * 100) + (parseInt(data.damage) || 0),
-    //         last_update: Date.now()
-    //     };
-
-    //     const pipeline = global.redisClient.multi();
-        
-    //     // Сохраняем индивидуальную статистику
-    //     pipeline.hSet(matchKey, 'stats', JSON.stringify(updatedStats));
-    //     pipeline.expire(matchKey, this.matchTTL);
-        
-    //     // Обновляем общую статистику комнаты
-    //     pipeline.zAdd(statsKey, { score: updatedStats.score, value: playerId });
-    //     pipeline.expire(statsKey, this.matchTTL);
-        
-    //     await pipeline.exec();
-
-    //     return updatedStats;
-    // }
-
-    //======================Рабочий вариавнт======================
-    // async getPlayerStats(playerId, roomId) {
-    //     try {
-    //         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
-    //         const statsJson = await global.redisClient.hGet(matchKey, 'stats');
-
-    //         return statsJson ? JSON.parse(statsJson) : {
-    //             kills: 0,
-    //             deaths: 0,
-    //             damage: 0,
-    //             is_alive: true,
-    //             score: 0,
-    //             last_update: Date.now()
-    //         };
-    //     } catch (error) {
-    //         console.error(`Error getting stats for player ${playerId}:`, error);
-    //         return { kills: 0, deaths: 0, damage: 0, is_alive: true, score: 0, last_update: Date.now() };
-    //     }
-    // }
-    //======================Рабочий вариавнт======================
-
     async getPlayerStats(playerId, roomId) {
         try {
             const matchKey = `player_stats:${roomId}:${playerId}`;

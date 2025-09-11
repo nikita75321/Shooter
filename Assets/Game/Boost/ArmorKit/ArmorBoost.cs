@@ -2,12 +2,18 @@ public class ArmorBoost : Boost
 {
     public int armorAmount = 1000;
 
+    public void OnValidate()
+    {
+        type = BoostType.armor;
+    }
+
     public override void ApplyBoostEffect(Player player)
     {
         // Находим игрока и добавляем ему броню
         // var player = FindObjectOfType<PlayerHealth>(); // Замените на ваш скрипт
         if (player != null)
         {
+            BoostsManager.Instance.PickUpBoost(id);
             player.Character.Armor.ArmorIncrease(armorAmount);
             // Character.Health.ArmorIncrease(armorAmount);
         }

@@ -1,8 +1,13 @@
 public class HealBoost : Boost
 {
+    public void OnValidate()
+    {
+        type = BoostType.aidkit;
+    }
+
     public override bool CanPickUp(Player player)
     {
-        return player != null && 
+        return player != null &&
                player.Character.currentHealthKits < player.Character.maxHealthKits;
     }
 

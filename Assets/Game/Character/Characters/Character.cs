@@ -83,7 +83,7 @@ public class Character : MonoBehaviour
         // Debug.Log("AddAmmo 1");
         // CurrentWeapon.StopReload();
         MainWeapon.AddAmmo();
-        Debug.Log(MainWeapon.ammoOverall);
+        // Debug.Log(MainWeapon.ammoOverall);
         // if (MainWeapon.currentAmmo == 0 && MainWeapon.ammoOverall > 0)
         // {
         if (CurrentWeapon != MainWeapon)

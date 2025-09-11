@@ -87,7 +87,7 @@ public class InAppCanvas : MonoBehaviour
 
         for (int i = 0; i < goldInAppSOs.Length; i++)
         {
-            Debug.Log(i);
+            // Debug.Log(i);
             var index = i;
             goldInAppSOs[i].Subscribe(() => ChestRewardCanvas.Instance.InitInstaReward(goldReward[index+1], false));
             goldButtons[i+1].onClick.AddListener(() => goldInAppSOs[index].BuyItem());

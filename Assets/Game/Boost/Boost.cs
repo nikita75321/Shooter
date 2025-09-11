@@ -5,6 +5,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(BoxCollider))]
 public abstract class Boost : MonoBehaviour
 {
+    [Header("Info")]
+    public int id;
+    public bool isPickingUp;
+    public BoostType type;
+
     [Header("Settings")]
     public float TimeToPickUp = 2f;
 
@@ -13,8 +18,9 @@ public abstract class Boost : MonoBehaviour
     public Image RadialProgressImage;
 
     private Coroutine pickUpCoroutine;
-    public bool isPickingUp;
     private float currentPickUpTime;
+
+    [Header("Player")]
     public Player player;
 
     private void Start()
@@ -150,6 +156,7 @@ public abstract class Boost : MonoBehaviour
 
     protected virtual void CompletePickUp()
     {
+
         isPickingUp = false;
         ApplyBoostEffect(player);
         gameObject.SetActive(false);

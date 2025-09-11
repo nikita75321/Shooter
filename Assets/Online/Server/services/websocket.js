@@ -6,6 +6,7 @@ const ConnectionController = require('../controllers/connectionController');
 
 const playerInGameController = require('../controllers/playerInGameController');
 const damageController = require('../controllers/damageController');
+const boostController = require('../controllers/BoostController');
 
 const { flushPlayerData } = require('./servicesflushService');
 const playerController = require('../controllers/playerController');
@@ -157,6 +158,13 @@ function setupWebSocketServer(server) {
                 // =================== Combat ===================
                 case 'deal_damage': await damageController.handleDealDamage(ws, data); break;
                 case 'player_death': await damageController.handlePlayerDeath(ws, data); break;
+
+                // =================== Boost ===================
+                case 'spawn_room_boosts': await boostController.spawnBoosts(ws, data); break;
+                case 'boost_pickup': await boostController.handleBoostPickup(ws, data); break;
+                
+                // =================== Upgrade ===================
+                case 'pick_up_upgrade': await upgradeController.handlePickUpUpgrade(ws, data); break;
 
                 default:
                     sendError(ws, `Unknown action: ${data.action}`);

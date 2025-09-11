@@ -277,10 +277,10 @@ public abstract class Weapon : MonoBehaviour
 
         if (player.Character.CurrentWeapon == player.Character.MainWeapon)
         {
-            Debug.Log(player.Character.MainWeapon.ammoOverall+" - 1");
+            // Debug.Log(player.Character.MainWeapon.ammoOverall+" - 1");
             if (player.Character.MainWeapon.ammoOverall == 0 && player.Character.MainWeapon.currentAmmo == 0)
             {
-                Debug.Log("Меняем на пистолет");
+                // Debug.Log("Меняем на пистолет");
                 player.Character.CurrentWeapon.StopReload();
                 player.SetSecondaryWeapon();
                 return;

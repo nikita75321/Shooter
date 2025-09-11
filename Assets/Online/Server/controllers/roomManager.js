@@ -353,9 +353,6 @@ class RoomManager {
         const realPlayers = room.players || [];
         const allPlayersInfo = await this.getPlayersWithInfo(realPlayers, room.id);
         
-        console.log(`[Hp & Armor] ${allPlayersInfo.hp} ${allPlayersInfo.armor}`);
-        console.log(`[allPlayersInfo] ${allPlayersInfo}`);
-        
         // Формируем payload в старом формате
         const matchStartPayload = {
             action: 'match_start',

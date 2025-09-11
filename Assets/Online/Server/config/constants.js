@@ -7,7 +7,9 @@ const Constants = {
     roomKey: 'room:',
     roomPlayersKey: `room_players:`,
     matchKey: `match:`,
-    playerStats: `player_stats:`
+    playerStats: `player_stats:`,
+    boostKey: "boost:",
+    roomBoostsKey: "room_boosts:"
 };
 
 const GameConstants = {

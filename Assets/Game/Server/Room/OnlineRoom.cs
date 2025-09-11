@@ -236,7 +236,9 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnPlayerTransformUpdateResponse += HandlePlayerTransformUpdateResponse;
         WebSocketBase.Instance.OnPlayerStatsUpdateResponse += HandlePlayerStatsUpdateResponse;
 
-        WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;        
+        WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;
+
+        WebSocketBase.Instance.OnBoostTaken += HandleBoostTaken;
     }
 
     private void Start()
@@ -269,6 +271,8 @@ public class OnlineRoom : MonoBehaviour
             WebSocketBase.Instance.OnPlayerStatsUpdateResponse -= HandlePlayerStatsUpdateResponse;
 
             WebSocketBase.Instance.OnPlayerDamaged -= HandlePlayerDamaged;
+
+            WebSocketBase.Instance.OnBoostTaken -= HandleBoostTaken;
         }
 
         if (serverCor != null)
@@ -733,7 +737,7 @@ public class OnlineRoom : MonoBehaviour
         existingPlayer.deaths = newPlayerInfo.deaths;
     }
     #endregion
-    
+
 
 
 
@@ -746,9 +750,9 @@ public class OnlineRoom : MonoBehaviour
             // if (response.success)
             {
                 if (!IsInRoom)
-                    {
-                        return;
-                    }
+                {
+                    return;
+                }
 
                 if (string.IsNullOrEmpty(response.target_id))
                 {
@@ -773,6 +777,21 @@ public class OnlineRoom : MonoBehaviour
                 UpdatePlayerArmor(response);
                 UpdatePlayerHp(response);
             }
+        });
+    }
+    #endregion
+
+
+
+
+
+
+    #region BoostLogic
+    public void HandleBoostTaken(BoostTakenResponse response)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            BoostsManager.Instance.UpdateVisualBoosts(response);
         });
     }
     #endregion

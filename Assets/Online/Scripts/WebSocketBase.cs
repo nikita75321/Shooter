@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
+#region Все структуры
 [Serializable]
 public class PlayerStatsResponse
 {
@@ -199,6 +200,11 @@ public class ForceEndGameResponse
 }
 #endregion
 
+
+
+
+
+
 #region Структуры для игроков в игре
 [Serializable]
 public class PlayerJoinedResponse
@@ -298,6 +304,31 @@ public class PlayerInfoResponse
     public int kills;
     public int deaths;
 }
+#endregion
+
+
+
+
+
+
+#region Boosts
+[Serializable]
+public class BoostPickupResponse
+{
+    public bool success;
+    public string player_id;
+    public int boost_id;
+    public string boost_type;
+}
+
+[Serializable]
+public class BoostTakenResponse
+{
+    public string player_id;
+    public int boost_id;
+    public string boost_type;
+}
+#endregion
 
 #endregion
 public class WebSocketBase : MonoBehaviour
@@ -368,6 +399,9 @@ public class WebSocketBase : MonoBehaviour
 
     public event Action<PlayerDamagedResponse> OnPlayerDamaged;
     public event Action<PlayerDeathResponse> OnPlayerDeath;
+
+    public event Action<BoostPickupResponse> OnBoostPickupResponse;
+    public event Action<BoostTakenResponse> OnBoostTaken;
     #endregion
 
     #region Комнаты
@@ -386,12 +420,18 @@ public class WebSocketBase : MonoBehaviour
     public event Action<string> OnMatchmakingFull;
     #endregion
 
+
+
+
+
+
     #region Игроки
     public event Action<PlayerJoinedResponse> OnPlayerJoinedRoom;
     public event Action<List<PlayerInfoResponse>> OnRoomPlayersUpdate;
     #endregion
-    protected virtual void InitializeWebSocket(Action<bool> callback) { }
+
     #endregion
+    protected virtual void InitializeWebSocket(Action<bool> callback) { }
 
     public void UnsubscribeAllCompact()
     {
@@ -427,24 +467,6 @@ public class WebSocketBase : MonoBehaviour
     {
         Shutdown();
     }
-
-    // protected void HandleServerResponse(Dictionary<string, object> message)
-    // {
-    //     string action = message["action"].ToString();
-
-    //     switch (action)
-    //     {
-    //         case "server_time_response":
-    //             HandleGetServerTime(message);
-    //             break;
-    //         case "get_server_stats_response": //сервер вызовет в ответ этот action
-    //             HandleGetServerStats(message);
-    //             break;
-    //         default:
-    //             Debug.LogWarning($"Received server message with action: {action}");
-    //             break;
-    //     }
-    // }
 
     //Обработчик ответов
     protected void HandleServerResponse(Dictionary<string, object> message)
@@ -608,6 +630,19 @@ public class WebSocketBase : MonoBehaviour
             case "player_stats_update_response":
                 HandlePlayerStatsUpdateResponse(message);
                 break;
+
+            //===============Boosts==============
+            case "boost_pickup_response":
+                HandleBoostPickupResponse(message);
+                break;
+
+            case "boost_taken":
+                HandleBoostTaken(message);
+                break;
+
+
+
+
             default:
                 Debug.LogWarning($"Received server message with action: {action}");
                 break;
@@ -1118,19 +1153,19 @@ public class WebSocketBase : MonoBehaviour
         }
 
         return new ClanShortInfo
-            {
-                clan_id = dict.TryGetValue("clan_id", out var id) ? Convert.ToString(id) : "",
-                clan_name = dict.TryGetValue("clan_name", out var name) ? name.ToString() : "",
-                leader_id = dict.TryGetValue("leader_id", out var lid) ? lid.ToString() : "",
-                leader_name = dict.TryGetValue("leader_name", out var lname) ? lname.ToString() : "",
-                need_rating = dict.TryGetValue("need_rating", out var nr) ? Convert.ToInt32(nr) : -1,
-                is_open = dict.TryGetValue("is_open", out var io) && Convert.ToBoolean(io),
-                clan_points = dict.TryGetValue("clan_points", out var cp) ? Convert.ToInt32(cp) : -1,
-                clan_level = currentLevel,
-                max_players = dict.TryGetValue("max_players", out var mp) ? Convert.ToInt32(mp) : 24,
-                player_count = dict.TryGetValue("player_count", out var pc) ? Convert.ToInt32(pc) : -1,
-                clan_place = dict.TryGetValue("place", out var pl) ? Convert.ToInt32(pl) : -1
-            };
+        {
+            clan_id = dict.TryGetValue("clan_id", out var id) ? Convert.ToString(id) : "",
+            clan_name = dict.TryGetValue("clan_name", out var name) ? name.ToString() : "",
+            leader_id = dict.TryGetValue("leader_id", out var lid) ? lid.ToString() : "",
+            leader_name = dict.TryGetValue("leader_name", out var lname) ? lname.ToString() : "",
+            need_rating = dict.TryGetValue("need_rating", out var nr) ? Convert.ToInt32(nr) : -1,
+            is_open = dict.TryGetValue("is_open", out var io) && Convert.ToBoolean(io),
+            clan_points = dict.TryGetValue("clan_points", out var cp) ? Convert.ToInt32(cp) : -1,
+            clan_level = currentLevel,
+            max_players = dict.TryGetValue("max_players", out var mp) ? Convert.ToInt32(mp) : 24,
+            player_count = dict.TryGetValue("player_count", out var pc) ? Convert.ToInt32(pc) : -1,
+            clan_place = dict.TryGetValue("place", out var pl) ? Convert.ToInt32(pl) : -1
+        };
     }
 
     private void HandleRatingLeaderboardResponse(Dictionary<string, object> message)
@@ -1179,7 +1214,7 @@ public class WebSocketBase : MonoBehaviour
             Debug.LogError($"Failed to update hero levels: {error}");
         }
     }
-    
+
     #region Комнаты
     private void HandleMatchmakingJoinedResponse(Dictionary<string, object> message)
     {
@@ -1208,8 +1243,8 @@ public class WebSocketBase : MonoBehaviour
 
             foreach (var playerResp in response.players)
             {
-                Debug.Log("playerResp.max_hp "+ playerResp.max_hp);
-                Debug.Log("playerResp.max_armor "+ playerResp.max_armor);
+                Debug.Log("playerResp.max_hp " + playerResp.max_hp);
+                Debug.Log("playerResp.max_armor " + playerResp.max_armor);
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,
@@ -1306,12 +1341,6 @@ public class WebSocketBase : MonoBehaviour
         var response = JsonConvert.DeserializeObject<LeaveRoomResponse>(
             JsonConvert.SerializeObject(message));
         OnLeaveRoomResponse?.Invoke(response);
-
-        // if (response.success && OnlineRoom.Instance.IsInRoom &&
-        //     OnlineRoom.Instance.CurrentRoom.id == response.room_id)
-        // {
-        //     OnlineRoom.Instance.ClearCurrentRoom();
-        // }
     }
 
     private void HandleForceCloseRoomResponse(Dictionary<string, object> message)
@@ -1370,9 +1399,9 @@ public class WebSocketBase : MonoBehaviour
         {
             var response = JsonConvert.DeserializeObject<PlayerStatsUpdateResponse>(
                 JsonConvert.SerializeObject(message));
-            
+
             OnPlayerStatsUpdateResponse?.Invoke(response);
-            
+
             Debug.Log($"Received stats update for player {response.player_id}");
         }
         catch (Exception e)
@@ -1445,6 +1474,43 @@ public class WebSocketBase : MonoBehaviour
         }
     }
     #endregion
+
+    #region Бусты
+    private void HandleBoostPickupResponse(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<BoostPickupResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnBoostPickupResponse?.Invoke(response);
+
+            Debug.Log($"[Boost] Pickup response: success={response.success}, boost={response.boost_id} ({response.boost_type})");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing boost_pickup_response: {e.Message}");
+        }
+    }
+
+    private void HandleBoostTaken(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<BoostTakenResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnBoostTaken?.Invoke(response);
+
+            Debug.Log($"[Boost] Taken: player={response.player_id}, boost={response.boost_id} ({response.boost_type})");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing boost_taken: {e.Message}");
+        }
+    }
+    #endregion
+
     #endregion
 
     #endregion
@@ -2052,5 +2118,60 @@ public class WebSocketBase : MonoBehaviour
 
     #endregion
 
+
+
+
+
+
+    #region Boosts
+    public void SendBoostsToServer(BoostList[] boostList)
+    {
+        var roomId = Geekplay.Instance.PlayerData.roomId;
+        var playerId = Geekplay.Instance.PlayerData.id;
+
+        var boostsData = new List<Dictionary<string, object>>();
+
+        foreach (var boostEntry in boostList)
+        {
+            var boost = boostEntry.boost;
+            var type = boostEntry.type;
+
+            var boostData = new Dictionary<string, object>
+            {
+                { "boost_id", boost.id },
+                { "type", type.ToString().ToLower() }, // armor | ammo | aidkit
+                { "p_x", boost.transform.position.x },
+                { "p_y", boost.transform.position.y },
+                { "p_z", boost.transform.position.z },
+                { "is_taken", false }
+            };
+
+            boostsData.Add(boostData);
+        }
+
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", playerId },
+            { "boosts", boostsData }
+        };
+
+        SendWebSocketRequest("spawn_room_boosts", data);
+
+        // Debug.Log($"[BoostsManager] Sent {boostsData.Count} boosts to server for room {roomId}");
+    }
+
+    public void SendBoostPickup(string roomId, string playerId, int boostId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", playerId },
+            { "boost_id", boostId }
+        };
+
+        SendWebSocketRequest("boost_pickup", data);
+    }
+    #endregion 
     #endregion
 }

@@ -7,15 +7,6 @@ function init(redis) {
 }
 
 // Преобразование чисел при чтении из Redis
-// function parsePlayerData(raw) {
-//     const data = {};
-//     for (const [k, v] of Object.entries(raw)) {
-//         // Попробуем преобразовать в число, если возможно
-//         const n = Number(v);
-//         data[k] = isNaN(n) ? v : n;
-//     }
-//     return data;
-// }
 function parsePlayerData(raw) {
     const data = {};
     for (const [k, v] of Object.entries(raw)) {
@@ -61,29 +52,6 @@ async function getPlayerFromRedis(playerId) {
 }
 
 // Сохранить профиль игрока (HSET)
-// async function savePlayerProfileToRedis(playerId, playerData) {
-//     try {
-//         const key = `player:${playerId}:profile`;
-
-//         // сериализуем сложные поля
-//         const dataToStore = { ...playerData };
-//         ['open_characters', 'hero_levels', 'hero_card', 'hero_match'].forEach(field => {
-//             if (dataToStore[field] && typeof dataToStore[field] !== 'string') {
-//                 dataToStore[field] = JSON.stringify(dataToStore[field]);
-//             }
-//         });
-//         dataToStore.last_updated = new Date().toISOString();
-
-//         // сохраняем как хэш
-//         await redisClient.hSet(key, dataToStore);
-//         await redisClient.expire(key, 86400);
-
-//         return true;
-//     } catch (err) {
-//         console.error(`Error saving player ${playerId} profile:`, err);
-//         return false;
-//     }
-// }
 async function savePlayerProfileToRedis(playerId, playerData) {
     try {
         const key = `player:${playerId}:profile`;
@@ -110,32 +78,6 @@ async function savePlayerProfileToRedis(playerId, playerData) {
 }
 
 // Обновить часть профиля игрока
-// async function updatePlayerInRedis(playerId, updates) {
-//     try {
-//         const existing = await getPlayerFromRedis(playerId);
-//         if (!existing) return false;
-
-//         const oldClanPoints = Number(existing.clan_points || 0);
-//         const newClanPoints = updates.clan_points !== undefined ? Number(updates.clan_points) : oldClanPoints;
-//         const delta = newClanPoints - oldClanPoints;
-
-//         // Объединяем обновления
-//         const updated = { ...existing, ...updates, clan_points: newClanPoints };
-
-//         await savePlayerProfileToRedis(playerId, updated);
-
-//         // Обновление клана, если есть изменение очков
-//         if (existing.clan_id && delta !== 0) {
-//             const clanKey = `clan:${existing.clan_id}:info`;
-//             await redisClient.hIncrBy(clanKey, 'clan_points', delta);
-//         }
-
-//         return true;
-//     } catch (err) {
-//         console.error(`Error updating player ${playerId}:`, err);
-//         return false;
-//     }
-// }
 async function updatePlayerInRedis(playerId, updates) {
     try {
         const existing = await getPlayerFromRedis(playerId);
