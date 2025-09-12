@@ -961,6 +961,7 @@ MonoBehaviour:
   OnRevive:
     m_PersistentCalls:
       m_Calls: []
+  currentHealth: 0
   isEnemy: 0
   isAlly: 0
 --- !u!114 &6089000797292195973
@@ -976,6 +977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  characterController: {fileID: 1522696442394647736}
   revive: {fileID: 0}
   revievButton: {fileID: 0}
   ally: {fileID: 0}

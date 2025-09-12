@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(CapsuleCollider))]
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Armor))]
 public class Enemy : MonoBehaviour
@@ -29,11 +27,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject[] heroes;
 
     [Header("Visual")]
-    [SerializeField] private Renderer[] traces;
+    [SerializeField] private Trace trace;
     [SerializeField] private bool isAudible;
-    [SerializeField] private float noizeVolume;
-    [SerializeField] private GameObject[] tracesGo;
-    [SerializeField] private GameObject[] tracesTarget;
+    public float noizeVolume;
 
     private struct State
     {
@@ -50,24 +46,26 @@ public class Enemy : MonoBehaviour
     private void OnValidate()
     {
         if (Health == null) Health = GetComponentInChildren<Health>();
-        // if (animator == null) animator = GetComponentInChildren<Animator>();
         if (col == null) col = GetComponentInChildren<Collider>();
         if (controller == null) controller = GetComponentInChildren<CharacterController>();
         if (healthbar == null) healthbar = GetComponentInChildren<Healthbar>(false);
         if (armorBar == null) armorBar = GetComponentInChildren<ArmorBar>();
         if (level == null) level = GetComponentInParent<LevelPrefab>();
         if (level != null && player == null) player = level.player;
-        if (heroDummy == null) heroDummy = GetComponent<HeroDummy>();
+    }
+
+    private void Start()
+    {
+        Health.OnDie.AddListener(HideUI);
+        Health.OnDie.AddListener(healthbar.Hide);
+        Health.OnDie.AddListener(armorBar.Hide);
+
+        Health.OnTakeDamage.AddListener(TakeDamageAnim);
+        trace.HideTraces();
     }
 
     private void Update()
     {
-        // твой код с traces
-        for (int i = 0; i < tracesGo.Length; i++)
-        {
-            tracesGo[i].transform.position = tracesTarget[i].transform.position;
-        }
-
         if (stateBuffer.Count == 0) return;
 
         float renderTime = Time.time - interpolationDelay;
@@ -111,27 +109,10 @@ public class Enemy : MonoBehaviour
         while (stateBuffer.Count > 0 && stateBuffer.Peek().time < renderTime - 1f)
             stateBuffer.Dequeue();
 
-        // // Лерп к сетевой позиции
-        // if (targetPosition != Vector3.zero) // можно проверить что инициализировано
-        // {
-        //     Debug.Log($"Бежим к targetPosition - {targetPosition}");
-        //     transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * lerpSpeed / 3);
-        //     transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * lerpSpeed / 3);
-        // }
-        // else
-        // {
-        //     Debug.Log("Стоим ждем-с");
-        // }
-    }
-
-    private void Start()
-    {
-        Health.OnDie.AddListener(HideUI);
-        Health.OnDie.AddListener(healthbar.Hide);
-        Health.OnDie.AddListener(armorBar.Hide);
-
-        Health.OnTakeDamage.AddListener(TakeDamageAnim);
-        HideTraces();
+        // Обновление шума
+        UpdateNoizeState(noizeVolume * 3);
+        // Следы от персонажа
+        trace.UpdateTracesPos();
     }
 
     public void InitHero(PlayerInGameInfo playerInfo)
@@ -146,6 +127,8 @@ public class Enemy : MonoBehaviour
         }
         heroes[playerInfo.hero_id].SetActive(true);
 
+        animator = heroes[playerInfo.hero_id].GetComponent<Animator>();
+        trace = heroes[playerInfo.hero_id].GetComponent<Trace>();
         heroDummy = heroes[playerInfo.hero_id].GetComponent<HeroDummy>();
         heroDummy.SelectSkin(playerInfo.hero_skin);
 
@@ -217,22 +200,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    public void ShowTraces()
-    {
-        foreach (var trace in traces)
-        {
-            trace.enabled = true;
-        }
-        // Debug.Log("Show trace");
-    }
-    public void HideTraces()
-    {
-        foreach (var trace in traces)
-        {
-            trace.enabled = false;
-        }
-        // Debug.Log("Hide trace");
-    }
+    
 
     private void OnDestroy()
     {
@@ -246,15 +214,15 @@ public class Enemy : MonoBehaviour
     public void UpdateNoizeState(float value)
     {
         var distance = Vector3.Distance(player.Character.transform.position, transform.position);
-        // Debug.Log($"distance - {distance}, value - {value}");
+        Debug.Log($"distance - {distance}, value - {value}");
         if (distance <= value)
         {
-            ShowTraces();
+            trace.ShowTraces();
             animator.SetBool("IsMoving", true);
         }
         else
         {
-            HideTraces();
+            trace.HideTraces();
             animator.SetBool("IsMoving", false);
         }
     }

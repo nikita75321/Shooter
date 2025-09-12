@@ -20,6 +20,7 @@ public class Revive : MonoBehaviour
         
         reviveTween = DOVirtual.Float(0, 1, timeToRevive, (value) =>
         {
+            player.IsRevive = true;
             player.Character.Health.useReviveImage.fillAmount = value;
         }).OnComplete(() =>
         {

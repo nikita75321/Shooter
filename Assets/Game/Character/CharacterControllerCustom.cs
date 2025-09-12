@@ -172,15 +172,5 @@ public class CharacterControllerCustom : MonoBehaviour
     {
         // Управляем анимацией движения
         animator.SetBool("IsMoving", player.IsMoving);
-
-        // Если нужно использовать триггер (однократное срабатывание)
-        if (player.IsMoving && !animator.GetBool("IsMoving"))
-        {
-            // animator.SetTrigger("WalkForward");
-        }
-        else if (!player.IsMoving && animator.GetBool("IsMoving"))
-        {
-            animator.SetTrigger("IsStop");
-        }
     }
 }

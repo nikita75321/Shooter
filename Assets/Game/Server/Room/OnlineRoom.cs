@@ -4,6 +4,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System;
+using UnityEngine.Experimental.AI;
 
 #region Class struct
 [Serializable]
@@ -72,6 +73,7 @@ public class PlayerInGameInfo
     public int hero_id;
     public int hero_skin;
     public bool isReady;
+    public float noizeRadius;
     public Vector3 position;
     public Quaternion rotation;
     public string animationState;
@@ -84,20 +86,16 @@ public class PlayerInGameInfo
     public float armor;
     public float max_hp;
     public float max_armor;
+    public BoolsState boolsState;
 
     public PlayerInGameInfo(string playerId, string player_name, int rating = -1, int heroId = -1)
     {
         this.playerId = playerId;
         this.player_name = player_name;
         this.rating = rating;
-        this.hero_id = heroId;
-        // this.isReady = false;
-        // this.position = Vector3.zero;
-        // this.rotation = Quaternion.identity;
-        // this.animationState = "idle";
-        // this.isAlive = true;
-        // this.kills = 0;
-        // this.deaths = 0;
+        hero_id = heroId;
+
+        boolsState = new();
     }
 
     public void UpdateTransform(Vector3 newPosition, Quaternion newRotation, string newAnimation)
@@ -313,6 +311,8 @@ public class OnlineRoom : MonoBehaviour
             if (IsInRoom && CurrentRoom.id == response.room_id)
             {
                 CurrentRoom.RemovePlayer(response.player_id);
+                Geekplay.Instance.PlayerData.roomId = null;
+                Geekplay.Instance.Save();
                 Debug.Log($"Player {response.player_id} left room {response.room_id}");
             }
         });
@@ -511,8 +511,7 @@ public class OnlineRoom : MonoBehaviour
             // Отправляем на сервер
             WebSocketBase.Instance.SendPlayerTransformUpdate(
                 position,
-                rotation,
-                animation
+                rotation
             );
         }
     }
@@ -557,8 +556,7 @@ public class OnlineRoom : MonoBehaviour
         while (true && player != null)
         {
             WebSocketBase.Instance.SendPlayerTransformUpdate(player.Controller.transform.position,
-                                                            player.Controller.transform.rotation,
-                                                            "poka xz");
+                                                            player.Controller.transform.rotation);
             yield return _waitForSeconds0_1;
         }
     }
@@ -582,6 +580,8 @@ public class OnlineRoom : MonoBehaviour
                 if (response.other_transforms != null && response.other_transforms.Count > 0)
                 {
                     UpdateOtherPlayersTransforms(response.other_transforms);
+                    UpdateOtherPlayersAnimations(response.other_transforms);
+                    UpdateOtherPlayersNoizes(response.other_transforms);
                 }
             }
             else
@@ -612,7 +612,6 @@ public class OnlineRoom : MonoBehaviour
                 // Обновляем данные существующего игрока
                 player.position = transformData.position.ToVector3();
                 player.rotation = transformData.rotation.ToQuaternion();
-                player.animationState = transformData.animation;
                 player.isAlive = transformData.is_alive;
 
                 // Обновляем визуальное представление
@@ -632,7 +631,6 @@ public class OnlineRoom : MonoBehaviour
                 {
                     position = transformData.position.ToVector3(),
                     rotation = transformData.rotation.ToQuaternion(),
-                    animationState = transformData.animation,
                     isAlive = transformData.is_alive
                 };
 
@@ -640,6 +638,74 @@ public class OnlineRoom : MonoBehaviour
                 UpdatePlayerVisualization(newPlayer);
 
                 Debug.Log($"Added new player from transform: {transformData.username}");
+            }
+        }
+    }
+
+    private void UpdateOtherPlayersAnimations(List<PlayerTransformData> transforms)
+    {
+        Debug.Log("UpdateOtherPlayersAnimations");
+        if (!IsInRoom) return;
+
+        foreach (var transformData in transforms)
+        {
+            if (transformData == null) return;
+
+            // Пропускаем своего игрока (его данные приходят отдельно)
+            if (transformData.player_id == Geekplay.Instance.PlayerData.id)
+                return;
+
+            // Находим игрока в комнате
+            var player = CurrentRoom.GetPlayer(transformData.player_id);
+            var enemy = EnemiesInGame.Instance.GetEnemy(transformData.player_id);
+
+            if (player != null)
+            {
+                Debug.Log(player.boolsState);
+                Debug.Log(transformData.boolsState);
+                player.boolsState.isMoving = transformData.boolsState.isMoving;
+                player.boolsState.isDead = transformData.boolsState.isDead;
+                player.boolsState.isHealing = transformData.boolsState.isHealing;
+                player.boolsState.isPickingUp = transformData.boolsState.isPickingUp;
+                player.boolsState.isReloading = transformData.boolsState.isReloading;
+                player.boolsState.isShooting = transformData.boolsState.isShooting;
+            }
+            
+            if (enemy != null)
+            {
+                // Булевые
+                enemy.animator.SetBool("IsMoving", transformData.boolsState.isMoving);
+                enemy.animator.SetBool("IsReload", transformData.boolsState.isReloading);
+                enemy.animator.SetBool("IsShoot", transformData.boolsState.isShooting);
+                // Триггеры
+                if (transformData.boolsState.isReviving) enemy.animator.SetTrigger("Revive");
+                if (transformData.boolsState.isPickingUp) enemy.animator.SetTrigger("");
+                if (transformData.boolsState.isHealing) enemy.animator.SetTrigger("");
+            }
+        }
+    }
+    
+    private void UpdateOtherPlayersNoizes(List<PlayerTransformData> transforms)
+    {
+        Debug.Log("UodateOtherPlayersNoizes");
+        if (!IsInRoom) return;
+
+        foreach (var transformData in transforms)
+        {
+            if (transformData == null) continue;
+
+            // Пропускаем своего игрока (его данные приходят отдельно)
+            if (transformData.player_id == Geekplay.Instance.PlayerData.id)
+                continue;
+
+            // Находим игрока в комнате
+            var player = CurrentRoom.GetPlayer(transformData.player_id);
+            var enemy = EnemiesInGame.Instance.GetEnemy(transformData.player_id);
+
+            if (player != null)
+            {
+                player.noizeRadius = transformData.noizeVolume;
+                enemy.noizeVolume = transformData.noizeVolume;
             }
         }
     }
@@ -657,7 +723,6 @@ public class OnlineRoom : MonoBehaviour
             // Обновляем позицию и ротацию
             player.position = transformData.position.ToVector3();
             player.rotation = transformData.rotation.ToQuaternion();
-            player.animationState = transformData.animation;
             player.isAlive = transformData.is_alive;
 
             // Обновляем визуальное представление

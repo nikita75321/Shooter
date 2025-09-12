@@ -26,6 +26,8 @@ public abstract class Boost : MonoBehaviour
     private void Start()
     {
         ResetProgress();
+        player = Level.Instance.currentLevel.player;
+        Animator = player.Controller.animator;
     }
 
     public virtual void OnTriggerEnter(Collider other)
@@ -34,10 +36,11 @@ public abstract class Boost : MonoBehaviour
         {
             if (other is CharacterController)
             {
-                if (other.GetComponentInParent<Player>() && !isPickingUp && CanPickUp(other.GetComponentInParent<Player>()))
+                var p = other.GetComponentInParent<Player>();
+                if (p == player && !isPickingUp && CanPickUp(player))
                 {
                     Debug.Log("trigger pick up");
-                    player = other.GetComponentInParent<Player>();
+                    // player = other.GetComponentInParent<Player>();
                     StartPickUp();
                 }
                 else
@@ -76,6 +79,7 @@ public abstract class Boost : MonoBehaviour
 
     public void StartPickUp()
     {
+        player.IsPickingUp = true;
         if (!CanPickUp(player)) return;
 
         isPickingUp = true;
@@ -85,7 +89,7 @@ public abstract class Boost : MonoBehaviour
         pickUpCoroutine = StartCoroutine(PickUpProcess());
 
         if (Animator != null)
-        {
+        {   
             Animator.SetBool("IsPickingUp", true);
             Animator.SetFloat("PickUpSpeed", 1f / TimeToPickUp);
         }
@@ -93,6 +97,7 @@ public abstract class Boost : MonoBehaviour
 
     private void CancelPickUp()
     {
+        player.IsPickingUp = false;
         if (pickUpCoroutine != null)
         {
             StopCoroutine(pickUpCoroutine);

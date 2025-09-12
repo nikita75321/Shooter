@@ -70,7 +70,7 @@ public class Healthbar : MonoBehaviour
 
     private void HandleHealthChanged(float newHealth)
     {
-        // Debug.Log($"HandleHealthChanged (slider) - {newHealth}");
+        Debug.Log($"HandleHealthChanged (slider) - {newHealth}");
         // Отменяем предыдущую анимацию, если она была
         healthTween?.Kill();
 

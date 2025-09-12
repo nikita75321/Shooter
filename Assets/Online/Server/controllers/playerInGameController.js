@@ -9,30 +9,71 @@ class PlayerInGameController {
         this.matchTTL = 30 * 30; // 15 минут для данных матча
     }
 
+    // 🔹 Маппинг данных из Redis → структура как в Unity
+    async mapTransformToPlayerData(playerId, raw) {
+        if (!raw || !raw.p_x) return null;
+
+        const playerInfo = await this.getPlayerBasicInfo(playerId);
+
+        return {
+            player_id: playerId,
+            username: playerInfo.player_name || "Unknown",
+            hero_id: parseInt(playerInfo.hero_id || 0),
+
+            position: {
+                x: parseFloat(raw.p_x || 0),
+                y: parseFloat(raw.p_y || 0),
+                z: parseFloat(raw.p_z || 0)
+            },
+            rotation: {
+                x: parseFloat(raw.r_x || 0),
+                y: parseFloat(raw.r_y || 0),
+                z: parseFloat(raw.r_z || 0),
+                w: parseFloat(raw.r_w || 1)
+            },
+
+            boolsState: {
+                isMoving: raw.isMoving === "true",
+                isShooting: raw.isShooting === "true",
+                isReloading: raw.isReloading === "true",
+                isHealing: raw.isHealing === "true",
+                isReviving: raw.isReviving === "true",
+                isPickingUp: raw.isPickingUp === "true",
+                isDead: raw.isDead === "true",
+            },
+
+            is_alive: raw.is_alive === "true",
+            noizeVolume: parseFloat(raw.noizeVolume || 0),
+            timestamp: parseInt(raw.timestamp || Date.now())
+        };
+    }
+
     async handleUpdatePlayerTransform(ws, data) {
-        const requiredFields = ['player_id', 'room_id', 'p_x', 'p_y', 'p_z', 'r_x', 'r_y', 'r_z', 'r_w', 'anim'];
+        const requiredFields = ['player_id', 'room_id', 'p_x', 'p_y', 'p_z', 'r_x', 'r_y', 'r_z', 'r_w'];
         if (!Utils.isValidMessage(data, requiredFields)) {
             return Utils.sendError(ws, 'Missing transform data fields');
         }
 
         try {
             const { player_id, room_id } = data;
-            
-            // Сохраняем трансформ в Redis
+
+            // Сохраняем трансформ
             await this.savePlayerTransform(player_id, room_id, data);
-            
-            // Получаем свои собственные данные
-            const myTransform = await this.getPlayerTransform(player_id);
+
+            // Получаем свои данные
+            const myRaw = await global.redisClient.hGetAll(`${Constants.playerTransformKey}${player_id}`);
+            const myTransform = await this.mapTransformToPlayerData(player_id, myRaw);
+
             // Получаем трансформы других игроков
             const otherTransforms = await this.getOtherPlayerTransforms(room_id, player_id);
 
-            // Отправляем ответ с трансформами других игроков
+            // Отправляем уже структурированный JSON
             ws.send(JSON.stringify({
-                action: 'player_transform_update_response',
+                action: 'update_player_transform_response',
                 success: true,
                 timestamp: Date.now(),
-                other_transforms: otherTransforms,
-                my_transform: myTransform
+                my_transform: myTransform,
+                other_transforms: otherTransforms
             }));
 
         } catch (error) {
@@ -41,57 +82,79 @@ class PlayerInGameController {
         }
     }
 
+    async getOtherPlayerTransforms(roomId, excludePlayerId) {
+        const playerIds = await global.redisClient.sMembers(`${Constants.roomPlayersKey}${roomId}`);
+        const otherIds = playerIds.filter(id => id !== excludePlayerId);
+
+        const otherTransforms = [];
+        for (const pid of otherIds) {
+            const raw = await global.redisClient.hGetAll(`${Constants.playerTransformKey}${pid}`);
+            const mapped = await this.mapTransformToPlayerData(pid, raw);
+            if (mapped) {
+                otherTransforms.push(mapped);
+            }
+        }
+        return otherTransforms;
+    }
+
     async savePlayerTransform(playerId, roomId, data) {
         const transformKey = `${Constants.playerTransformKey}${playerId}`;
         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
 
         const transformData = {
+            // Позиция
             'p_x': data.p_x?.toString() || '0',
             'p_y': data.p_y?.toString() || '0',
             'p_z': data.p_z?.toString() || '0',
+
+            // Ротация
             'r_x': data.r_x?.toString() || '0',
             'r_y': data.r_y?.toString() || '0',
             'r_z': data.r_z?.toString() || '0',
             'r_w': data.r_w?.toString() || '1',
-            'anim': data.anim?.toString() || 'idle',
+
+            // Булевые состояния
+            'isMoving': data.isMoving ? 'true' : 'false',
+            'isShooting': data.isShooting ? 'true' : 'false',
+            'isReloading': data.isReloading ? 'true' : 'false',
+            'isHealing': data.isHealing ? 'true' : 'false',
+            'isReviving': data.isReviving ? 'true' : 'false',
+            'isPickingUp': data.isPickingUp ? 'true' : 'false',
+            'isDead': data.isDead ? 'true' : 'false',
+
+            // Прочее
+            'noizeVolume': data.noizeVolume?.toString() || '0',
             'timestamp': Date.now().toString(),
             'room_id': roomId
         };
 
-        // Сохраняем в двух местах: отдельно для трансформа и в данных матча
         const pipeline = global.redisClient.multi();
-        
+
         // Основной трансформ
         pipeline.hSet(transformKey, transformData);
         pipeline.expire(transformKey, 300); // 5 минут TTL
-        
+
         // Данные матча
         pipeline.hSet(matchKey, 'transform', JSON.stringify(transformData));
         pipeline.expire(matchKey, this.matchTTL);
-        
+
         await pipeline.exec();
     }
 
-    async getOtherPlayerTransforms(roomId, excludePlayerId) {
+    async getPlayerBasicInfo(playerId) {
         try {
-            // Получаем всех игроков в комнате
-            const roomPlayersKey = `${Constants.roomPlayersKey}${roomId}`;
-            const playerIds = await global.redisClient.sMembers(roomPlayersKey);
-            
-            const otherPlayerIds = playerIds.filter(id => id !== excludePlayerId);
-            if (otherPlayerIds.length === 0) return [];
-
-            // Получаем трансформы параллельно
-            const transformPromises = otherPlayerIds.map(playerId => 
-                this.getPlayerTransform(playerId)
-            );
-
-            const transforms = await Promise.all(transformPromises);
-            return transforms.filter(transform => transform !== null);
-
+            const playerInfo = await playerRedisService.getPlayerFromRedis(playerId);
+            if (playerInfo) {
+                return {
+                    player_name: playerInfo.player_name || "Unknown",
+                    rating: playerInfo.rating || 1000,
+                    hero_id: playerInfo.hero_id || 0
+                };
+            }
+            return { player_name: "Unknown", rating: 1000, hero_id: 0 };
         } catch (error) {
-            console.error(`Error getting other player transforms for room ${roomId}:`, error);
-            return [];
+            console.error(`Error getting basic info for player ${playerId}:`, error);
+            return { player_name: "Unknown", rating: 1000, hero_id: 0 };
         }
     }
 
@@ -99,10 +162,9 @@ class PlayerInGameController {
         try {
             const transformKey = `${Constants.playerTransformKey}${playerId}`;
             const transformData = await global.redisClient.hGetAll(transformKey);
-            
+
             if (!transformData || !transformData.p_x) return null;
 
-            // Получаем информацию об игроке
             const playerInfo = await this.getPlayerBasicInfo(playerId);
 
             return {
@@ -119,9 +181,20 @@ class PlayerInGameController {
                     z: parseFloat(transformData.r_z || '0'),
                     w: parseFloat(transformData.r_w || '1')
                 },
-                animation: transformData.anim || 'idle',
+
+                // Булевые состояния
+                isMoving: transformData.isMoving === 'true',
+                isShooting: transformData.isShooting === 'true',
+                isReloading: transformData.isReloading === 'true',
+                isHealing: transformData.isHealing === 'true',
+                isReviving: transformData.isReviving === 'true',
+                isPickingUp: transformData.isPickingUp === 'true',
+                isDead: transformData.isDead === 'true',
+
+                // Доп
+                noizeVolume: parseFloat(transformData.noizeVolume || '0'),
                 timestamp: parseInt(transformData.timestamp || '0'),
-                is_alive: await this.isPlayerAlive(playerId, transformData.room_id)
+                is_alive: !(transformData.isDead === 'true')
             };
         } catch (error) {
             console.error(`Error getting transform for player ${playerId}:`, error);
@@ -133,19 +206,16 @@ class PlayerInGameController {
         try {
             const playerInfo = await playerRedisService.getPlayerFromRedis(playerId);
             if (playerInfo) {
-                
                 return {
                     player_name: playerInfo.player_name || 'Unknown',
                     rating: playerInfo.rating || 1000,
                     hero_id: playerInfo.hero_id || 0
                 };
             }
-
-            // Если нет в Redis, возвращаем дефолт
-            return { username: 'Unknown', rating: 1000, hero_id: 0 };
+            return { player_name: 'Unknown', rating: 1000, hero_id: 0 };
         } catch (error) {
             console.error(`Error getting basic info for player ${playerId}:`, error);
-            return { username: 'Unknown', rating: 1000, hero_id: 0 };
+            return { player_name: 'Unknown', rating: 1000, hero_id: 0 };
         }
     }
 

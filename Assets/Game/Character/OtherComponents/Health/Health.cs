@@ -208,18 +208,18 @@ public class Health : MonoBehaviour
 
     public void NewTakeDamage(float damage)
     {
-        Debug.Log($"NewTakeDamage currentHealth={currentHealth}, damage={damage}");
+        Debug.Log($"NewTakeDamage currentHealth={CurrentHealth}, damage={damage}");
         if (armor != null && armor.CurrentArmor > 0)
         {
             var damageToHealth = armor.TakeDamage(damage, 0);
 
-            currentHealth -= damageToHealth;
+            CurrentHealth -= damageToHealth;
         }
         else
         {
-            currentHealth -= damage;
+            CurrentHealth -= damage;
         }
-        ChangeHp(currentHealth);
+        ChangeHp(CurrentHealth);
     }
     public void ChangeHp(float value)
     {

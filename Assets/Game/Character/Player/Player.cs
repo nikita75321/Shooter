@@ -11,6 +11,8 @@ public enum PlayerState
     Reloading,  // Перезарядка оружия
     PickingUp,  // Подбирает предмет
     Revive,     // Поднимаем союзника
+    Healing,    // Используем аптечку
+    TakeDamage, // Получение урона
     Dead        // Персонаж мертв
 }
 
@@ -41,13 +43,13 @@ public class Player : MonoBehaviour
     [HideInInspector] public UnityEvent OnPickUp;
     [HideInInspector] public UnityEvent OnDeath;
 
-    [Header("States")]
+    [Header("States")] // Расположены по приоритеты показа анимации
+    [field: SerializeField] public bool IsRevive { get; set; }
+    [field: SerializeField] public bool IsUseAidKit { get; set; }
     [field: SerializeField] public bool IsPickingUp { get; set; }
     [field: SerializeField] public bool IsReload { get; set; }
     [field: SerializeField] public bool IsShoot { get; set; }
     [field: SerializeField] public bool IsMoving { get; set; }
-    [field: SerializeField] public bool IsUseAidKit { get; set; }
-    [field: SerializeField] public bool IsRevive { get; set; }
 
     [Header("Visibility")]
     [SerializeField] private Material hiddenMaterial; // Материал для скрытых объектов
@@ -91,6 +93,9 @@ public class Player : MonoBehaviour
         }
         if (GameStateManager.Instance.GameState == GameState.game)
         {
+            //Animation state
+            UpdateState();
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (IsUseAidKit)
@@ -261,10 +266,12 @@ public class Player : MonoBehaviour
         Controller.animator.SetLayerWeight(1, 0);
         Controller.animator.SetLayerWeight(2, 0);
         GameStateManager.Instance.GameDeath();
+        currentState = PlayerState.Dead;
     }
 
     public void TakeDamageAnim()
     {
+
         int randomAnimation = Random.Range(0, 2); // 0 или 1
         Controller.animator.SetInteger("RandomHit", randomAnimation);
         Controller.animator.SetTrigger("Hit");
@@ -305,6 +312,90 @@ public class Player : MonoBehaviour
             upgrade.DropUpgrade(Controller.transform.position);
             RemoveUpgrade(upgrade);
         });
+    }
+    #endregion
+
+
+
+
+
+
+    #region Amimation state
+    private void UpdateState()
+    {
+        if (Character.Health.CurrentHealth <= 0)
+        {
+            SetState(PlayerState.Dead);
+            return;
+        }
+
+        if (IsRevive)
+        {
+            SetState(PlayerState.Revive);
+            return;
+        }
+
+        if (IsUseAidKit)
+        {
+            SetState(PlayerState.Healing);
+            return;
+        }
+
+        if (IsPickingUp)
+        {
+            SetState(PlayerState.PickingUp);
+            return;
+        }
+
+        if (IsReload)
+        {
+            SetState(PlayerState.Reloading);
+            return;
+        }
+
+        if (IsShoot)
+        {
+            SetState(PlayerState.Shooting);
+            return;
+        }
+
+        if (IsMoving)
+        {
+            SetState(PlayerState.Walking);
+            return;
+        }
+
+        SetState(PlayerState.Idle);
+    }
+
+    private void SetState(PlayerState newState)
+    {
+        if (currentState == newState) return;
+
+        currentState = newState;
+
+        switch (currentState)
+        {
+            case PlayerState.Idle: OnIdle?.Invoke(); break;
+            case PlayerState.Walking: OnWalk?.Invoke(); break;
+            case PlayerState.Shooting: OnShoot?.Invoke(); break;
+            case PlayerState.Reloading: OnReload?.Invoke(); break;
+            case PlayerState.PickingUp: OnPickUp?.Invoke(); break;
+            case PlayerState.Dead: OnDeath?.Invoke(); break;
+        }
+    }
+
+    private void UpdateAnimator()
+    {
+        var animator = Controller.animator;
+
+        animator.SetBool("IsMoving", IsMoving);
+        animator.SetBool("IsShooting", IsShoot);
+        animator.SetBool("IsReloading", IsReload);
+        animator.SetBool("IsHealing", IsUseAidKit);
+        animator.SetBool("IsReviving", IsRevive);
+        animator.SetBool("IsPickingUp", IsPickingUp);
+        animator.SetBool("IsDead", currentState == PlayerState.Dead);
     }
     #endregion
 }

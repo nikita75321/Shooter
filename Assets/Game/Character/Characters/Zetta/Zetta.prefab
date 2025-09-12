@@ -279,6 +279,7 @@ MonoBehaviour:
   OnRevive:
     m_PersistentCalls:
       m_Calls: []
+  currentHealth: 0
   isEnemy: 0
   isAlly: 0
 --- !u!114 &8180050042251990058
@@ -294,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  characterController: {fileID: 1072751216411746603}
   revive: {fileID: 0}
   revievButton: {fileID: 0}
   ally: {fileID: 0}
@@ -346,49 +348,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5182df665b78284ea6f4d861bc80bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skinHead:
-  - {fileID: 1351191389334947468}
-  - {fileID: 2626684811249808559}
-  - {fileID: 2603148256564446806}
-  - {fileID: 2848585401031097661}
-  - {fileID: 3695591970841881623}
-  - {fileID: 5589979857145885233}
-  - {fileID: 8567151607006390954}
-  - {fileID: 6805290948383151406}
-  - {fileID: 4019927494098935588}
-  - {fileID: 4117346454298237570}
-  - {fileID: 4210483937592804198}
-  - {fileID: 4664889979502981194}
-  - {fileID: 8845540277020701829}
-  - {fileID: 9143610294294971936}
-  - {fileID: 2481374188896730556}
-  - {fileID: 1284193894638518124}
-  - {fileID: 6880970786365645343}
-  - {fileID: 948708627727901423}
-  - {fileID: 7674796061589626625}
-  - {fileID: 3150517641517323103}
-  skinBody:
-  - {fileID: 2908140952851935835}
-  - {fileID: 823496128751884318}
-  - {fileID: 5961408956746159528}
-  - {fileID: 582576335700596055}
-  - {fileID: 5370633505950661700}
-  - {fileID: 5324236511159355193}
-  - {fileID: 4960799906518920514}
-  - {fileID: 3142215218619933887}
-  - {fileID: 4068093220058352602}
-  - {fileID: 1407323663767619282}
-  - {fileID: 5237734032486881025}
-  - {fileID: 1937635804037463113}
-  - {fileID: 4569533791519456565}
-  - {fileID: 3138917800856194273}
-  - {fileID: 5679578900399966442}
-  - {fileID: 646331800333166775}
-  - {fileID: 3058880869530178962}
-  - {fileID: 2475716693339722740}
-  - {fileID: 7287972211770736657}
-  - {fileID: 1935626659932049178}
-  skinsBody: []
+  skinsHead:
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  - skinPrefab: {fileID: 0}
+    needHead: 0
+  skinBody: {fileID: 0}
+  materialsBody: []
 --- !u!1 &467604196326526352
 GameObject:
   m_ObjectHideFlags: 0
@@ -2012,6 +1992,7 @@ MonoBehaviour:
   minNoiseRadius: 1
   maxNoiseRadius: 3
   noiseFadeSpeed: 2
+  currentNoiseRadius: 0
 --- !u!1 &2365554735263668363
 GameObject:
   m_ObjectHideFlags: 0

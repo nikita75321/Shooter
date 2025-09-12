@@ -241,11 +241,12 @@ public class PlayerTransformData
     public int hero_id;
     public Position position;
     public Rotation rotation;
-    public string animation;
+    public BoolsState boolsState;
     public bool is_alive;
+    public float noizeVolume;
     public long timestamp;
 }
-[System.Serializable]
+[Serializable]
 public class Position
 {
     public float x;
@@ -258,7 +259,7 @@ public class Position
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class Rotation
 {
     public float x;
@@ -270,6 +271,18 @@ public class Rotation
     {
         return new Quaternion(x, y, z, w);
     }
+}
+
+[Serializable]
+public class BoolsState
+{
+    public bool isMoving;
+    public bool isShooting;
+    public bool isReloading;
+    public bool isHealing;
+    public bool isReviving;
+    public bool isPickingUp;
+    public bool isDead;
 }
 
 [Serializable]
@@ -611,7 +624,7 @@ public class WebSocketBase : MonoBehaviour
 
 
 
-            case "player_transform_update_response":
+            case "update_player_transform_response":
                 HandlePlayerTransformUpdateResponse(message);
                 break;
 
@@ -1899,8 +1912,10 @@ public class WebSocketBase : MonoBehaviour
 
 
     #region Transform and Animation
-    public void SendPlayerTransformUpdate(Vector3 position, Quaternion rotation, string animation)
+    public void SendPlayerTransformUpdate(Vector3 position, Quaternion rotation)
     {
+        var player = Level.Instance.currentLevel.player;
+
         var data = new Dictionary<string, object>
         {
             { "player_id", Geekplay.Instance.PlayerData.id },
@@ -1912,7 +1927,16 @@ public class WebSocketBase : MonoBehaviour
             { "r_y", rotation.y },
             { "r_z", rotation.z },
             { "r_w", rotation.w },
-            { "anim", animation }
+            
+            { "noizeVolume", player.noiseEmitter.currentNoiseRadius},
+
+            { "isMoving", player.IsMoving },
+            { "isShooting", player.IsShoot },
+            { "isReloading", player.IsReload },
+            { "isHealing", player.IsUseAidKit },
+            { "isReviving", player.IsRevive },
+            { "isPickingUp", player.IsPickingUp },
+            { "isDead", player.currentState == PlayerState.Dead }
         };
 
         SendWebSocketRequest("update_player_transform", data);
@@ -2131,6 +2155,7 @@ public class WebSocketBase : MonoBehaviour
 
         var boostsData = new List<Dictionary<string, object>>();
 
+        Debug.Log("roomId - "+ roomId);
         foreach (var boostEntry in boostList)
         {
             var boost = boostEntry.boost;

@@ -53,15 +53,20 @@ public class BoostsManager : MonoBehaviour
     private void OnEnable()
     {
         WebSocketBase.Instance.OnBoostPickupResponse += UpdateBoosts;
+        WebSocketBase.Instance.OnMatchStart += SpawnBoost;
     }
     private void OnDisable()
     {
         WebSocketBase.Instance.OnBoostPickupResponse -= UpdateBoosts;
+        WebSocketBase.Instance.OnMatchStart -= SpawnBoost;
     }
 
-    private void Start()
+    private void SpawnBoost(MatchStartResponse response)
     {
-        WebSocketBase.Instance.SendBoostsToServer(boostList);
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            WebSocketBase.Instance.SendBoostsToServer(boostList);
+        });
     }
 
     public void PickUpBoost(int id)

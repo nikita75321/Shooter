@@ -11,7 +11,8 @@ public class NoiseEmitter : MonoBehaviour
     [SerializeField] private float maxNoiseRadius = 3f;
     [SerializeField] private float noiseFadeSpeed = 2f;
 
-    [SerializeField] private float currentNoiseRadius;
+    public float currentNoiseRadius;
+    
     private float targetNoiseRadius;
     private float noiseDelayTimer = 0f;
     private bool isWaitingToReset = false;
