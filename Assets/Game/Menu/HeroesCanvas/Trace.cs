@@ -27,7 +27,7 @@ public class Trace : MonoBehaviour
         {
             trace.enabled = true;
         }
-        Debug.Log("Show trace");
+        // Debug.Log("Show trace");
     }
     public void HideTraces()
     {
@@ -35,6 +35,6 @@ public class Trace : MonoBehaviour
         {
             trace.enabled = false;
         }
-        Debug.Log("Hide trace");
+        // Debug.Log("Hide trace");
     }
 }

@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System;
 using UnityEngine.Experimental.AI;
+using System.Net.WebSockets;
 
 #region Class struct
 [Serializable]
@@ -74,6 +75,7 @@ public class PlayerInGameInfo
     public int hero_skin;
     public bool isReady;
     public float noizeRadius;
+    public string current_weapon;
     public Vector3 position;
     public Quaternion rotation;
     public string animationState;
@@ -237,6 +239,8 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnPlayerDamaged += HandlePlayerDamaged;
 
         WebSocketBase.Instance.OnBoostTaken += HandleBoostTaken;
+
+        WebSocketBase.Instance.OnHealPlayer += HandleHealPlayer;
     }
 
     private void Start()
@@ -271,6 +275,8 @@ public class OnlineRoom : MonoBehaviour
             WebSocketBase.Instance.OnPlayerDamaged -= HandlePlayerDamaged;
 
             WebSocketBase.Instance.OnBoostTaken -= HandleBoostTaken;
+
+            WebSocketBase.Instance.OnHealPlayer -= HandleHealPlayer;
         }
 
         if (serverCor != null)
@@ -438,7 +444,18 @@ public class OnlineRoom : MonoBehaviour
         if (enemy == null) return;
 
         enemy.SetNetworkState(player.position, player.rotation);
+        if (player.current_weapon == "secondary")
+        {
+            enemy.currentWeapon.weapons[0].SetActive(true);
+            enemy.currentWeapon.weapons[1].SetActive(false);
+        }
+        if (player.current_weapon == "main")
+        {
+            enemy.currentWeapon.weapons[1].SetActive(true);
+            enemy.currentWeapon.weapons[0].SetActive(false);
+        }
     }
+    
     private void UpdatePlayerHp(WebSocketBase.PlayerDamagedResponse response)
     {
         if (response.target_id == Geekplay.Instance.PlayerData.id)
@@ -501,20 +518,20 @@ public class OnlineRoom : MonoBehaviour
             new List<PlayerInGameInfo>();
     }
 
-    public void UpdateLocalPlayerTransform(Vector3 position, Quaternion rotation, string animation)
-    {
-        var localPlayer = GetLocalPlayerInfo();
-        if (localPlayer != null)
-        {
-            localPlayer.UpdateTransform(position, rotation, animation);
+    // public void UpdateLocalPlayerTransform(Vector3 position, Quaternion rotation, string animation)
+    // {
+    //     var localPlayer = GetLocalPlayerInfo();
+    //     if (localPlayer != null)
+    //     {
+    //         localPlayer.UpdateTransform(position, rotation, animation);
 
-            // Отправляем на сервер
-            WebSocketBase.Instance.SendPlayerTransformUpdate(
-                position,
-                rotation
-            );
-        }
-    }
+    //         // Отправляем на сервер
+    //         WebSocketBase.Instance.SendPlayerTransformUpdate(
+    //             position,
+    //             rotation
+    //         );
+    //     }
+    // }
 
     public void UpdateLocalPlayerStats(int kills, int deaths, bool isAlive)
     {
@@ -593,7 +610,7 @@ public class OnlineRoom : MonoBehaviour
 
     private void UpdateOtherPlayersTransforms(List<PlayerTransformData> transforms)
     {
-        Debug.Log("UpdateOtherPlayersTransforms");
+        // Debug.Log("UpdateOtherPlayersTransforms");
         if (!IsInRoom) return;
 
         foreach (var transformData in transforms)
@@ -617,7 +634,7 @@ public class OnlineRoom : MonoBehaviour
                 // Обновляем визуальное представление
                 UpdatePlayerVisualization(player);
 
-                Debug.Log($"Updated other player: {player.player_name}");
+                // Debug.Log($"Updated other player: {player.player_name}");
             }
             else
             {
@@ -644,7 +661,7 @@ public class OnlineRoom : MonoBehaviour
 
     private void UpdateOtherPlayersAnimations(List<PlayerTransformData> transforms)
     {
-        Debug.Log("UpdateOtherPlayersAnimations");
+        // Debug.Log("UpdateOtherPlayersAnimations");
         if (!IsInRoom) return;
 
         foreach (var transformData in transforms)
@@ -661,33 +678,35 @@ public class OnlineRoom : MonoBehaviour
 
             if (player != null)
             {
+                Debug.Log(player);
                 Debug.Log(player.boolsState);
-                Debug.Log(transformData.boolsState);
-                player.boolsState.isMoving = transformData.boolsState.isMoving;
-                player.boolsState.isDead = transformData.boolsState.isDead;
-                player.boolsState.isHealing = transformData.boolsState.isHealing;
-                player.boolsState.isPickingUp = transformData.boolsState.isPickingUp;
-                player.boolsState.isReloading = transformData.boolsState.isReloading;
-                player.boolsState.isShooting = transformData.boolsState.isShooting;
+                Debug.Log(transformData);
+                Debug.Log(transformData.bools_state);
+                player.boolsState.isMoving = transformData.bools_state.isMoving;
+                player.boolsState.isDead = transformData.bools_state.isDead;
+                player.boolsState.isHealing = transformData.bools_state.isHealing;
+                player.boolsState.isPickingUp = transformData.bools_state.isPickingUp;
+                player.boolsState.isReloading = transformData.bools_state.isReloading;
+                player.boolsState.isShooting = transformData.bools_state.isShooting;
             }
-            
+
             if (enemy != null)
             {
                 // Булевые
-                enemy.animator.SetBool("IsMoving", transformData.boolsState.isMoving);
-                enemy.animator.SetBool("IsReload", transformData.boolsState.isReloading);
-                enemy.animator.SetBool("IsShoot", transformData.boolsState.isShooting);
+                enemy.animator.SetBool("IsMoving", transformData.bools_state.isMoving);
+                enemy.animator.SetBool("IsReload", transformData.bools_state.isReloading);
+                enemy.animator.SetBool("IsShoot", transformData.bools_state.isShooting);
                 // Триггеры
-                if (transformData.boolsState.isReviving) enemy.animator.SetTrigger("Revive");
-                if (transformData.boolsState.isPickingUp) enemy.animator.SetTrigger("");
-                if (transformData.boolsState.isHealing) enemy.animator.SetTrigger("");
+                if (transformData.bools_state.isReviving) enemy.animator.SetTrigger("Revive");
+                if (transformData.bools_state.isPickingUp) enemy.animator.SetTrigger("");
+                if (transformData.bools_state.isHealing) enemy.animator.SetTrigger("");
             }
         }
     }
-    
+
     private void UpdateOtherPlayersNoizes(List<PlayerTransformData> transforms)
     {
-        Debug.Log("UodateOtherPlayersNoizes");
+        // Debug.Log("UpdateOtherPlayersNoizes");
         if (!IsInRoom) return;
 
         foreach (var transformData in transforms)
@@ -704,8 +723,8 @@ public class OnlineRoom : MonoBehaviour
 
             if (player != null)
             {
-                player.noizeRadius = transformData.noizeVolume;
-                enemy.noizeVolume = transformData.noizeVolume;
+                player.noizeRadius = transformData.noize_volume;
+                enemy.noizeVolume = transformData.noize_volume;
             }
         }
     }
@@ -857,6 +876,27 @@ public class OnlineRoom : MonoBehaviour
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
             BoostsManager.Instance.UpdateVisualBoosts(response);
+        });
+    }
+    #endregion
+
+    #region Useable
+    public void HandleHealPlayer(string playerId)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            var player = GetPlayerInfo(playerId);
+            player.hp = player.max_hp;
+
+            if (Geekplay.Instance.PlayerData.id == playerId)
+            {
+                Level.Instance.currentLevel.player.Character.Health.ChangeHp(player.max_hp);
+            }
+            else
+            {
+                var enemy = EnemiesInGame.Instance.GetEnemy(playerId);
+                enemy.Health.ChangeHp(player.max_hp);
+            }
         });
     }
     #endregion

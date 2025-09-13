@@ -121,6 +121,55 @@ class BoostController {
             Utils.sendError(ws, 'Failed to pickup boost');
         }
     }
+
+    async healPlayer(ws, data) {
+        if (!Utils.isValidMessage(data, ['player_id', 'room_id'])) {
+            return Utils.sendError(ws, 'Missing heal fields');
+        }
+
+        const { player_id, room_id } = data;
+
+        try {
+            // 1. Получаем статы игрока
+            const playerStats = await playerInGameController.getPlayerStats(player_id, room_id);
+            if (!playerStats) {
+                return Utils.sendError(ws, 'Player stats not found');
+            }
+
+            // 2. Восстанавливаем здоровье до максимума
+            const updatedStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
+                new_hp: playerStats.max_hp,
+                new_armor: playerStats.armor, // оставляем текущее значение
+                kills: playerStats.kills,
+                deaths: playerStats.deaths,
+                damage: playerStats.damage,
+                is_alive: true
+            });
+
+            // 3. Оповещаем комнату
+            const room = await roomManager.getRoomInfo(room_id);
+            if (room) {
+                roomManager.notifyRoomPlayers(room, {
+                    success: true,
+                    action: 'player_healed',
+                    player_id,
+                    new_stats: updatedStats
+                });
+            }
+
+            // 4. Отправляем ответ клиенту
+            ws.send(JSON.stringify({
+                action: 'heal_player_response',
+                success: true,
+                player_id,
+                new_hp: updatedStats.hp,
+            }));
+
+        } catch (err) {
+            console.error('Error healing player:', err);
+            Utils.sendError(ws, 'Failed to heal player');
+        }
+    }
 }
 
 module.exports = new BoostController();

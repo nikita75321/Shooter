@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Trace trace;
     [SerializeField] private bool isAudible;
     public float noizeVolume;
+    public WeaponEnemy currentWeapon;
 
     private struct State
     {
@@ -214,7 +215,7 @@ public class Enemy : MonoBehaviour
     public void UpdateNoizeState(float value)
     {
         var distance = Vector3.Distance(player.Character.transform.position, transform.position);
-        Debug.Log($"distance - {distance}, value - {value}");
+        // Debug.Log($"distance - {distance}, value - {value}");
         if (distance <= value)
         {
             trace.ShowTraces();

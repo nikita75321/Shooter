@@ -162,6 +162,9 @@ function setupWebSocketServer(server) {
                 // =================== Boost ===================
                 case 'spawn_room_boosts': await boostController.spawnBoosts(ws, data); break;
                 case 'boost_pickup': await boostController.handleBoostPickup(ws, data); break;
+
+                // ===========================================
+                case 'heal_player': await boostController.healPlayer(ws, data); break;
                 
                 // =================== Upgrade ===================
                 case 'pick_up_upgrade': await upgradeController.handlePickUpUpgrade(ws, data); break;

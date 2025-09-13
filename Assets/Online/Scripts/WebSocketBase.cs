@@ -241,9 +241,10 @@ public class PlayerTransformData
     public int hero_id;
     public Position position;
     public Rotation rotation;
-    public BoolsState boolsState;
+    public BoolsState bools_state;
+    public string current_weapon;
     public bool is_alive;
-    public float noizeVolume;
+    public float noize_volume;
     public long timestamp;
 }
 [Serializable]
@@ -415,6 +416,8 @@ public class WebSocketBase : MonoBehaviour
 
     public event Action<BoostPickupResponse> OnBoostPickupResponse;
     public event Action<BoostTakenResponse> OnBoostTaken;
+
+    public event Action<string> OnHealPlayer;
     #endregion
 
     #region Комнаты
@@ -648,11 +651,14 @@ public class WebSocketBase : MonoBehaviour
             case "boost_pickup_response":
                 HandleBoostPickupResponse(message);
                 break;
-
             case "boost_taken":
                 HandleBoostTaken(message);
                 break;
 
+            // ==============Useable==============
+            case "player_healed":
+                HandleHealPlayer(message);
+                break;
 
 
 
@@ -1526,6 +1532,24 @@ public class WebSocketBase : MonoBehaviour
 
     #endregion
 
+    #region Используемое
+    private void HandleHealPlayer(Dictionary<string, object> message)
+    {
+        // достаём hp и max_hp из ответа
+        if (message.TryGetValue("success", out var successObj) && (bool)successObj)
+        {
+            message.TryGetValue("player_id", out var playerId);
+            OnHealPlayer?.Invoke(playerId.ToString());
+        }
+        else
+        {
+            string error = message.TryGetValue("message", out var errorObj)
+                ? errorObj.ToString()
+                : "Unknown error";
+            Debug.LogError($"Failed to update hero levels: {error}");
+        }
+    }
+    #endregion
     #endregion
 
 
@@ -1905,12 +1929,6 @@ public class WebSocketBase : MonoBehaviour
 
 
     #region InGameplay
-
-
-
-
-
-
     #region Transform and Animation
     public void SendPlayerTransformUpdate(Vector3 position, Quaternion rotation)
     {
@@ -1927,8 +1945,9 @@ public class WebSocketBase : MonoBehaviour
             { "r_y", rotation.y },
             { "r_z", rotation.z },
             { "r_w", rotation.w },
-            
+
             { "noizeVolume", player.noiseEmitter.currentNoiseRadius},
+            { "currentWeapon", player.Character.currentWeaponType.ToString()},
 
             { "isMoving", player.IsMoving },
             { "isShooting", player.IsShoot },
@@ -1968,7 +1987,6 @@ public class WebSocketBase : MonoBehaviour
         SendWebSocketRequest("deal_damage", data);
     }
     #endregion
-
     public void SendPlayerStatsUpdate(int kills, int deaths, bool isAlive)
     {
         var data = new Dictionary<string, object>
@@ -1980,38 +1998,6 @@ public class WebSocketBase : MonoBehaviour
         };
 
         SendWebSocketRequest("update_player_stats", data);
-    }
-
-    public void SendPlayerReadyState(bool isReady)
-    {
-        var data = new Dictionary<string, object>
-        {
-            { "player_id", Geekplay.Instance.PlayerData.id },
-            { "is_ready", isReady }
-        };
-
-        SendWebSocketRequest("update_player_ready", data);
-    }
-
-    public void RequestRoomPlayers(string roomId)
-    {
-        var data = new Dictionary<string, object>
-        {
-            { "room_id", roomId },
-            { "player_id", Geekplay.Instance.PlayerData.id }
-        };
-        SendWebSocketRequest("get_room_players", data);
-    }
-
-    public void KickPlayerFromRoom(string targetPlayerId, string roomId)
-    {
-        var data = new Dictionary<string, object>
-        {
-            { "room_id", roomId },
-            { "player_id", Geekplay.Instance.PlayerData.id },
-            { "target_player_id", targetPlayerId }
-        };
-        SendWebSocketRequest("kick_player_from_room", data);
     }
     #endregion
 
@@ -2140,6 +2126,38 @@ public class WebSocketBase : MonoBehaviour
         SendWebSocketRequest("force_end_game", data);
     }
 
+    public void SendPlayerReadyState(bool isReady)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "player_id", Geekplay.Instance.PlayerData.id },
+            { "is_ready", isReady }
+        };
+
+        SendWebSocketRequest("update_player_ready", data);
+    }
+
+    public void RequestRoomPlayers(string roomId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", Geekplay.Instance.PlayerData.id }
+        };
+        SendWebSocketRequest("get_room_players", data);
+    }
+
+    public void KickPlayerFromRoom(string targetPlayerId, string roomId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", Geekplay.Instance.PlayerData.id },
+            { "target_player_id", targetPlayerId }
+        };
+        SendWebSocketRequest("kick_player_from_room", data);
+    }
+
     #endregion
 
 
@@ -2155,7 +2173,7 @@ public class WebSocketBase : MonoBehaviour
 
         var boostsData = new List<Dictionary<string, object>>();
 
-        Debug.Log("roomId - "+ roomId);
+        Debug.Log("roomId - " + roomId);
         foreach (var boostEntry in boostList)
         {
             var boost = boostEntry.boost;
@@ -2182,8 +2200,6 @@ public class WebSocketBase : MonoBehaviour
         };
 
         SendWebSocketRequest("spawn_room_boosts", data);
-
-        // Debug.Log($"[BoostsManager] Sent {boostsData.Count} boosts to server for room {roomId}");
     }
 
     public void SendBoostPickup(string roomId, string playerId, int boostId)
@@ -2197,6 +2213,19 @@ public class WebSocketBase : MonoBehaviour
 
         SendWebSocketRequest("boost_pickup", data);
     }
-    #endregion 
+    #endregion
+
+    #region Useable
+    public void HealPlayer(string playerId, string roomId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "player_id", playerId },
+            { "room_id", roomId }
+        };
+
+        SendWebSocketRequest("heal_player", data);
+    }
+    #endregion
     #endregion
 }

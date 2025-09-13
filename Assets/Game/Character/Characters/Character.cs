@@ -21,6 +21,7 @@ public class Character : MonoBehaviour
     public AmmoInfo ammoInfo;
 
     [Header("Weapon")]
+    public WeaponClass currentWeaponType;
     [field: SerializeField] public Weapon CurrentWeapon { get; protected set; }
     [field: SerializeField] public Weapon MainWeapon { get; protected set; }
     [field: SerializeField] public Weapon SecondaryWeapon { get; protected set; }
@@ -64,6 +65,15 @@ public class Character : MonoBehaviour
         CurrentWeapon.gameObject.SetActive(true);
         CurrentWeapon.enabled = true;
 
+        if (CurrentWeapon.weaponClass == WeaponClass.secondary)
+        {
+            currentWeaponType = WeaponClass.secondary;
+        }
+        else
+        {
+            currentWeaponType = WeaponClass.main;
+        }
+
         // Обновляем UI и прицеливание
         if (aimingCone != null)
         {
@@ -96,11 +106,6 @@ public class Character : MonoBehaviour
         {
             // MainWeapon.StartReload();
         }
-        // }
-        // else
-        // {
-        //     Debug.Log(2);
-        // }
     }
     public void AddAmmo(int value)
     {

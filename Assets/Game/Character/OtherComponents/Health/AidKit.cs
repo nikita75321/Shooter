@@ -53,6 +53,7 @@ public class AidKit : MonoBehaviour
         OnHealComplete += () =>
         {
             player.Controller.MoveSpeed = player.Controller.MaxSpeed;
+            WebSocketBase.Instance.HealPlayer(Geekplay.Instance.PlayerData.id, Geekplay.Instance.PlayerData.roomId);
         };
     }
 
@@ -177,11 +178,11 @@ public class AidKit : MonoBehaviour
     {
         GameStateManager.Instance.GameStart -= StartFilling;
         
-        OnHealBegin += () =>
+        OnHealBegin -= () =>
         {
             player.Controller.MoveSpeed = player.Controller.MaxSpeed / 2;
         };
-        OnHealComplete += () =>
+        OnHealComplete -= () =>
         {
             player.Controller.MoveSpeed = player.Controller.MaxSpeed;
         };

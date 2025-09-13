@@ -32,7 +32,7 @@ class PlayerInGameController {
                 w: parseFloat(raw.r_w || 1)
             },
 
-            boolsState: {
+            bools_state: {
                 isMoving: raw.isMoving === "true",
                 isShooting: raw.isShooting === "true",
                 isReloading: raw.isReloading === "true",
@@ -44,6 +44,7 @@ class PlayerInGameController {
 
             is_alive: raw.is_alive === "true",
             noizeVolume: parseFloat(raw.noizeVolume || 0),
+            current_weapon: raw.currentWeapon || "secondary",
             timestamp: parseInt(raw.timestamp || Date.now())
         };
     }
@@ -124,6 +125,7 @@ class PlayerInGameController {
 
             // Прочее
             'noizeVolume': data.noizeVolume?.toString() || '0',
+            'current_weapon': data.currentWeapon?.toString() || 'secondary',
             'timestamp': Date.now().toString(),
             'room_id': roomId
         };
@@ -193,6 +195,7 @@ class PlayerInGameController {
 
                 // Доп
                 noizeVolume: parseFloat(transformData.noizeVolume || '0'),
+                current_weapon: transformData.currentWeapon || 'secondary',
                 timestamp: parseInt(transformData.timestamp || '0'),
                 is_alive: !(transformData.isDead === 'true')
             };
