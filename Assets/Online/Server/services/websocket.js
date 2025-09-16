@@ -7,6 +7,7 @@ const ConnectionController = require('../controllers/connectionController');
 const playerInGameController = require('../controllers/playerInGameController');
 const damageController = require('../controllers/damageController');
 const boostController = require('../controllers/BoostController');
+const upgradeController = require('../controllers/UpgradeController')
 
 const { flushPlayerData } = require('./servicesflushService');
 const playerController = require('../controllers/playerController');
@@ -167,7 +168,9 @@ function setupWebSocketServer(server) {
                 case 'heal_player': await boostController.healPlayer(ws, data); break;
                 
                 // =================== Upgrade ===================
-                case 'pick_up_upgrade': await upgradeController.handlePickUpUpgrade(ws, data); break;
+                case 'spawn_room_upgrades': await upgradeController.spawnUpgrades(ws, data); break;
+                case 'upgrade_pickup': await upgradeController.handleUpgradePickup(ws, data); break;
+                case 'upgrade_drop': await upgradeController.handleUpgradeDrop(ws, data); break;
 
                 default:
                     sendError(ws, `Unknown action: ${data.action}`);

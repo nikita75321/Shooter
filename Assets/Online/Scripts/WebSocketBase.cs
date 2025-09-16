@@ -344,6 +344,34 @@ public class BoostTakenResponse
 }
 #endregion
 
+#region Upgrades
+[Serializable]
+public class UpgradePickupResponse
+{
+    public bool success;
+    public string player_id;
+    public int upgrade_id;
+    public string upgrade_type;
+}
+
+[Serializable]
+public class UpgradeTakenResponse
+{
+    public string player_id;
+    public int upgrade_id;
+    public string upgrade_type;
+}
+
+[Serializable]
+public class UpgradeDroppedResponse
+{
+    public string player_id;
+    public int upgrade_id;
+    public string upgrade_type;
+    public Position position; // уже есть класс Position
+}
+#endregion
+
 #endregion
 public class WebSocketBase : MonoBehaviour
 {
@@ -416,6 +444,10 @@ public class WebSocketBase : MonoBehaviour
 
     public event Action<BoostPickupResponse> OnBoostPickupResponse;
     public event Action<BoostTakenResponse> OnBoostTaken;
+
+    public event Action<UpgradePickupResponse> OnUpgradePickupResponse;
+    public event Action<UpgradeTakenResponse> OnUpgradeTaken;
+    public event Action<UpgradeDroppedResponse> OnUpgradeDropped;
 
     public event Action<string> OnHealPlayer;
     #endregion
@@ -653,6 +685,20 @@ public class WebSocketBase : MonoBehaviour
                 break;
             case "boost_taken":
                 HandleBoostTaken(message);
+                break;
+
+            //===============Upgrades==============
+            case "upgrade_pickup_response":
+                HandleUpgradePickupResponse(message);
+                break;
+            case "upgrade_taken":
+                HandleUpgradeTaken(message);
+                break;
+            case "upgrade_dropped":
+                HandleUpgradeDropped(message);
+                break;
+            case "upgrade_drop_response":
+                Debug.Log("sucsess drop");
                 break;
 
             // ==============Useable==============
@@ -1550,6 +1596,62 @@ public class WebSocketBase : MonoBehaviour
         }
     }
     #endregion
+
+
+
+
+
+    private void HandleUpgradePickupResponse(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<UpgradePickupResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnUpgradePickupResponse?.Invoke(response);
+
+            Debug.Log($"[Upgrade] Pickup response: success={response.success}, upgrade={response.upgrade_id} ({response.upgrade_type})");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing upgrade_pickup_response: {e.Message}");
+        }
+    }
+
+    private void HandleUpgradeTaken(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<UpgradeTakenResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnUpgradeTaken?.Invoke(response);
+
+            Debug.Log($"[Upgrade] Taken: player={response.player_id}, upgrade={response.upgrade_id} ({response.upgrade_type})");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing upgrade_taken: {e.Message}");
+        }
+    }
+
+    private void HandleUpgradeDropped(Dictionary<string, object> message)
+    {
+        try
+        {
+            Debug.Log("HandleUpgradeDropped");
+            var response = JsonConvert.DeserializeObject<UpgradeDroppedResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnUpgradeDropped?.Invoke(response);
+
+            Debug.Log($"[Upgrade] Dropped: player={response.player_id}, upgrade={response.upgrade_id} ({response.upgrade_type}) at pos=({response.position.x},{response.position.y},{response.position.z})");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing upgrade_dropped: {e.Message}");
+        }
+    }
     #endregion
 
 
@@ -2054,7 +2156,6 @@ public class WebSocketBase : MonoBehaviour
 
 
 
-
     #region Room Management Requests
     public void JoinMatchmaking(int mode)
     {
@@ -2164,7 +2265,6 @@ public class WebSocketBase : MonoBehaviour
 
 
 
-
     #region Boosts
     public void SendBoostsToServer(BoostList[] boostList)
     {
@@ -2214,6 +2314,78 @@ public class WebSocketBase : MonoBehaviour
         SendWebSocketRequest("boost_pickup", data);
     }
     #endregion
+
+
+
+
+
+    #region Upgrades
+    public void SendUpgradesToServer(UpgradesList[] upgrades)
+    {
+        var roomId = Geekplay.Instance.PlayerData.roomId;
+        var playerId = Geekplay.Instance.PlayerData.id;
+
+        var upgradesData = new List<Dictionary<string, object>>();
+
+        foreach (var upgradeEntry in upgrades)
+        {
+            var upgrade = upgradeEntry.upgrade;
+            var type = upgradeEntry.type;
+
+            var upgradeData = new Dictionary<string, object>
+            {
+                { "upgrade_id", upgrade.id },
+                { "type", type.ToString().ToLower() },
+                { "p_x", upgrade.transform.position.x },
+                { "p_y", upgrade.transform.position.y },
+                { "p_z", upgrade.transform.position.z },
+                { "is_taken", false }
+            };
+
+            upgradesData.Add(upgradeData);
+        }
+
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", playerId },
+            { "upgrades", upgradesData }
+        };
+
+        SendWebSocketRequest("spawn_room_upgrades", data);
+    }
+
+    public void SendUpgradePickup(string roomId, string playerId, int upgradeId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", roomId },
+            { "player_id", playerId },
+            { "upgrade_id", upgradeId }
+        };
+
+        SendWebSocketRequest("upgrade_pickup", data);
+    }
+
+    public void SendUpgradeDrop(Vector3 position, int upgradeId)
+    {
+        var data = new Dictionary<string, object>
+        {
+            { "room_id", Geekplay.Instance.PlayerData.roomId },
+            { "player_id", Geekplay.Instance.PlayerData.id },
+            { "upgrade_id", upgradeId },
+            { "p_x", position.x },
+            { "p_y", position.y },
+            { "p_z", position.z }
+        };
+
+        SendWebSocketRequest("upgrade_drop", data);
+    }
+    #endregion
+
+
+
+
 
     #region Useable
     public void HealPlayer(string playerId, string roomId)

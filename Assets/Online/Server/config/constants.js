@@ -9,6 +9,7 @@ const Constants = {
     matchKey: `match:`,
     playerStats: `player_stats:`,
     boostKey: "boost:",
+    upgradeKey: "upgrade:",
     roomBoostsKey: "room_boosts:"
 };
 

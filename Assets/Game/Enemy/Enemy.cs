@@ -177,8 +177,10 @@ public class Enemy : MonoBehaviour
         animator.SetTrigger("Die");
         animator.SetLayerWeight(1, 0);
         animator.SetLayerWeight(2, 0);
+
         col.enabled = false;
         controller.enabled = false;
+        this.enabled = false;
 
         healthbar.Hide();
         armorBar.Hide();

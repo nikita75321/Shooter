@@ -212,6 +212,8 @@ public class OnlineRoom : MonoBehaviour
     private WaitForSeconds _waitForSeconds0_1 = new WaitForSeconds(0.1f);
     private Coroutine serverCor;
 
+    private bool matchStart = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -335,6 +337,8 @@ public class OnlineRoom : MonoBehaviour
                 Debug.Log(2);
                 CurrentRoom.state = "in_progress";
                 CurrentRoom.matchId = response.match_id;
+                matchStart = true;
+                StartServerUpdate();
 
                 // Очищаем и заполняем словарь игроков
                 CurrentRoom.players.Clear();
@@ -518,21 +522,6 @@ public class OnlineRoom : MonoBehaviour
             new List<PlayerInGameInfo>();
     }
 
-    // public void UpdateLocalPlayerTransform(Vector3 position, Quaternion rotation, string animation)
-    // {
-    //     var localPlayer = GetLocalPlayerInfo();
-    //     if (localPlayer != null)
-    //     {
-    //         localPlayer.UpdateTransform(position, rotation, animation);
-
-    //         // Отправляем на сервер
-    //         WebSocketBase.Instance.SendPlayerTransformUpdate(
-    //             position,
-    //             rotation
-    //         );
-    //     }
-    // }
-
     public void UpdateLocalPlayerStats(int kills, int deaths, bool isAlive)
     {
         var localPlayer = GetLocalPlayerInfo();
@@ -570,7 +559,7 @@ public class OnlineRoom : MonoBehaviour
     #region UpdateServerInfo
     private IEnumerator UpdateServerInfo()
     {
-        while (true && player != null)
+        while (true && player != null && matchStart)
         {
             WebSocketBase.Instance.SendPlayerTransformUpdate(player.Controller.transform.position,
                                                             player.Controller.transform.rotation);

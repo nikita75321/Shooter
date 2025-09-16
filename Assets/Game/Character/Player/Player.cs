@@ -179,7 +179,7 @@ public class Player : MonoBehaviour
         Character.Health.aidKit.gameObject.SetActive(true);
 
         // visibilityZone.
-        OnlineRoom.Instance.StartServerUpdate();
+        // OnlineRoom.Instance.StartServerUpdate();
 
         Cheat.Instance.Init(this);
         StartPlay();

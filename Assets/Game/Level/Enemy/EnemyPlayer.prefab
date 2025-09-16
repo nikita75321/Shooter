@@ -2368,7 +2368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 1855013095860638788}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -2636,7 +2636,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5022880451314530538}
   - component: {fileID: 6733802298426576884}
-  - component: {fileID: 1254702201168412786}
   - component: {fileID: 1918259428858721654}
   - component: {fileID: 418660755248457506}
   - component: {fileID: 5034329183183371555}
@@ -2730,32 +2729,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &1254702201168412786
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650720063505331696}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1918259428858721654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6616,7 +6589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 288394373846956854}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -6791,7 +6764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 1254702201168412786}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -7174,7 +7147,6 @@ GameObject:
   m_Component:
   - component: {fileID: 32342464989972543}
   - component: {fileID: 3430079958626625428}
-  - component: {fileID: 3594494361687600135}
   - component: {fileID: 4743302491265221248}
   - component: {fileID: 1987332652730708704}
   - component: {fileID: 283875010172612529}
@@ -7268,32 +7240,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &3594494361687600135
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1224008893865582082}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4743302491265221248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8755,7 +8701,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3452426085827481793}
   - component: {fileID: 4507121634707057928}
-  - component: {fileID: 1855013095860638788}
   - component: {fileID: 3741657645101851400}
   - component: {fileID: 3571812448142264250}
   - component: {fileID: 8987851083622995873}
@@ -8849,32 +8794,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &1855013095860638788
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484517084764734019}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &3741657645101851400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20242,7 +20161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 7034820210157167774}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -30803,7 +30722,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 3995595625038859211}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -31044,7 +30963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 3594494361687600135}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -38171,7 +38090,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7561982591645698352}
   - component: {fileID: 1501587928371359394}
-  - component: {fileID: 3819135591171094585}
   - component: {fileID: 8086716523455421714}
   - component: {fileID: 5091089777284131533}
   - component: {fileID: 6499966193648625472}
@@ -38265,32 +38183,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &3819135591171094585
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6118737281281674157}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1.9
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &8086716523455421714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38411,7 +38303,6 @@ GameObject:
   m_Component:
   - component: {fileID: 683992364116930326}
   - component: {fileID: 3396880743384853725}
-  - component: {fileID: 3995595625038859211}
   - component: {fileID: 662073198018990136}
   - component: {fileID: 5387725307631379469}
   - component: {fileID: 5469119939079973594}
@@ -38505,32 +38396,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &3995595625038859211
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6135792804405572402}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &662073198018990136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45224,7 +45089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 5568085097570729237}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -45657,7 +45522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   weapon: {fileID: 0}
-  character: {fileID: 3819135591171094585}
+  character: {fileID: 0}
   coneMaterial: {fileID: 2100000, guid: 0ff0ebe9996fdb2469b1df751c932230, type: 2}
   neutralColor: {r: 0, g: 1, b: 0, a: 0.3}
   detectedColor: {r: 1, g: 0, b: 0, a: 0.5}
@@ -47603,7 +47468,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8054605267063365169}
   - component: {fileID: 1315947248355120659}
-  - component: {fileID: 288394373846956854}
   - component: {fileID: 5486079055799268858}
   - component: {fileID: 9079589543726136554}
   - component: {fileID: 36078432713782353}
@@ -47697,32 +47561,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &288394373846956854
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7814327332919748563}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5486079055799268858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52042,7 +51880,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8616513775223456150}
   - component: {fileID: 7660873098180996818}
-  - component: {fileID: 5568085097570729237}
   - component: {fileID: 893578551262228568}
   - component: {fileID: 3410705007732030169}
   - component: {fileID: 1633988682744206696}
@@ -52117,32 +51954,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &5568085097570729237
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8554242946354261021}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &893578551262228568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53795,7 +53606,6 @@ GameObject:
   m_Component:
   - component: {fileID: 660723701509038052}
   - component: {fileID: 3336571821328923274}
-  - component: {fileID: 7034820210157167774}
   - component: {fileID: 6724370947263357896}
   - component: {fileID: 5195365657900551185}
   - component: {fileID: 2537455858371863843}
@@ -53889,32 +53699,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!143 &7034820210157167774
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8859290726141603063}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &6724370947263357896
 MonoBehaviour:
   m_ObjectHideFlags: 0

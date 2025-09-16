@@ -4,6 +4,11 @@ using UnityEngine.UI;
 
 public abstract class Upgrade : MonoBehaviour
 {
+    [Header("Info")]
+    public int id;
+    public bool isPickingUp;
+    public UpgradeType type;
+
     [Header("Prefab")]
     [SerializeField] private GameObject upgradePrefab;
 
@@ -11,11 +16,10 @@ public abstract class Upgrade : MonoBehaviour
     public float TimeToPickUp = 2f;
 
     [Header("Visuals")]
-    public Animator Animator;
+    // public Animator Animator;
     public Image RadialProgressImage;
 
     private Coroutine pickUpCoroutine;
-    public bool isPickingUp;
     private float currentPickUpTime;
     protected Player player;
 
@@ -74,11 +78,11 @@ public abstract class Upgrade : MonoBehaviour
 
         pickUpCoroutine = StartCoroutine(PickUpProcess());
 
-        if (Animator != null)
-        {
-            Animator.SetBool("IsPickingUp", true);
-            Animator.SetFloat("PickUpSpeed", 1f / TimeToPickUp);
-        }
+        // if (Animator != null)
+        // {
+        //     Animator.SetBool("IsPickingUp", true);
+        //     Animator.SetFloat("PickUpSpeed", 1f / TimeToPickUp);
+        // }
     }
 
     private void CancelPickUp()
@@ -91,10 +95,10 @@ public abstract class Upgrade : MonoBehaviour
         isPickingUp = false;
         ResetProgress();
 
-        if (Animator != null)
-        {
-            Animator.SetBool("IsPickingUp", false);
-        }
+        // if (Animator != null)
+        // {
+        //     Animator.SetBool("IsPickingUp", false);
+        // }
     }
 
     private IEnumerator PickUpProcess()
@@ -124,10 +128,10 @@ public abstract class Upgrade : MonoBehaviour
             RadialProgressImage.fillAmount = progress;
         }
 
-        if (Animator != null)
-        {
-            Animator.SetFloat("PickUpProgress", progress);
-        }
+        // if (Animator != null)
+        // {
+        //     Animator.SetFloat("PickUpProgress", progress);
+        // }
     }
 
     public void ResetProgress()
@@ -137,10 +141,10 @@ public abstract class Upgrade : MonoBehaviour
             RadialProgressImage.fillAmount = 0f;
         }
 
-        if (Animator != null)
-        {
-            Animator.SetFloat("PickUpProgress", 0f);
-        }
+        // if (Animator != null)
+        // {
+        //     Animator.SetFloat("PickUpProgress", 0f);
+        // }
     }
 
     protected virtual void CompletePickUp()
@@ -168,7 +172,7 @@ public abstract class Upgrade : MonoBehaviour
         {
             // Параметры разброса
 
-            float dropRadius = 2f; // Радиус разброса
+            float dropRadius = 3f; // Радиус разброса
             // float dropHeight = 1f; // Высота появления
 
             // Случайный угол и расстояние
@@ -181,8 +185,10 @@ public abstract class Upgrade : MonoBehaviour
             // dropPosition.y += dropHeight;
 
             // Создаем апгрейд
-            GameObject droppedUpgrade = Instantiate(upgradePrefab, dropPosition, Quaternion.identity);
-            droppedUpgrade.SetActive(true);
+            ResetProgress();
+            UpgradesManager.Instance.DropUpgrade(dropPosition, id);
+            // GameObject droppedUpgrade = Instantiate(upgradePrefab, dropPosition, Quaternion.identity);
+            // droppedUpgrade.SetActive(true);
         }
     }
 }

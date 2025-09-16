@@ -12,12 +12,13 @@ public class InitSocket : MonoBehaviour
     private Action<bool> socketConnectedHandler;
     private void Awake()
     {
-        Debug.Log("00");
+        // Debug.Log("00");
         socketConnectedHandler = status =>
         {
-            Debug.Log(0);
+            // Debug.Log(0);
             if (status)
-            { Debug.Log(1);
+            {
+                // Debug.Log(1);
                 if (!string.IsNullOrEmpty(Geekplay.Instance.PlayerData.id))
                 {
                     Debug.Log("connect");
@@ -49,7 +50,7 @@ public class InitSocket : MonoBehaviour
 
         WebSocketBase.Load(status =>
         {
-            Debug.Log("aaa");
+            // Debug.Log("aaa");
             socketConnected.Invoke(status);
         });
     }

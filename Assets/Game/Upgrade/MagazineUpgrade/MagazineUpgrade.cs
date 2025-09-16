@@ -4,10 +4,17 @@ public class MagazineUpgrade : Upgrade
 {
     private float magazineBonus = 0.25f;
     private float reloadBonus = 0.25f;
+
+    public void OnValidate()
+    {
+        type = UpgradeType.magazine;
+    }
+
     public override void ApplyBoostEffect(Player player)
     {
         if (player != null)
         {
+            UpgradesManager.Instance.PickUpUpgrade(id);
             player.Character.MainWeapon.magazineSize = Mathf.RoundToInt(player.Character.MainWeapon.maxMagazineSize * (1 + magazineBonus));
             player.Character.MainWeapon.reloadTime = player.Character.MainWeapon.InitReloadTime / (1 + reloadBonus);
             player.Character.ammoInfo.UpdateUI();
