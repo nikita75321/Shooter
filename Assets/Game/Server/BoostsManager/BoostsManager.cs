@@ -126,7 +126,11 @@ public class BoostsManager : MonoBehaviour
         {
             var player = OnlineRoom.Instance.GetLocalPlayerInfo();
             player.armor = player.max_armor;
-            Level.Instance.currentLevel.player.Character.Armor.ChangeArmor(player.armor);
+
+            if (response.boost_type == "armor")
+            {
+                Level.Instance.currentLevel.player.Character.Armor.ChangeArmor(player.armor);
+            } 
         }
         else
         {
@@ -134,7 +138,11 @@ public class BoostsManager : MonoBehaviour
             player.armor = player.max_armor;
 
             Enemy enemy = EnemiesInGame.Instance.GetEnemy(player.playerId);
-            enemy.Armor.ChangeArmor(player.armor);
+            
+            if (response.boost_type == "armor")
+            {
+                enemy.Armor.ChangeArmor(player.armor);
+            } 
         }
     }
 }

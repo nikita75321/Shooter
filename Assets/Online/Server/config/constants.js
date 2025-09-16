@@ -15,7 +15,7 @@ const Constants = {
     playerStats: `player_stats:`,
 
     upgradeKey: `upgrade:`,
-    roomUpgradesKey : `room_upgrades`,
+    roomUpgradesKey : `room_upgrades:`,
 
     boostKey: `boost:`,
     roomBoostsKey: `room_boosts:`

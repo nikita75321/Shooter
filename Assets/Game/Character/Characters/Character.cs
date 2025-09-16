@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
 
     [Header("Health")]
     public Health Health;
+    public Healthbar healthBar;
 
     [Header("Kits")]
     public int maxHealthKits = 3;
@@ -16,6 +17,7 @@ public class Character : MonoBehaviour
     public Armor Armor;
     [SerializeField] protected float maxArmor = 50f;
     [SerializeField] protected float currentArmor;
+    public ArmorBar armorBar;
 
     [Header("Ammo")]
     public AmmoInfo ammoInfo;
@@ -34,6 +36,8 @@ public class Character : MonoBehaviour
         if (ammoInfo == null) ammoInfo = GetComponentInChildren<AmmoInfo>();
         if (aimingCone == null) aimingCone = GetComponentInChildren<AimingCone>();
         if (player == null) player = GetComponentInParent<Player>();
+        if (healthBar == null) healthBar = GetComponentInChildren<Healthbar>();
+        if (armorBar == null) armorBar = GetComponentInChildren<ArmorBar>();
     }
 
     protected virtual void Awake()

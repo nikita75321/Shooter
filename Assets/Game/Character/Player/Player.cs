@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -226,7 +227,7 @@ public class Player : MonoBehaviour
         }
 
         Character.Health.OnDie.AddListener(Die);
-        Character.Health.OnDie.AddListener(() => gameEndCanvas.ShowLosePanel());
+        // Character.Health.OnDie.AddListener(() => gameEndCanvas.ShowLosePanel());
 
         Character.Health.OnTakeDamage.AddListener(TakeDamageAnim);
 
@@ -237,7 +238,7 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         Character.Health.OnDie.RemoveListener(Die);
-        Character.Health.OnDie.RemoveListener(() => gameEndCanvas.ShowLosePanel());
+        // Character.Health.OnDie.RemoveListener(() => gameEndCanvas.ShowLosePanel());
 
         Character.Health.OnTakeDamage.RemoveListener(TakeDamageAnim);
     }
@@ -269,11 +270,37 @@ public class Player : MonoBehaviour
         Controller.animator.SetLayerWeight(2, 0);
         GameStateManager.Instance.GameDeath();
         currentState = PlayerState.Dead;
+        
+        StartCoroutine(RespawnRoutine());
+    }
+
+    [SerializeField] private float respawnDelay = 5f;
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        // выбрать точку спавна (см. SpawnManager ниже)
+        Vector3 spawnPos = SpawnPoints.Instance.GetRandomSpawnPoint().position;
+        Quaternion spawnRot = SpawnPoints.Instance.GetRandomSpawnPoint().rotation;
+
+        // телепорт на спавн
+        Controller.transform.SetPositionAndRotation(spawnPos, spawnRot);
+        Level.Instance.InitCharater();
+        GameStateManager.Instance.GameState = GameState.game;
+
+        // восстановление
+        Character.Health.FullHeal();
+        Character.Health.state = HealthState.live;
+
+        Character.aimingCone.gameObject.SetActive(true);
+        Character.Health.aidKit.gameObject.SetActive(true);
+
+        Character.healthBar.gameObject.SetActive(true);
+        Character.armorBar.gameObject.SetActive(true);
     }
 
     public void TakeDamageAnim()
     {
-
         int randomAnimation = Random.Range(0, 2); // 0 или 1
         Controller.animator.SetInteger("RandomHit", randomAnimation);
         Controller.animator.SetTrigger("Hit");

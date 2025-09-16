@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class SpawnPoints : MonoBehaviour
 {
+    public static SpawnPoints Instance;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private List<Transform> tempPoints;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+    
     private void Start()
     {
         tempPoints = spawnPoints.ToList();

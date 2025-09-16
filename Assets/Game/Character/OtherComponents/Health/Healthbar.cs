@@ -97,7 +97,7 @@ public class Healthbar : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, cameraYRotation, 0);
     }
 
-    private void UpdateVisibility()
+    public void UpdateVisibility()
     {
         if (canvas == null) return;
 

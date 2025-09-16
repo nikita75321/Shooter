@@ -86,10 +86,7 @@ public abstract class Weapon : MonoBehaviour
         currentAimAngle = maxAimAngle;
         if (reloadImage != null)
             reloadImage.fillAmount = 0;
-    }
 
-    private void Start()
-    {
         fireRateCooldown = fireRate;
         InitMinAngle = minAimAngle;
         InitMaxAngle = maxAimAngle;
@@ -98,7 +95,10 @@ public abstract class Weapon : MonoBehaviour
         maxMagazineSize = magazineSize;
         InitReloadTime = reloadTime;
         InitNoiseShoot = noiseShoot;
+    }
 
+    private void Start()
+    {
         //Временно, надо переделать 
         if (player != null)
         //Временно, надо переделать

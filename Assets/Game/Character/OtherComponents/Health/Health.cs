@@ -1,5 +1,6 @@
 using System;
-using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -132,7 +133,7 @@ public class Health : MonoBehaviour
             // Debug.Log(101);
             player.Character.aimingCone.gameObject.SetActive(false);
             player.Character.Health.aidKit.gameObject.SetActive(false);
-            Cursor.lockState = CursorLockMode.None;
+            // Cursor.lockState = CursorLockMode.None;
         });
     }
     public void OnDisable()
@@ -143,7 +144,7 @@ public class Health : MonoBehaviour
             // Debug.Log(202);
             player.Character.aimingCone.gameObject.SetActive(false);
             player.Character.Health.aidKit.gameObject.SetActive(false);
-            Cursor.lockState = CursorLockMode.None;
+            // Cursor.lockState = CursorLockMode.None;
         });
     }
 
@@ -287,12 +288,12 @@ public class Health : MonoBehaviour
     private void Die()
     {
         if (IsDead) return;
-
         state = HealthState.death;
+
         CurrentHealth = 0;
         PlaySound(deathSound);
         OnDie?.Invoke();
-        Geekplay.Instance.Save();
+        // Geekplay.Instance.Save();
         Debug.Log($"{gameObject.name} died!");
     }
 

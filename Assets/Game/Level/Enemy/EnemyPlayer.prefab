@@ -41986,6 +41986,7 @@ MonoBehaviour:
   regenerationRate: 5
   regenerationDelay: 3
   invulnerabilityTimeAfterHit: 0.5
+  respawnDelay: 5
   damageSound: {fileID: 0}
   healSound: {fileID: 0}
   deathSound: {fileID: 0}
