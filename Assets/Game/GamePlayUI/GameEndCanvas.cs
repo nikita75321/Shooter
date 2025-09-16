@@ -224,7 +224,7 @@ public class GameEndCanvas : MonoBehaviour
             moneyEarned: loseMoney,
             donatMoneyEarned: loseDonatMoney,
             kills: matchStats.kills,
-            isWin: true,
+            isWin: false,
             revives: matchStats.revives,
             damageDealt: matchStats.damageDealt,
             shotsFired: matchStats.shotsFired,

@@ -7,7 +7,7 @@ public class Minigun : Weapon
         base.OnValidate();
         ammoOverall = 0;
         magazineSize = 30;
-        ammoAmountToPickUp = 90;
+        ammoAmountToPickUp = 60;
 
         reloadTime = 2f;
         fireRate = 0.1f;

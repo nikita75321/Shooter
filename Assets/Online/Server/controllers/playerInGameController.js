@@ -43,8 +43,8 @@ class PlayerInGameController {
             },
 
             is_alive: raw.is_alive === "true",
-            noizeVolume: parseFloat(raw.noizeVolume || 0),
-            current_weapon: raw.currentWeapon || "secondary",
+            noize_volume: parseFloat(raw.noize_volume || 0),
+            current_weapon: raw.current_weapon || "secondary",
             timestamp: parseInt(raw.timestamp || Date.now())
         };
     }
@@ -124,8 +124,8 @@ class PlayerInGameController {
             'isDead': data.isDead ? 'true' : 'false',
 
             // Прочее
-            'noizeVolume': data.noizeVolume?.toString() || '0',
-            'current_weapon': data.currentWeapon?.toString() || 'secondary',
+            'noize_volume': data.noize_volume?.toString() || '0',
+            'current_weapon': data.current_weapon?.toString() || 'secondary',
             'timestamp': Date.now().toString(),
             'room_id': roomId
         };
@@ -194,8 +194,8 @@ class PlayerInGameController {
                 isDead: transformData.isDead === 'true',
 
                 // Доп
-                noizeVolume: parseFloat(transformData.noizeVolume || '0'),
-                current_weapon: transformData.currentWeapon || 'secondary',
+                noizeVolume: parseFloat(transformData.noize_volume || '0'),
+                current_weapon: transformData.current_weapon || 'secondary',
                 timestamp: parseInt(transformData.timestamp || '0'),
                 is_alive: !(transformData.isDead === 'true')
             };

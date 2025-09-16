@@ -7,7 +7,7 @@ public class HuntingRifle : Weapon
         base.OnValidate();
         ammoOverall = 0;
         magazineSize = 8;
-        ammoAmountToPickUp = 24;
+        ammoAmountToPickUp = 16;
 
         reloadTime = 1f;
         fireRate = 0.3f;

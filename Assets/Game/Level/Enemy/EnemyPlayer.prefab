@@ -1064,7 +1064,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7756763252212135577}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4797,7 +4797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7159068148068504197}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5055,7 +5055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 986723826044436059}
   - component: {fileID: 986723826044436058}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5108,7 +5108,7 @@ GameObject:
   - component: {fileID: 986723826930100958}
   - component: {fileID: 986723826930100959}
   - component: {fileID: 986723826930100952}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5211,7 +5211,7 @@ GameObject:
   - component: {fileID: 986723827559498795}
   - component: {fileID: 986723827559498793}
   - component: {fileID: 986723827559498794}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5286,7 +5286,7 @@ GameObject:
   - component: {fileID: 986723827728530474}
   - component: {fileID: 986723827728530472}
   - component: {fileID: 986723827728530473}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6948,7 +6948,7 @@ GameObject:
   - component: {fileID: 8209271606951222126}
   - component: {fileID: 5517273617237187741}
   - component: {fileID: 4513562799235144302}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15476,7 +15476,7 @@ GameObject:
   - component: {fileID: 5704972461071749805}
   - component: {fileID: 1634284240230568200}
   - component: {fileID: 2023147424287430688}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16413,7 +16413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5297019571168189307}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21279,7 +21279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6842456964035057494}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22699,7 +22699,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6588605619543621352}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28167,7 +28167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3443822006170276172}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30497,7 +30497,7 @@ GameObject:
   - component: {fileID: 8201478881767472252}
   - component: {fileID: 7629160979198039037}
   - component: {fileID: 902989535387335915}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34138,7 +34138,7 @@ GameObject:
   - component: {fileID: 2937338546321354697}
   - component: {fileID: 6820874590981624827}
   - component: {fileID: 6511387007060656694}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35165,7 +35165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2347457101815822793}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38972,7 +38972,7 @@ GameObject:
   - component: {fileID: 3140383885981706591}
   - component: {fileID: 8080481460203262034}
   - component: {fileID: 5184155592573735251}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50826,7 +50826,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2123754308848618287}
-  m_Layer: 16
+  m_Layer: 6
   m_Name: Bars
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54778,7 +54778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3186373987514649505}
   - component: {fileID: 6179640848081003470}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: ArmorBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56351,7 +56351,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -56695,7 +56695,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2592975509580629117, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Type
@@ -56727,7 +56727,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -56735,7 +56735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: hideEmpty
@@ -56759,11 +56759,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -57307,11 +57307,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -57323,15 +57323,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -58617,11 +58617,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -58633,15 +58633,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -60273,7 +60273,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 20
+  ammoAmountToPickUp: 40
   noiseShoot: 6
   reloadTime: 2.5
   reloadImage: {fileID: 0}
@@ -61836,7 +61836,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -62085,7 +62085,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -63035,11 +63035,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -63051,15 +63051,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -63802,7 +63802,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -63826,7 +63826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -63834,7 +63834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -63846,11 +63846,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -63994,7 +63994,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -65856,11 +65856,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -65872,15 +65872,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -66738,11 +66738,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -66754,15 +66754,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -67376,7 +67376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -67400,7 +67400,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -67408,7 +67408,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -67420,11 +67420,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -68134,7 +68134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -68158,7 +68158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -68166,7 +68166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -68178,11 +68178,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -68579,7 +68579,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -69726,11 +69726,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -69742,15 +69742,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -71540,7 +71540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -71564,7 +71564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -71572,7 +71572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -71584,11 +71584,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -72200,7 +72200,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -74824,7 +74824,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 20
+  ammoAmountToPickUp: 40
   noiseShoot: 6
   reloadTime: 2.5
   reloadImage: {fileID: 0}
@@ -76202,7 +76202,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 24
+  ammoAmountToPickUp: 16
   noiseShoot: 8
   reloadTime: 1
   reloadImage: {fileID: 0}
@@ -77033,7 +77033,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -78344,7 +78344,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 20
+  ammoAmountToPickUp: 40
   noiseShoot: 7
   reloadTime: 1.5
   reloadImage: {fileID: 0}
@@ -78681,7 +78681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -78705,7 +78705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -78713,7 +78713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -78725,11 +78725,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -78873,7 +78873,7 @@ MonoBehaviour:
   maxMagazineSize: 0
   ammoOverall: 0
   weaponClass: 0
-  ammoAmountToPickUp: 90
+  ammoAmountToPickUp: 60
   noiseShoot: 5
   reloadTime: 2
   reloadImage: {fileID: 0}
@@ -79447,11 +79447,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413323435999, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025809, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046413514025810, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -79463,15 +79463,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414844214688, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5316046414947681711, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6061165537109189939, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_fontSize
@@ -79709,7 +79709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1979835266738922619, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_fontSize
@@ -79733,7 +79733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6847709338530044010, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -79741,7 +79741,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7579837390366417293, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7650998107293745043, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Enabled
@@ -79757,11 +79757,11 @@ PrefabInstance:
       objectReference: {fileID: 3970263476898002049}
     - target: {fileID: 8293247000328074268, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8795804647597731339, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

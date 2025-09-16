@@ -2048,8 +2048,8 @@ public class WebSocketBase : MonoBehaviour
             { "r_z", rotation.z },
             { "r_w", rotation.w },
 
-            { "noizeVolume", player.noiseEmitter.currentNoiseRadius},
-            { "currentWeapon", player.Character.currentWeaponType.ToString()},
+            { "noize_volume", player.noiseEmitter.currentNoiseRadius},
+            { "current_weapon", player.Character.currentWeaponType.ToString()},
 
             { "isMoving", player.IsMoving },
             { "isShooting", player.IsShoot },

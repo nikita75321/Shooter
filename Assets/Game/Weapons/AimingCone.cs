@@ -88,6 +88,7 @@ public class AimingCone : MonoBehaviour
             Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * transform.forward;
 
             RaycastHit[] hits = Physics.RaycastAll(transform.position, direction, distance, enemyLayer | obstacleLayer);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
             foreach (RaycastHit hit in hits)
             {

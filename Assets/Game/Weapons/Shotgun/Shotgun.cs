@@ -7,7 +7,7 @@ public class Shotgun : Weapon
         base.OnValidate();
         ammoOverall = 0;
         magazineSize = 20;
-        ammoAmountToPickUp = 20;
+        ammoAmountToPickUp = 40;
 
         reloadTime = 1.5f;
         fireRate = 0.5f;

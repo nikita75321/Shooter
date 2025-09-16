@@ -7,7 +7,7 @@ public class SniperRifle : Weapon
         base.OnValidate();
         ammoOverall = 0;
         magazineSize = 20;
-        ammoAmountToPickUp = 20;
+        ammoAmountToPickUp = 40;
 
         reloadTime = 2.5f;
         fireRate = 0.8f;
