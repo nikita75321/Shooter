@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8125499351362440944}
   - component: {fileID: 2972820482086604117}
   - component: {fileID: 2592975509580629117}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1429882864491190268}
   - component: {fileID: 7650998107293745043}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ArmorBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 1475863602995770626}
   - component: {fileID: 5749992482536082447}
   - component: {fileID: 8655464019165383950}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 1669768357831422868}
   - component: {fileID: 7009621839140081574}
   - component: {fileID: 7328103549508820587}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 5637997896540315681}
   - component: {fileID: 6201326792254394272}
   - component: {fileID: 3704105773427155126}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

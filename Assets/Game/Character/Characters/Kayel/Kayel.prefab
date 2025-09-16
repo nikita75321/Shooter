@@ -3157,7 +3157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3505231976036458752
 Transform:
   m_ObjectHideFlags: 0
@@ -3435,6 +3435,7 @@ MonoBehaviour:
   maxArmor: 50
   currentArmor: 0
   ammoInfo: {fileID: 0}
+  currentWeaponType: 0
   <CurrentWeapon>k__BackingField: {fileID: 8157578537033199106}
   <MainWeapon>k__BackingField: {fileID: 7078213417782663845}
   <SecondaryWeapon>k__BackingField: {fileID: 8157578537033199106}
@@ -8738,6 +8739,10 @@ PrefabInstance:
       propertyPath: <Armor>k__BackingField
       value: 
       objectReference: {fileID: 8730722184900371550}
+    - target: {fileID: 4788323747600154205, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5342352209310836829, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -8748,7 +8753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5342352209310836829, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5342352209310836829, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8789,6 +8794,10 @@ PrefabInstance:
     - target: {fileID: 7365671270314536319, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
       propertyPath: m_fontSize
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7422357541354011466, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
+      propertyPath: m_Camera
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7422357542103625678, guid: 97fa8fcd69e971845b253eb176abaf02, type: 3}
       propertyPath: <Health>k__BackingField

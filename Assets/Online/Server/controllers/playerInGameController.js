@@ -303,7 +303,7 @@ class PlayerInGameController {
 
     async getPlayerStats(playerId, roomId) {
         try {
-            const matchKey = `player_stats:${roomId}:${playerId}`;
+            const matchKey = `${Constants.playerStats}${roomId}:${playerId}`;
             const stats = await global.redisClient.hGetAll(matchKey);
 
             // console.log(`[getPlayerStats] matchKey - ${matchKey}`, stats);
