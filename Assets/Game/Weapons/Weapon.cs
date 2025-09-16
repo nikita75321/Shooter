@@ -162,62 +162,16 @@ public abstract class Weapon : MonoBehaviour
         {
             // Debug.Log(2);
         }
-        // DOVirtual.DelayedCall(0.1f, () => FireBullet());
         FireBullet();
 
         // Запускаем цикл стрельбы с интервалом fireRate
         fireRateTween = DOVirtual.DelayedCall(fireRate, () =>
         {
             player.IsShoot = false;
-            // player.Controller.animator.SetBool("IsShoot", false);
-            // player.Controller.animator.speed = 1;
+
         }, false);
     }
 
-    // private void FireBullet()
-    // {
-    //     if (currentAmmo <= 0)
-    //     {
-    //         StartReload();
-    //         return;
-    //     }
-
-    //     currentAmmo--;  // Сначала тратим патрон
-    //     ammoInfo.UpdateUI();  // Обновляем UI
-
-    //     // Дальше логика выстрела...
-    //     player.noiseEmitter.TriggerShootNoise();
-    //     player.shotCount++;
-
-    //     Vector3 shootOrigin = player.Character.transform.position + Vector3.up * 1f;
-    //     Vector3 baseDirection = player.Character.transform.forward;
-    //     float maxSpreadRadians = currentAimAngle * Mathf.Deg2Rad;
-    //     float randomSpread = Mathf.Tan(Random.Range(-maxSpreadRadians / 3, maxSpreadRadians / 3));
-    //     Vector3 spreadDirection = (baseDirection + player.Character.transform.right * randomSpread).normalized;
-
-    //     if (Physics.Raycast(shootOrigin, spreadDirection, out RaycastHit hit, range, enemyLayers))
-    //     {
-    //         if (hit.collider.TryGetComponent(out Health health) && !hit.collider.TryGetComponent(out Ally _))
-    //         {
-    //             health.TakeDamage(damage, armorPenetration);
-
-    //             player.SetMaxDamage(damage);
-    //             if (health.state == HealthState.death)
-    //             {
-    //                 player.overallKills++;
-    //             }
-    //         }
-    //     }
-
-    //     SpawnVisualBullet(shootOrigin, spreadDirection);
-    //     PlayMuzzleFlash();
-    //     PlayShootSound();
-
-    //     if (currentAmmo <= 0)
-    //     {
-    //         StartReload();
-    //     }
-    // }
     private void FireBullet()
     {
         if (currentAmmo <= 0)
@@ -243,9 +197,10 @@ public abstract class Weapon : MonoBehaviour
         WebSocketBase.Instance.SendDealDamage(shootOrigin, spreadDirection, (int)damage);
 
         // --- визуальный фидбек ---
-        SpawnVisualBullet(shootOrigin, spreadDirection);
-        PlayMuzzleFlash();
-        PlayShootSound();
+        // SpawnVisualBullet(shootOrigin, spreadDirection);
+        // PlayMuzzleFlash();
+        // PlayShootSound();
+        PlayShotEffects(shootOrigin, spreadDirection);
 
         if (currentAmmo <= 0)
         {
@@ -253,10 +208,29 @@ public abstract class Weapon : MonoBehaviour
         }
     }
 
+    public void PlayShotEffects(Vector3 origin, Vector3 direction)
+    {
+        Vector3 shotDirection = direction.sqrMagnitude > 0.0001f
+            ? direction.normalized
+            : (muzzle != null ? muzzle.forward : transform.forward);
+
+        SpawnVisualBullet(origin, shotDirection);
+        PlayMuzzleFlash();
+        PlayShootSound();
+    }
+
+    public void PlayShotEffects(Vector3 direction)
+    {
+        Vector3 origin = muzzle != null ? muzzle.position : transform.position;
+        PlayShotEffects(origin, direction);
+    }
+
     protected virtual void SpawnVisualBullet(Vector3 origin, Vector3 direction)
     {
         // Debug.Log("SpawnVisualBullet");
-        GameObject bullet = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
+        // GameObject bullet = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
+        Vector3 spawnPosition = muzzle != null ? muzzle.position : origin;
+        GameObject bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
         bullet.transform.forward = direction;
 
         // Двигаем пулю визуально

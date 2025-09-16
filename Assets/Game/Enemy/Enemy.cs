@@ -130,6 +130,7 @@ public class Enemy : MonoBehaviour
 
         animator = heroes[playerInfo.hero_id].GetComponent<Animator>();
         trace = heroes[playerInfo.hero_id].GetComponent<Trace>();
+        currentWeapon = heroes[playerInfo.hero_id].GetComponentInChildren<WeaponEnemy>(true);
         heroDummy = heroes[playerInfo.hero_id].GetComponent<HeroDummy>();
         heroDummy.SelectSkin(playerInfo.hero_skin);
 
@@ -171,6 +172,50 @@ public class Enemy : MonoBehaviour
         armorBar.Init();
     }
 
+    private Weapon GetActiveWeapon()
+    {
+        if (currentWeapon == null || currentWeapon.weapons == null)
+        {
+            return null;
+        }
+
+        foreach (var weaponGo in currentWeapon.weapons)
+        {
+            if (weaponGo == null || !weaponGo.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Weapon weapon = weaponGo.GetComponent<Weapon>();
+            if (weapon == null)
+            {
+                weapon = weaponGo.GetComponentInChildren<Weapon>(true);
+            }
+
+            if (weapon != null)
+            {
+                return weapon;
+            }
+        }
+
+        return null;
+    }
+
+    public void PlayRemoteShot(Vector3 origin, Vector3 direction)
+    {
+        var weapon = GetActiveWeapon();
+        if (weapon == null)
+        {
+            return;
+        }
+
+        Vector3 shotDirection = direction.sqrMagnitude > 0.0001f
+            ? direction
+            : (weapon.muzzle != null ? weapon.muzzle.forward : transform.forward);
+
+        weapon.PlayShotEffects(origin, shotDirection);
+    }
+    
     public void Die()
     {
         Debug.Log("die");

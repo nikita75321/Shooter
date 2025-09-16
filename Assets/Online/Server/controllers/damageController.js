@@ -151,6 +151,8 @@ class DamageController {
                     damage: damage,
                     new_hp: Math.max(hp, 0),
                     new_armor: Math.max(armor, 0),
+                    shot_origin,
+                    shot_direction: dir,
                     timestamp: Date.now()
                 });
                 console.log(`Notified room players about damage to ${playerId}`);
@@ -163,7 +165,9 @@ class DamageController {
                     damage,
                     new_hp: hp,
                     new_armor: armor,
-                    room_id
+                    room_id,
+                    shot_origin,
+                    shot_direction: dir
                 }));
                 console.log(`Damage response sent to attacker ${attacker_id}`);
             }

@@ -844,6 +844,19 @@ public class OnlineRoom : MonoBehaviour
                     Debug.Log($"Deal damage to {target.player_name}");
                 }
 
+                if (!string.IsNullOrEmpty(response.attacker_id) &&
+                    response.attacker_id != Geekplay.Instance.PlayerData.id &&
+                    response.shot_origin != null &&
+                    response.shot_direction != null)
+                {
+                    var attackerEnemy = EnemiesInGame.Instance.GetEnemy(response.attacker_id);
+                    if (attackerEnemy != null)
+                    {
+                        attackerEnemy.PlayRemoteShot(response.shot_origin.ToVector3(),
+                            response.shot_direction.ToVector3());
+                    }
+                }
+
                 // Визуализация
                 UpdatePlayerVisualization(target);
 

@@ -1496,6 +1496,8 @@ public class WebSocketBase : MonoBehaviour
         public float damage;
         public float new_hp;
         public float new_armor;
+        public Position shot_origin;
+        public Position shot_direction;
         public string room_id;
     }
 
