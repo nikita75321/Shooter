@@ -1,10 +1,11 @@
 const { Constants } = require('../config/constants');
 const Utils = require('../services/utils');
 const { roomManager } = require('./roomManager');
+const playerInGameController = require('./playerInGameController');
 
 class UpgradeController {
     constructor() {
-        this.upgradeTTL = 60 * 15; // 15 минут
+        this.upgradeTTL = 60 * 10; // 10 минут
     }
 
     getUpgradeKey(roomId, upgradeId) {
@@ -90,27 +91,37 @@ class UpgradeController {
             const upgradeKey = this.getUpgradeKey(room_id, upgrade_id);
             const playerKey = this.getPlayerUpgradesKey(room_id, player_id);
 
+            // 1) Отмечаем как подобранный и привязываем к игроку
             const pipeline = global.redisClient.multi();
             pipeline.hSet(upgradeKey, { is_taken: "true", owner_id: player_id });
             pipeline.sAdd(playerKey, upgradeKey);
             await pipeline.exec();
 
+            // 2) Применяем эффект к статам на сервере (если поддержан)
+            const updatedStats = await applyUpgradeEffects(player_id, room_id, upgrade.type);
+
+            // 3) Оповещаем комнату
             const room = await roomManager.getRoomInfo(room_id);
             if (room) {
                 roomManager.notifyRoomPlayers(room, {
                     action: 'upgrade_taken',
                     player_id,
                     upgrade_id,
-                    upgrade_type: upgrade.type
+                    upgrade_type: upgrade.type,
+                    // Можно прислать и новые статы (если были изменены),
+                    // чтобы UI у других сразу отрисовал корректно
+                    new_stats: updatedStats || undefined
                 });
             }
 
+            // 4) Ответ игроку
             ws.send(JSON.stringify({
                 action: 'upgrade_pickup_response',
                 success: true,
                 player_id,
                 upgrade_id,
                 upgrade_type: upgrade.type,
+                new_stats: updatedStats || undefined
             }));
 
         } catch (err) {
@@ -220,6 +231,74 @@ class UpgradeController {
             Utils.sendError(ws, 'Failed to drop upgrade');
         }
     }
+}
+
+/**
+ * Применяет эффекты апгрейда к серверным статам игрока.
+ * Возвращает обновлённые статы (или исходные, если тип пока не поддержан).
+ */
+async function applyUpgradeEffects(player_id, room_id, upgradeType) {
+    // 1) Берём текущие статы
+    const stats = await playerInGameController.getPlayerStats(player_id, room_id);
+    if (!stats) return null;
+
+    // 2) Клонируем, чтобы не мутировать
+    let newStats = { ...stats };
+
+    switch (upgradeType) {
+        case "armor": {
+            // как на клиенте: +50% к max_armor, и текущую броню подогнать под новый максимум
+            const mul = 1.5;
+            const new_max_armor = Math.round(stats.max_armor * mul);
+            // const new_armor = Math.min(new_max_armor, stats.armor);
+
+            newStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
+                new_hp: stats.hp,
+                // new_armor: new_armor,
+                kills: stats.kills,
+                deaths: stats.deaths,
+                damage: stats.damage,
+                is_alive: true,
+                // Если у тебя внутри updatePlayerStats поддерживается изменение max_armor — добавь:
+                max_armor: new_max_armor
+            });
+
+            break;
+        }
+
+        case "damage": {
+            // пример: +20% к damage (если поле damage у тебя есть в stats)
+            const mul = 1.2;
+            const new_damage = Math.round((stats.damage || 0) * mul);
+
+            newStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
+                new_hp: stats.hp,
+                new_armor: stats.armor,
+                kills: stats.kills,
+                deaths: stats.deaths,
+                damage: new_damage,
+                is_alive: true
+            });
+
+            break;
+        }
+
+        // Типы, чьи параметры пока не лежат в player stats (aim, noize, magazine, vision) —
+        // можно оставить без серверного изменения статов.
+        // Клиент применит визуальные/геймплейные эффекты локально,
+        // а сервер просто зафиксирует владение апгрейдом.
+        case "aim":
+        case "noize":
+        case "magazine":
+        case "vision":
+        default: {
+            // ничего не меняем в stats на сервере
+            newStats = stats;
+            break;
+        }
+    }
+
+    return newStats;
 }
 
 module.exports = new UpgradeController();

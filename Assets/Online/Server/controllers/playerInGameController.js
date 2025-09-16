@@ -225,43 +225,77 @@ class PlayerInGameController {
     async updatePlayerStats(playerId, roomId, data) {
         const matchKey = `${Constants.matchKey}${roomId}:${playerId}`;
         const statsKey = `${Constants.playerStats}${roomId}:${playerId}`;
-        
-        const currentStats = await this.getPlayerStats(playerId, roomId);
 
-        const kills  = Number.isFinite(parseInt(data.kills))  ? parseInt(data.kills)  : (currentStats.kills  ?? 0);
-        const deaths = Number.isFinite(parseInt(data.deaths)) ? parseInt(data.deaths) : (currentStats.deaths ?? 0);
-        const damage = Number.isFinite(parseFloat(data.damage)) ? parseFloat(data.damage) : (currentStats.damage ?? 0);
-        const new_hp = Number.isFinite(parseFloat(data.new_hp)) ? parseFloat(data.new_hp) : parseFloat(currentStats.hp);
-        const new_armor = Number.isFinite(parseFloat(data.new_armor)) ? parseFloat(data.new_armor) : parseFloat(currentStats.armor);
+        const currentStats = await this.getPlayerStats(playerId, roomId) || {};
 
-        console.log(data.new_hp, data.new_armor);
-        console.log(`after parse ${new_hp}, ${new_armor}`);
-        
+        // helpers
+        const toFloat = (v, fallback) => {
+            const n = parseFloat(v);
+            return Number.isFinite(n) ? n : fallback;
+        };
+        const toInt = (v, fallback) => {
+            const n = parseInt(v);
+            return Number.isFinite(n) ? n : fallback;
+        };
+        const toBool = (v, fallback) => {
+            if (typeof v === 'boolean') return v;
+            if (typeof v === 'string') return v === 'true';
+            return (typeof fallback === 'boolean') ? fallback : true;
+        };
+
+        // текущие значения из Redis (как числа)
+        const cur_hp        = toFloat(currentStats.hp,         0);
+        const cur_max_hp    = toFloat(currentStats.max_hp,     cur_hp);
+        const cur_armor     = toFloat(currentStats.armor,      0);
+        const cur_max_armor = toFloat(currentStats.max_armor,  cur_armor);
+        const cur_damage    = toFloat(currentStats.damage,     0);
+        const cur_kills     = toInt  (currentStats.kills,      0);
+        const cur_deaths    = toInt  (currentStats.deaths,     0);
+        const cur_vision    = toFloat(currentStats.vision,     0);
+        const cur_score     = toFloat(currentStats.score,      0);
+        const cur_alive     = toBool (currentStats.is_alive,   true);
+
+        // входящие данные (опциональны)
+        const kills     = toInt  (data.kills,     cur_kills);
+        const deaths    = toInt  (data.deaths,    cur_deaths);
+        const damage    = toFloat(data.damage,    cur_damage);
+        const max_hp_in = ('max_hp'    in data) ? toFloat(data.max_hp,    cur_max_hp)    : cur_max_hp;
+        const max_ar_in = ('max_armor' in data) ? toFloat(data.max_armor, cur_max_armor) : cur_max_armor;
+        const vision    = ('vision'    in data) ? toFloat(data.vision,    cur_vision)    : cur_vision;
+        const score     = ('score'     in data) ? toFloat(data.score,     cur_score)     : cur_score;
+
+        // сначала определим новые max-значения
+        const max_hp    = Math.max(0, max_hp_in);
+        const max_armor = Math.max(0, max_ar_in);
+
+        // затем — hp/armor с учётом возможных максимумов
+        const new_hp_in    = ('new_hp'    in data) ? toFloat(data.new_hp,    cur_hp)    : cur_hp;
+        const new_armor_in = ('new_armor' in data) ? toFloat(data.new_armor, cur_armor) : cur_armor;
+
+        const hp    = Math.min(Math.max(0, new_hp_in),    max_hp    || new_hp_in);    // если max_hp=0, не clamp'им
+        const armor = Math.min(Math.max(0, new_armor_in), max_armor || new_armor_in); // если max_armor=0, не clamp'им
+
+        const is_alive = toBool(data.is_alive, cur_alive);
+
         const updatedStats = {
-            hp: new_hp.toString(),
-            armor: new_armor.toString(),
+            hp: hp.toString(),
+            max_hp: max_hp.toString(),               // <-- теперь сохраняем и отдаём
+            armor: armor.toString(),
+            max_armor: max_armor.toString(),         // <-- теперь сохраняем и отдаём
             kills: kills.toString(),
             deaths: deaths.toString(),
             damage: damage.toString(),
-            is_alive: ((typeof data.is_alive === "boolean") ? data.is_alive : (currentStats.is_alive ?? true)).toString(),
+            vision: vision.toString(),               // поле на будущее
+            is_alive: is_alive.toString(),
+            score: Number.isFinite(score) ? score : 0,
             last_update: Date.now().toString()
         };
-
-        // Подстраховка от NaN
-        if (!Number.isFinite(updatedStats.score)) {
-            updatedStats.score = 0;
-        }
 
         const pipeline = global.redisClient.multi();
         pipeline.hSet(matchKey, updatedStats);
         pipeline.expire(matchKey, this.matchTTL);
-
-        // console.log("ZADD debug:", statsKey, updatedStats.score, playerId.toString());
-        
-        // pipeline.zAdd(statsKey, [{ score: updatedStats.score, value: playerId.toString() }]);
         pipeline.hSet(statsKey, updatedStats);
         pipeline.expire(statsKey, this.matchTTL);
-
         await pipeline.exec();
 
         return updatedStats;

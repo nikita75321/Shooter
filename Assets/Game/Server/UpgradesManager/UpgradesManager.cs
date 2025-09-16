@@ -95,25 +95,27 @@ public class UpgradesManager : MonoBehaviour
             Debug.Log($"Upgrade picked up: {response.upgrade_type}");
 
             var player = Level.Instance.currentLevel.player;
+            var playerInfo = OnlineRoom.Instance.GetPlayerInfo(response.player_id);
+            
             switch (response.upgrade_type)
             {
                 case "aim":
-                    
-                    break;
-                case "armor":
 
                     break;
+                case "armor":
+                    playerInfo.max_armor *= 1.5f;
+                    break;
                 case "noize":
-                    
+
                     break;
                 case "damage":
-                    
+
                     break;
                 case "magazine":
-                    
+
                     break;
                 case "vision":
-                    
+
                     break;
             }
         });
@@ -128,6 +130,34 @@ public class UpgradesManager : MonoBehaviour
             upgradeList[response.upgrade_id].isPickingUp = true;
             curUpgrade.isPickingUp = true;
             curUpgrade.gameObject.SetActive(false);
+
+            if (response.player_id != Geekplay.Instance.PlayerData.id)
+            {
+                var enemy = EnemiesInGame.Instance.GetEnemy(response.player_id);
+                switch (response.upgrade_type)
+                {
+                    case "aim":
+
+                        break;
+                    case "armor":
+                        enemy.Armor.maxArmor *= 1.5f;
+                        OnlineRoom.Instance.GetPlayerInfo(response.player_id).max_armor = enemy.Armor.maxArmor;
+                        // enemy.Armor.ChangeArmor(enemy.Armor.maxArmor);
+                        break;
+                    case "noize":
+
+                        break;
+                    case "damage":
+
+                        break;
+                    case "magazine":
+
+                        break;
+                    case "vision":
+
+                        break;
+                }
+            }
         });
     }
 

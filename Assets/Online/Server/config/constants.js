@@ -2,15 +2,23 @@
 const Constants = {
     wsKey: `ws:connection:`, 
     myVar: 'Hello!',
+
     playerTransformKey: `player_transform:`,
-    playerHeroKey: 'player:hero:',
+    playerHeroKey: `player:hero:`,
+    playerUpgradesKey:'player_upgrades:',
+
     roomKey: 'room:',
     roomPlayersKey: `room_players:`,
+
     matchKey: `match:`,
+
     playerStats: `player_stats:`,
-    boostKey: "boost:",
-    upgradeKey: "upgrade:",
-    roomBoostsKey: "room_boosts:"
+
+    upgradeKey: `upgrade:`,
+    roomUpgradesKey : `room_upgrades`,
+
+    boostKey: `boost:`,
+    roomBoostsKey: `room_boosts:`
 };
 
 const GameConstants = {

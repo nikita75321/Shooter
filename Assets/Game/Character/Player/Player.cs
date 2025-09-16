@@ -91,6 +91,7 @@ public class Player : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
         }
+
         if (GameStateManager.Instance.GameState == GameState.game)
         {
             //Animation state
@@ -106,14 +107,15 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
+                    Character.CurrentWeapon.StopReload();
                     if (Character.Health.UseKit())
                     {
                         Debug.Log("Start use Aidkit");
                     }
-                    else
-                    {
-                        Character.CurrentWeapon.StopReload();
-                    }
+                    // else
+                    // {
+                    //     Character.CurrentWeapon.StopReload();
+                    // }
                 }
             }
             if (Input.GetKeyDown(KeyCode.R))

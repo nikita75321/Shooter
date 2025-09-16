@@ -521,7 +521,7 @@ public class OnlineRoom : MonoBehaviour
             CurrentRoom.GetAllPlayers().Where(p => p.isAlive).ToList() :
             new List<PlayerInGameInfo>();
     }
-
+    
     public void UpdateLocalPlayerStats(int kills, int deaths, bool isAlive)
     {
         var localPlayer = GetLocalPlayerInfo();
