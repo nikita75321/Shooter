@@ -19,21 +19,29 @@ public class GameEndCanvas : MonoBehaviour
     [SerializeField] private Player player;
     [SerializeField] private Level level;
     [SerializeField] private RewardSO rewardSO;
+    [SerializeField] private GameEndStats gameEndStats;
+
+    [Header("Stats")]
+    [SerializeField] private int place;
 
     [Header("Win panel")]
+    [SerializeField] private TMP_Text winPlaceTXT;
     [SerializeField] private GameObject winPanel;
     [SerializeField] private Button winClaim;
     [SerializeField] private Button winStats;
     [SerializeField] private Button rewardWin;
-    [SerializeField] private int winRating = 5, winMoney = 250, winDonatMoney = 1;
+    [SerializeField] private float winMoney = 250, winDonatMoney = 1;
+    [SerializeField] private int winRating;
     [SerializeField] private TMP_Text winRatingTXT, winMoneyTXT, winDonatMoneyTXT;
 
     [Header("Lose panel")]
+    [SerializeField] private TMP_Text losePlaceTXT;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private Button loseClaim;
     [SerializeField] private Button loseStats;
     [SerializeField] private Button rewardLose;
-    [SerializeField] private int loseRating = 2, loseMoney = 50, loseDonatMoney = 0;
+    [SerializeField] private float loseRatingMin = 5, loseRatingMax = 5, loseMoney = 50, loseDonatMoney = 0;
+    [SerializeField] private int loseRating;
     [SerializeField] private TMP_Text loseRatingTXT, loseMoneyTXT, loseDonatMoneyTXT;
 
     [Header("Stats panel")]
@@ -42,8 +50,12 @@ public class GameEndCanvas : MonoBehaviour
 
     [Header("General")]
     [SerializeField] private Button back;
+
     [Header("To Save")]
     [ShowInInspector] public MatchStats matchStats;
+
+    [Header("MatchFinalStats")]
+    public MatchEndResponse Response = new();
 
     private void OnEnable()
     {
@@ -55,6 +67,7 @@ public class GameEndCanvas : MonoBehaviour
         loseClaim.onClick.AddListener(ClaimLose);
         rewardLose.onClick.AddListener(RewardLose);
 
+        WebSocketBase.Instance.OnMatchEnd += ShowFinal;
     }
     private void OnDisable()
     {
@@ -63,6 +76,8 @@ public class GameEndCanvas : MonoBehaviour
         loseStats.onClick.RemoveAllListeners();
         rewardWin.onClick.RemoveAllListeners();
         rewardLose.onClick.RemoveAllListeners();
+
+        WebSocketBase.Instance.OnMatchEnd -= ShowFinal;
     }
 
     private void Start()
@@ -75,6 +90,35 @@ public class GameEndCanvas : MonoBehaviour
     {
         level.gameObject.SetActive(false);
         level.mainMenu.OpenMenu();
+    }
+
+    private void ShowFinal(MatchEndResponse response)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            Response = response;
+
+            for (int i = 0; i < response.results.Count; i++)
+            {
+                var result = response.results[i];
+                if (result.player_id == Geekplay.Instance.PlayerData.id)
+                {
+                    if (result.is_winner)
+                    {
+                        ShowWinPanel();
+                        winPlaceTXT.text = $"Топ - {result.place}";
+                    }
+                    else
+                    {
+                        ShowLosePanel();
+                        losePlaceTXT.text = $"Ваше место - {result.place}";
+                    }
+                    place = result.place;
+                }
+            }
+
+            UpdateUI();
+        });
     }
 
     public void ShowWinPanel()
@@ -91,7 +135,7 @@ public class GameEndCanvas : MonoBehaviour
         playerData.winOverral++;
         playerData.winCaseValue++;
 
-        int clanPoint = playerData.clanPoints; 
+        int clanPoint = playerData.clanPoints;
         if (playerData.clanName != string.Empty)
         {
             if (playerData.isParty)
@@ -179,6 +223,7 @@ public class GameEndCanvas : MonoBehaviour
     public void ShowStatsPanel()
     {
         statsPanel.SetActive(true);
+        gameEndStats.InitStats(Response);
     }
     public void HideStatsPanel()
     {
@@ -188,16 +233,23 @@ public class GameEndCanvas : MonoBehaviour
     private void ClaimWin()
     {
         // Локальное обновление
+        switch (place)
+        {
+            case 1: winRating = (int)Random.Range(10, 15f); break;
+            case 2: winRating = (int)Random.Range(7, 12f); break;
+            case 3: winRating = (int)Random.Range(4, 7f); break;
+        }
+
         Rating.Instance.AddRating(winRating);
-        Currency.Instance.AddMoney(winMoney);
-        Currency.Instance.AddDonatMoney(winDonatMoney);
+        Currency.Instance.AddMoney((int)winMoney);
+        Currency.Instance.AddDonatMoney((int)winDonatMoney);
 
         // Обновление на сервере
         WebSocketBase.Instance.UpdatePlayerStatsAfterBattle(
             playerId: Geekplay.Instance.PlayerData.id,
             ratingChange: winRating,
-            moneyEarned: winMoney,
-            donatMoneyEarned: winDonatMoney,
+            moneyEarned: (int)winMoney,
+            donatMoneyEarned: (int)winDonatMoney,
             kills: matchStats.kills,
             isWin: true,
             revives: matchStats.revives,
@@ -214,15 +266,17 @@ public class GameEndCanvas : MonoBehaviour
     private void ClaimLose()
     {
         // Локальное обновление
+        loseRating = (int)Random.Range(loseRatingMin, loseRatingMax);
+
         Rating.Instance.SpendRating(loseRating);
-        Currency.Instance.AddMoney(loseMoney);
+        Currency.Instance.AddMoney((int)loseMoney);
 
         // Обновление на сервере
         WebSocketBase.Instance.UpdatePlayerStatsAfterBattle(
             playerId: Geekplay.Instance.PlayerData.id,
             ratingChange: -loseRating,
-            moneyEarned: loseMoney,
-            donatMoneyEarned: loseDonatMoney,
+            moneyEarned: (int)loseMoney,
+            donatMoneyEarned: (int)loseDonatMoney,
             kills: matchStats.kills,
             isWin: false,
             revives: matchStats.revives,

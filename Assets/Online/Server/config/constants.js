@@ -29,6 +29,7 @@ const GameConstants = {
         3: 10
     },
     MATCHMAKING_TIME: 5000, // 5 секунд
+    MATCH_DURATION_MS: 90 * 1000, // 1 минута 30 секунд
     ROOM_STATES: {
         WAITING: 'waiting',
         COUNTDOWN: 'countdown',

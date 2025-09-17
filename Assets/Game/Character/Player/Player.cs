@@ -199,15 +199,15 @@ public class Player : MonoBehaviour
         float armor = heroData.armor;
         float damage = heroData.damage;
 
-        // Apply rank multiplier (50% per rank)
-        health *= Mathf.Pow(1.5f, rank);
-        armor *= Mathf.Pow(1.5f, rank);
-        damage *= Mathf.Pow(1.5f, rank);
+        // Apply rank multiplier (15% per rank)
+        health *= Mathf.Pow(1.15f, rank);
+        armor *= Mathf.Pow(1.15f, rank);
+        damage *= Mathf.Pow(1.15f, rank);
 
-        // Apply level multiplier (10% per level)
-        health *= Mathf.Pow(1.1f, level);
-        armor *= Mathf.Pow(1.1f, level);
-        damage *= Mathf.Pow(1.1f, level);
+        // Apply level multiplier (5% per level)
+        health *= Mathf.Pow(1.05f, level);
+        armor *= Mathf.Pow(1.05f, level);
+        damage *= Mathf.Pow(1.05f, level);
 
         // Set character stats
         Character.Armor.MaxArmor = armor;

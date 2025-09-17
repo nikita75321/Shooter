@@ -443,13 +443,25 @@ class PlayerInGameController {
                 
                 allStats.push({
                     player_id: playerId,
-                    username: info.username,
+                    player_name: info.player_name,
                     ...stats
                 });
             }
             
-            // Сортируем по score
-            return allStats.sort((a, b) => b.score - a.score);
+            // Сортируем по количеству убийств
+            return allStats.sort((a, b) => {
+                const killsA = parseInt(a.kills ?? 0, 10) || 0;
+                const killsB = parseInt(b.kills ?? 0, 10) || 0;
+
+                if (killsB !== killsA) {
+                    return killsB - killsA;
+                }
+
+                // Дополнительная сортировка по счёту, если количество убийств одинаково
+                const scoreA = parseFloat(a.score ?? 0) || 0;
+                const scoreB = parseFloat(b.score ?? 0) || 0;
+                return scoreB - scoreA;
+            });
             
         } catch (error) {
             console.error(`Error getting room stats for ${roomId}:`, error);

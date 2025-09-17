@@ -7,6 +7,7 @@ const playerInGameController = require('./playerInGameController');
 class RoomManager {
     constructor() {
         this.roomTimers = new Map();
+        this.matchTimers = new Map();
         this.connectedPlayers = new Map();
         this.validModes = [1, 2, 3];
         this.isRedisConnected = false;
@@ -69,9 +70,33 @@ class RoomManager {
                             players: '[]',
                             bots: '[]',
                             startTime: '0',
-                            matchId: ''
+                            matchId: '',
+                            matchStartTime: '0',
+                            matchEndTime: '0'
                         };
                         await global.redisClient.hSet(roomsKey, roomId, JSON.stringify(roomData));
+                    } else {
+                        try {
+                            const parsed = JSON.parse(existing);
+                            let needsUpdate = false;
+                            if (!('matchId' in parsed)) {
+                                parsed.matchId = '';
+                                needsUpdate = true;
+                            }
+                            if (!('matchStartTime' in parsed)) {
+                                parsed.matchStartTime = '0';
+                                needsUpdate = true;
+                            }
+                            if (!('matchEndTime' in parsed)) {
+                                parsed.matchEndTime = '0';
+                                needsUpdate = true;
+                            }
+                            if (needsUpdate) {
+                                await global.redisClient.hSet(roomsKey, roomId, JSON.stringify(parsed));
+                            }
+                        } catch (err) {
+                            console.error(`Failed to parse room data for ${roomId}:`, err);
+                        }
                     }
                 }
             }
@@ -338,16 +363,58 @@ class RoomManager {
         }
     }
 
+    startMatchTimer(room) {
+        if (!room || !room.id) return;
+
+        this.clearMatchTimer(room.id);
+
+        const now = Date.now();
+        const parseTime = (value, fallback) => {
+            const parsed = parseInt(value, 10);
+            return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+        };
+
+        const matchStartTime = parseTime(room.matchStartTime, now);
+        const defaultEnd = matchStartTime + GameConstants.MATCH_DURATION_MS;
+        const matchEndTime = parseTime(room.matchEndTime, defaultEnd);
+        const delay = Math.max(0, matchEndTime - now);
+
+        const timer = setTimeout(async () => {
+            try {
+                const currentRoom = await this.getRoomInfo(room.id);
+                if (!currentRoom) return;
+                await this.endGame(currentRoom);
+            } catch (err) {
+                console.error(`Error ending match for room ${room.id}:`, err);
+            } finally {
+                this.matchTimers.delete(room.id);
+            }
+        }, delay);
+
+        this.matchTimers.set(room.id, timer);
+    }
+
+    clearMatchTimer(roomId) {
+        if (this.matchTimers.has(roomId)) {
+            clearTimeout(this.matchTimers.get(roomId));
+            this.matchTimers.delete(roomId);
+        }
+    }
+
     // === Старт/Завершение игры ===
     async startGame(room) {
         this.clearMatchmakingTimer(room.id);
+        this.clearMatchTimer(room.id);
 
         const roomsKey = `rooms:${room.mode}`;
         const roomDataRaw = await global.redisClient.hGet(roomsKey, room.id);
         const roomData = roomDataRaw ? JSON.parse(roomDataRaw) : { ...room };
 
         roomData.state = GameConstants.ROOM_STATES.IN_PROGRESS;
-        roomData.matchId = `match_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
+        const matchStartTimestamp = Date.now();
+        roomData.matchId = `match_${matchStartTimestamp}_${Math.random().toString(36).substr(2,9)}`;
+        roomData.matchStartTime = matchStartTimestamp.toString();
+        roomData.matchEndTime = (matchStartTimestamp + GameConstants.MATCH_DURATION_MS).toString();
         await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
 
         const realPlayers = room.players || [];
@@ -383,29 +450,105 @@ class RoomManager {
         }
 
         console.log(`Game started in room ${room.id} with ${allPlayersInfo.length} players and ${room.bots?.length || 0} bots`);
+
+        this.startMatchTimer({
+            ...room,
+            matchId: roomData.matchId,
+            matchStartTime: roomData.matchStartTime,
+            matchEndTime: roomData.matchEndTime
+        });
     }
 
-    async endGame(room) {
+    async endGame(room, options = {}) {
+        const { force = false } = options;
+        this.clearMatchTimer(room.id);
+
         const roomsKey = `rooms:${room.mode}`;
         const roomDataRaw = await global.redisClient.hGet(roomsKey, room.id);
         const roomData = roomDataRaw ? JSON.parse(roomDataRaw) : { ...room };
 
+        if (roomData.state === GameConstants.ROOM_STATES.COMPLETED && !force) {
+            return;
+        }
+
+        if (!force) {
+            const matchEndTime = parseInt(roomData.matchEndTime || '0', 10);
+            const now = Date.now();
+            if (matchEndTime > now) {
+                const remaining = matchEndTime - now;
+                console.log(`Match for room ${room.id} requested to end early, rescheduling in ${remaining} ms`);
+                this.startMatchTimer({
+                    ...room,
+                    matchId: roomData.matchId,
+                    matchStartTime: roomData.matchStartTime,
+                    matchEndTime: roomData.matchEndTime
+                });
+                return;
+            }
+        }
+
         roomData.state = GameConstants.ROOM_STATES.COMPLETED;
+        roomData.matchStartTime = '0';
+        roomData.matchEndTime = '0';
         await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
 
-        await this.notifyRoomPlayers(room, {
-            action: 'match_end',
-            room_id: room.id
-        });
+        let matchResults = [];
+        try {
+            const stats = await playerInGameController.getRoomStats(room.id);
+            const toInt = (value) => {
+                const parsed = parseInt(value, 10);
+                return Number.isFinite(parsed) ? parsed : 0;
+            };
 
-        await this.resetRoom({
-            id: room.id,
-            mode: room.mode,
-            maxPlayers: room.maxPlayers || GameConstants.MODE_CAPACITY[room.mode]
-        });
+            const toFloat = (value) => {
+                const parsed = parseFloat(value);
+                return Number.isFinite(parsed) ? parsed : 0;
+            };
+
+            matchResults = (stats || [])
+                .sort((a, b) => {
+                    const killDiff = toInt(b.kills) - toInt(a.kills);
+                    if (killDiff !== 0) return killDiff;
+                    return toFloat(b.score) - toFloat(a.score);
+                })
+                .map((stat, index) => ({
+                    player_id: stat.player_id,
+                    player_name: stat.player_name,
+                    kills: toInt(stat.kills),
+                    deaths: toInt(stat.deaths),
+                    damage: toFloat(stat.damage),
+                    score: toFloat(stat.score),
+                    place: index + 1,
+                    is_winner: index < 3
+                }));
+        } catch (err) {
+            console.error(`Failed to build match results for room ${room.id}:`, err);
+        }
+
+        const matchEndPayload = {
+            action: 'match_end',
+            room_id: room.id,
+            match_id: roomData.matchId || room.matchId || null,
+            results: matchResults
+        };
+
+        await this.notifyRoomPlayers(room, matchEndPayload);
+
+        try {
+            await playerInGameController.cleanupMatchData(room.id);
+        } catch (err) {
+            console.error(`Failed to cleanup match data for room ${room.id}:`, err);
+        }
+
+        // await this.resetRoom({
+        //     id: room.id,
+        //     mode: room.mode,
+        //     maxPlayers: room.maxPlayers || GameConstants.MODE_CAPACITY[room.mode]
+        // });
     }
 
     async resetRoom(room) {
+        this.clearMatchTimer(room.id);
         const roomsKey = `rooms:${room.mode}`;
         if (room.resetting) return;
         room.resetting = true;
@@ -418,7 +561,10 @@ class RoomManager {
             state: GameConstants.ROOM_STATES.WAITING,
             players: '[]',
             bots: '[]',
-            startTime: '0'
+            startTime: '0',
+            matchId: '',
+            matchStartTime: '0',
+            matchEndTime: '0'
         };
 
         const pipeline = global.redisClient.multi();
@@ -549,7 +695,7 @@ class RoomManager {
             const remainingPlayers = await this.getRoomPlayers(room.id);
             if (remainingPlayers.length === 0) {
                 console.log(`No players left in room ${room.id}, resetting room immediately`);
-                await this.endGame(room);
+                await this.endGame(room, { force: true });
             }
         }
 

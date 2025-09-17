@@ -220,6 +220,9 @@ public class Health : MonoBehaviour
         {
             CurrentHealth -= damage;
         }
+        OnTakeDamage?.Invoke();
+        PlaySound(damageSound);
+        
         ChangeHp(CurrentHealth);
     }
     public void ChangeHp(float value)

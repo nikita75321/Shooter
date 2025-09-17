@@ -4,8 +4,6 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System;
-using UnityEngine.Experimental.AI;
-using System.Net.WebSockets;
 
 #region Class struct
 [Serializable]
@@ -21,11 +19,13 @@ public class RoomInfo
     public int maxPlayers;
     public long startTime;
     public string matchId;
+    public List<MatchPlayerResult> lastMatchResults;
 
     public RoomInfo()
     {
         players = new Dictionary<string, PlayerInGameInfo>();
         bots = new List<string>();
+        lastMatchResults = new List<MatchPlayerResult>();
     }
 
     public void AddPlayer(PlayerInGameInfo playerInfo)
@@ -116,6 +116,20 @@ public class PlayerInGameInfo
         rotation = Quaternion.identity;
     }
 }
+
+[Serializable]
+public class MatchPlayerResult
+{
+    public string player_id;
+    public string player_name;
+    public int kills;
+    public int deaths;
+    public float damage;
+    public float score;
+    public int place;
+    public bool is_winner;
+}
+
 [Serializable]
 public class PlayerTransformUpdate
 {
@@ -176,6 +190,7 @@ public class MatchEndResponse
 {
     public string room_id;
     public string match_id;
+    public List<MatchPlayerResult> results;
 }
 
 [Serializable]
@@ -230,6 +245,7 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnMatchmakingJoined += HandleRoomJoined;
         WebSocketBase.Instance.OnPlayerLeftRoom += HandlePlayerLeftRoom;
         WebSocketBase.Instance.OnMatchStart += HandleMatchStart;
+        WebSocketBase.Instance.OnMatchEnd += HandleMatchEnd;
         WebSocketBase.Instance.OnRoomForceClosed += HandleRoomForceClosed;
         WebSocketBase.Instance.OnGameForceEnded += HandleGameForceEnded;
         WebSocketBase.Instance.OnRoomInfoReceived += HandleRoomInfoReceived;
@@ -267,6 +283,7 @@ public class OnlineRoom : MonoBehaviour
             WebSocketBase.Instance.OnMatchmakingJoined -= HandleRoomJoined;
             WebSocketBase.Instance.OnPlayerLeftRoom -= HandlePlayerLeftRoom;
             WebSocketBase.Instance.OnMatchStart -= HandleMatchStart;
+            WebSocketBase.Instance.OnMatchEnd -= HandleMatchEnd;
             WebSocketBase.Instance.OnRoomForceClosed -= HandleRoomForceClosed;
             WebSocketBase.Instance.OnGameForceEnded -= HandleGameForceEnded;
             WebSocketBase.Instance.OnRoomInfoReceived -= HandleRoomInfoReceived;
@@ -359,6 +376,39 @@ public class OnlineRoom : MonoBehaviour
                 CurrentRoom.bots = response.bots;
                 Debug.Log($"Match started in room {response.room_id} with {CurrentRoom.playerCount} players");
             }
+        });
+    }
+
+
+    private void HandleMatchEnd(MatchEndResponse response)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            if (!IsInRoom || CurrentRoom.id != response.room_id)
+            {
+                return;
+            }
+
+            matchStart = false;
+            if (serverCor != null)
+            {
+                StopCoroutine(serverCor);
+                serverCor = null;
+            }
+
+            CurrentRoom.state = "completed";
+            CurrentRoom.matchId = response.match_id;
+            CurrentRoom.lastMatchResults = response.results ?? new List<MatchPlayerResult>();
+
+            var localPlayerId = Geekplay.Instance.PlayerData.id;
+            bool isWinner = CurrentRoom.lastMatchResults.Any(result => result.player_id == localPlayerId && result.is_winner);
+
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.matchState = isWinner ? MatchState.win : MatchState.lose;
+            }
+
+            Debug.Log($"Match {response.match_id} ended. Local player {(isWinner ? "won" : "lost")}.");
         });
     }
 
@@ -475,7 +525,8 @@ public class OnlineRoom : MonoBehaviour
             var player = GetLocalPlayerInfo();
             player.hp = response.new_hp;
 
-            Level.Instance.currentLevel.player.Character.Health.ChangeHp(response.new_hp);
+            // Level.Instance.currentLevel.player.Character.Health.ChangeHp(response.new_hp);
+            Level.Instance.currentLevel.player.Character.Health.NewTakeDamage(response.damage);
         }
         else
         {
@@ -484,7 +535,8 @@ public class OnlineRoom : MonoBehaviour
             player.hp = response.new_hp;
 
             Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
-            enemy.Health.ChangeHp(response.new_hp);
+            // enemy.Health.ChangeHp(response.new_hp);
+            enemy.Health.NewTakeDamage(response.damage);
         }
     }
     private void UpdatePlayerArmor(WebSocketBase.PlayerDamagedResponse response)

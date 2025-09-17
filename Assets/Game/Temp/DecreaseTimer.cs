@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DecreaseTimer : MonoBehaviour
@@ -13,7 +14,25 @@ public class DecreaseTimer : MonoBehaviour
     private void OnEnable()
     {
         tempTime = startTime;
-        cor = StartCoroutine(StartTimer());
+        WebSocketBase.Instance.OnMatchStart += StartTimer;
+    }
+
+    private void OnDisable()
+    {
+        if (cor != null)
+        {
+            StopCoroutine(cor);
+        }
+
+        WebSocketBase.Instance.OnMatchStart -= StartTimer;
+    }
+
+    private void StartTimer(MatchStartResponse response)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            cor = StartCoroutine(StartTimer());
+        });
     }
 
     private IEnumerator StartTimer()
@@ -29,14 +48,5 @@ public class DecreaseTimer : MonoBehaviour
             txt.text = $"{minutes:00}:{seconds:00}";
         }
         Debug.Log("Time is end");
-    }
-
-    private void OnDisable()
-    {
-        if (cor != null)
-        {
-            txt.text = $"Поиск игроков ({0}с)";
-            StopCoroutine(cor);
-        }
     }
 }
