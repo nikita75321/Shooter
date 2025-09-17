@@ -12,7 +12,7 @@ public class SpawnPoints : MonoBehaviour
     {
         Instance = this;
     }
-    
+
     private void Start()
     {
         tempPoints = spawnPoints.ToList();
@@ -28,10 +28,14 @@ public class SpawnPoints : MonoBehaviour
         Debug.Log("Random point get");
         if (tempPoints.Count > 0)
         {
-            var t = tempPoints[Random.Range(0, tempPoints.Count)];
-            tempPoints.Remove(t);
-            return t;
+
         }
-        return null;
+        else
+        {
+            tempPoints = spawnPoints.ToList();
+        }
+        var t = tempPoints[Random.Range(0, tempPoints.Count)];
+        tempPoints.Remove(t);
+        return t;
     }
 }

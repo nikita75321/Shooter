@@ -450,6 +450,8 @@ public class WebSocketBase : MonoBehaviour
     public event Action<UpgradeDroppedResponse> OnUpgradeDropped;
 
     public event Action<string> OnHealPlayer;
+    public event Action<PlayerRespawnResponse> OnPlayerRespawnResponse;
+    public event Action<PlayerRespawnedMessage> OnPlayerRespawned;
     #endregion
 
     #region Комнаты
@@ -704,6 +706,13 @@ public class WebSocketBase : MonoBehaviour
             // ==============Useable==============
             case "player_healed":
                 HandleHealPlayer(message);
+                break;
+
+            case "player_respawn_response":
+                HandlePlayerRespawnResponse(message);
+                break;
+            case "player_respawned":
+                HandlePlayerRespawned(message);
                 break;
 
 
@@ -1509,6 +1518,39 @@ public class WebSocketBase : MonoBehaviour
         public string killer_id;
     }
 
+    [Serializable]
+    public class PlayerRespawnStats
+    {
+        public float hp;
+        public float max_hp;
+        public float armor;
+        public float max_armor;
+        public int kills;
+        public int deaths;
+        public float damage;
+        public float vision;
+        public float score;
+        public long last_update;
+        public bool is_alive;
+        public long respawn_time;
+    }
+
+    [Serializable]
+    public class PlayerRespawnResponse
+    {
+        public bool success;
+        public string player_id;
+        public PlayerRespawnStats stats;
+        public long timestamp;
+    }
+
+    [Serializable]
+    public class PlayerRespawnedMessage
+    {
+        public string player_id;
+        public PlayerRespawnStats stats;
+    }
+
     private void HandlePlayerDamaged(Dictionary<string, object> message)
     {
         try
@@ -1595,6 +1637,36 @@ public class WebSocketBase : MonoBehaviour
                 ? errorObj.ToString()
                 : "Unknown error";
             Debug.LogError($"Failed to update hero levels: {error}");
+        }
+    }
+    
+    private void HandlePlayerRespawnResponse(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<PlayerRespawnResponse>(
+                JsonConvert.SerializeObject(message));
+
+            OnPlayerRespawnResponse?.Invoke(response);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing player_respawn_response: {e.Message}");
+        }
+    }
+
+    private void HandlePlayerRespawned(Dictionary<string, object> message)
+    {
+        try
+        {
+            var response = JsonConvert.DeserializeObject<PlayerRespawnedMessage>(
+                JsonConvert.SerializeObject(message));
+
+            OnPlayerRespawned?.Invoke(response);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error parsing player_respawned: {e.Message}");
         }
     }
     #endregion
@@ -2103,9 +2175,41 @@ public class WebSocketBase : MonoBehaviour
 
         SendWebSocketRequest("update_player_stats", data);
     }
+    
+    public void SendPlayerRespawn(float hp, float maxHp, float armor, float maxArmor, Vector3 position, Quaternion rotation)
+    {
+        if (Geekplay.Instance == null || Geekplay.Instance.PlayerData == null)
+        {
+            Debug.LogWarning("Cannot send respawn data without player info");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(Geekplay.Instance.PlayerData.roomId))
+        {
+            Debug.LogWarning("Cannot send respawn data without room id");
+            return;
+        }
+
+        var data = new Dictionary<string, object>
+        {
+            { "player_id", Geekplay.Instance.PlayerData.id },
+            { "room_id", Geekplay.Instance.PlayerData.roomId },
+            { "hp", hp },
+            { "max_hp", maxHp },
+            { "armor", armor },
+            { "max_armor", maxArmor },
+            { "p_x", position.x },
+            { "p_y", position.y },
+            { "p_z", position.z },
+            { "r_x", rotation.x },
+            { "r_y", rotation.y },
+            { "r_z", rotation.z },
+            { "r_w", rotation.w }
+        };
+
+        SendWebSocketRequest("player_respawn", data);
+    }
     #endregion
-
-
 
 
 

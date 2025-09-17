@@ -215,7 +215,7 @@ public class Enemy : MonoBehaviour
 
         weapon.PlayShotEffects(origin, shotDirection);
     }
-    
+
     public void Die()
     {
         Debug.Log("die");
@@ -233,6 +233,54 @@ public class Enemy : MonoBehaviour
         Geekplay.Instance.PlayerData.killCaseValue++;
         Geekplay.Instance.PlayerData.killOverral++;
         Geekplay.Instance.Save();
+    }
+
+    public void Respawn(float targetHp, float targetArmor)
+    {
+        Debug.Log("Respawn");
+        if (Health != null)
+        {
+            if (Health.IsDead)
+            {
+                Health.Revive();
+            }
+            else
+            {
+                Health.ChangeHp(targetHp);
+            }
+        }
+
+        if (Armor != null)
+        {
+            var clampedArmor = Mathf.Clamp(targetArmor, 0f, Armor.MaxArmor);
+            Armor.ChangeArmor(clampedArmor);
+        }
+
+        if (col != null) col.enabled = true;
+        if (controller != null) controller.enabled = true;
+        enabled = true;
+
+        if (healthbar != null)
+        {
+            healthbar.gameObject.SetActive(true);
+            healthbar.Init();
+        }
+
+        if (armorBar != null)
+        {
+            armorBar.gameObject.SetActive(true);
+            armorBar.Init();
+        }
+
+        if (animator != null)
+        {
+            animator.ResetTrigger("Die");
+            animator.Rebind();
+            animator.Update(0f);
+        }
+
+        stateBuffer.Clear();
+        lastVelocity = Vector3.zero;
     }
 
     public void TakeDamageAnim()

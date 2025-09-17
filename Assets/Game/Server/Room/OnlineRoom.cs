@@ -243,6 +243,7 @@ public class OnlineRoom : MonoBehaviour
         WebSocketBase.Instance.OnBoostTaken += HandleBoostTaken;
 
         WebSocketBase.Instance.OnHealPlayer += HandleHealPlayer;
+        WebSocketBase.Instance.OnPlayerRespawned += HandlePlayerRespawned;
     }
 
     private void Start()
@@ -279,6 +280,7 @@ public class OnlineRoom : MonoBehaviour
             WebSocketBase.Instance.OnBoostTaken -= HandleBoostTaken;
 
             WebSocketBase.Instance.OnHealPlayer -= HandleHealPlayer;
+            WebSocketBase.Instance.OnPlayerRespawned -= HandlePlayerRespawned;
         }
 
         if (serverCor != null)
@@ -290,6 +292,11 @@ public class OnlineRoom : MonoBehaviour
 
     public void StartServerUpdate()
     {
+        if (serverCor != null)
+        {
+            StopCoroutine(serverCor);
+            serverCor = null;
+        }
         serverCor = StartCoroutine(UpdateServerInfo());
     }
 
@@ -459,7 +466,7 @@ public class OnlineRoom : MonoBehaviour
             enemy.currentWeapon.weapons[0].SetActive(false);
         }
     }
-    
+
     private void UpdatePlayerHp(WebSocketBase.PlayerDamagedResponse response)
     {
         if (response.target_id == Geekplay.Instance.PlayerData.id)
@@ -521,7 +528,7 @@ public class OnlineRoom : MonoBehaviour
             CurrentRoom.GetAllPlayers().Where(p => p.isAlive).ToList() :
             new List<PlayerInGameInfo>();
     }
-    
+
     public void UpdateLocalPlayerStats(int kills, int deaths, bool isAlive)
     {
         var localPlayer = GetLocalPlayerInfo();
@@ -897,9 +904,84 @@ public class OnlineRoom : MonoBehaviour
             else
             {
                 var enemy = EnemiesInGame.Instance.GetEnemy(playerId);
-                enemy.Health.ChangeHp(player.max_hp);
+                if (enemy != null)
+                {
+                    enemy.Health.ChangeHp(player.max_hp);
+                }
             }
         });
     }
     #endregion
+    
+    private void HandlePlayerRespawned(WebSocketBase.PlayerRespawnedMessage response)
+    {
+        if (response == null)
+        {
+            return;
+        }
+
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            Debug.Log("HandlePlayerRespawned");
+            if (!IsInRoom)
+            {
+                return;
+            }
+
+            var player = CurrentRoom.GetPlayer(response.player_id);
+            if (player == null)
+            {
+                return;
+            }
+
+            var stats = response.stats;
+            if (stats != null)
+            {
+                player.isAlive = stats.is_alive;
+                player.hp = stats.hp;
+                player.max_hp = stats.max_hp;
+                player.armor = stats.armor;
+                player.max_armor = stats.max_armor;
+                player.kills = stats.kills;
+                player.deaths = stats.deaths;
+                if (player.boolsState != null)
+                {
+                    player.boolsState.isDead = !stats.is_alive;
+                }
+            }
+
+            if (response.player_id == Geekplay.Instance.PlayerData.id)
+            {
+                if (stats != null)
+                {
+                    var level = Level.Instance;
+                    if (level != null && level.currentLevel != null && level.currentLevel.player != null)
+                    {
+                        var localPlayer = level.currentLevel.player;
+                        localPlayer.Character.Health.state = HealthState.live;
+                        localPlayer.Character.Health.FullHeal();
+                        // if (!Mathf.Approximately(stats.hp, localPlayer.Character.Health.MaxHealth))
+                        // {
+                            localPlayer.Character.Health.ChangeHp(stats.hp);
+                        // }
+                        // localPlayer.Character.Armor.ChangeArmor(stats.armor);
+                    }
+                }
+            }
+            else if (stats != null)
+            {
+                var enemies = EnemiesInGame.Instance;
+                if (enemies != null)
+                {
+                    var enemy = enemies.GetEnemy(response.player_id);
+                    if (enemy != null)
+                    {
+                        enemy.Respawn(stats.hp, stats.armor);
+                    }
+                }
+            }
+
+            UpdatePlayerVisualization(player);
+        });
+    }
 }

@@ -226,7 +226,7 @@ public class Player : MonoBehaviour
             hiddenMaterial.color = new Color(0.2f, 0.2f, 0.2f, 0.5f);
         }
 
-        Character.Health.OnDie.AddListener(Die);
+        // Character.Health.OnDie.AddListener(Die);
         // Character.Health.OnDie.AddListener(() => gameEndCanvas.ShowLosePanel());
 
         Character.Health.OnTakeDamage.AddListener(TakeDamageAnim);
@@ -237,7 +237,7 @@ public class Player : MonoBehaviour
 
     private void OnDestroy()
     {
-        Character.Health.OnDie.RemoveListener(Die);
+        // Character.Health.OnDie.RemoveListener(Die);
         // Character.Health.OnDie.RemoveListener(() => gameEndCanvas.ShowLosePanel());
 
         Character.Health.OnTakeDamage.RemoveListener(TakeDamageAnim);
@@ -280,8 +280,9 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(respawnDelay);
 
         // выбрать точку спавна (см. SpawnManager ниже)
-        Vector3 spawnPos = SpawnPoints.Instance.GetRandomSpawnPoint().position;
-        Quaternion spawnRot = SpawnPoints.Instance.GetRandomSpawnPoint().rotation;
+        Transform spawnPoint = SpawnPoints.Instance.GetRandomSpawnPoint();
+        Vector3 spawnPos = spawnPoint.position;
+        Quaternion spawnRot = spawnPoint.rotation;
 
         // телепорт на спавн
         Controller.transform.SetPositionAndRotation(spawnPos, spawnRot);
@@ -297,6 +298,33 @@ public class Player : MonoBehaviour
 
         Character.healthBar.gameObject.SetActive(true);
         Character.armorBar.gameObject.SetActive(true);
+
+        NotifyServerAboutRespawn(spawnPos, spawnRot);
+    }
+
+    private void NotifyServerAboutRespawn(Vector3 spawnPos, Quaternion spawnRot)
+    {
+        if (WebSocketBase.Instance == null)
+            return;
+
+        var localInfo = OnlineRoom.Instance.GetLocalPlayerInfo();
+        if (localInfo != null)
+        {
+            localInfo.isAlive = true;
+            localInfo.hp = Character.Health.CurrentHealth;
+            localInfo.armor = Character.Armor.CurrentArmor;
+            localInfo.max_hp = Character.Health.MaxHealth;
+            localInfo.max_armor = Character.Armor.MaxArmor;
+        }
+
+        WebSocketBase.Instance.SendPlayerRespawn(
+            Character.Health.CurrentHealth,
+            Character.Health.MaxHealth,
+            Character.Armor.CurrentArmor,
+            Character.Armor.MaxArmor,
+            spawnPos,
+            spawnRot
+        );
     }
 
     public void TakeDamageAnim()

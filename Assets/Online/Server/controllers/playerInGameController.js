@@ -3,6 +3,7 @@ const {Constants,GameConstants} = require('../config/constants');
 
 const Utils = require('../services/utils');
 const playerRedisService = require('../services/playerRedisService')
+const getRoomManager = () => require('./roomManager').roomManager;
 
 class PlayerInGameController {
     constructor() {
@@ -122,6 +123,7 @@ class PlayerInGameController {
             'isReviving': data.isReviving ? 'true' : 'false',
             'isPickingUp': data.isPickingUp ? 'true' : 'false',
             'isDead': data.isDead ? 'true' : 'false',
+            'is_alive': data.isDead ? 'false' : 'true',
 
             // Прочее
             'noize_volume': data.noize_volume?.toString() || '0',
@@ -254,6 +256,7 @@ class PlayerInGameController {
         const cur_vision    = toFloat(currentStats.vision,     0);
         const cur_score     = toFloat(currentStats.score,      0);
         const cur_alive     = toBool (currentStats.is_alive,   true);
+        const cur_respawn   = toInt  (currentStats.respawn_time, 0);
 
         // входящие данные (опциональны)
         const kills     = toInt  (data.kills,     cur_kills);
@@ -263,6 +266,7 @@ class PlayerInGameController {
         const max_ar_in = ('max_armor' in data) ? toFloat(data.max_armor, cur_max_armor) : cur_max_armor;
         const vision    = ('vision'    in data) ? toFloat(data.vision,    cur_vision)    : cur_vision;
         const score     = ('score'     in data) ? toFloat(data.score,     cur_score)     : cur_score;
+        const respawn_time = ('respawn_time' in data) ? toInt(data.respawn_time, cur_respawn) : cur_respawn;
 
         // сначала определим новые max-значения
         const max_hp    = Math.max(0, max_hp_in);
@@ -277,7 +281,10 @@ class PlayerInGameController {
 
         const is_alive = toBool(data.is_alive, cur_alive);
 
-        const updatedStats = {
+        const timestamp = Date.now();
+        const safeScore = Number.isFinite(score) ? score : 0;
+
+        const redisStats = {
             hp: hp.toString(),
             max_hp: max_hp.toString(),               // <-- теперь сохраняем и отдаём
             armor: armor.toString(),
@@ -287,18 +294,34 @@ class PlayerInGameController {
             damage: damage.toString(),
             vision: vision.toString(),               // поле на будущее
             is_alive: is_alive.toString(),
-            score: Number.isFinite(score) ? score : 0,
-            last_update: Date.now().toString()
+            score: safeScore.toString(),
+            respawn_time: respawn_time.toString(),
+            last_update: timestamp.toString()
+        };
+
+        const responseStats = {
+            hp,
+            max_hp,
+            armor,
+            max_armor,
+            kills,
+            deaths,
+            damage,
+            vision,
+            is_alive,
+            score: safeScore,
+            respawn_time,
+            last_update: timestamp
         };
 
         const pipeline = global.redisClient.multi();
-        pipeline.hSet(matchKey, updatedStats);
+        pipeline.hSet(matchKey, redisStats);
         pipeline.expire(matchKey, this.matchTTL);
-        pipeline.hSet(statsKey, updatedStats);
+        pipeline.hSet(statsKey, redisStats);
         pipeline.expire(statsKey, this.matchTTL);
         await pipeline.exec();
 
-        return updatedStats;
+        return responseStats;
     }
 
     async getPlayerStats(playerId, roomId) {
@@ -318,8 +341,10 @@ class PlayerInGameController {
                     kills: 0,
                     deaths: 0,
                     damage: 0,
+                    score: 0,
                     respawn_time: 0,
-                    last_update: Date.now()
+                    last_update: Date.now(),
+                    is_alive: true
                 };
             }
 
@@ -332,8 +357,10 @@ class PlayerInGameController {
                 kills: parseInt(stats.kills ?? 0, 10),
                 deaths: parseInt(stats.deaths ?? 0, 10),
                 damage: parseFloat(stats.damage ?? 0),
+                 score: parseFloat(stats.score ?? 0),
                 respawn_time: parseInt(stats.respawn_time ?? 0, 10),
-                last_update: Date.now()
+                last_update: Date.now(),
+                is_alive: stats.is_alive === 'true'
             };
         } catch (error) {
             console.error(`Error getting stats for player ${playerId}:`, error);
@@ -346,8 +373,10 @@ class PlayerInGameController {
                 kills: 0,
                 deaths: 0,
                 damage: 0,
+                score: 0,
                 respawn_time: 0,
-                last_update: Date.now()
+                last_update: Date.now(),
+                is_alive: true
             };
         }
     }
@@ -363,7 +392,7 @@ class PlayerInGameController {
 
     async notifyRoomAboutStatChange(roomId, playerId, stats) {
         try {
-            const roomManager = require('./roomManager');
+            const roomManager = getRoomManager();
             const room = await roomManager.getRoomInfo(roomId);
             
             if (room) {
@@ -463,6 +492,73 @@ class PlayerInGameController {
         } catch (error) {
             console.error('Player death handling error:', error);
             Utils.sendError(ws, 'Failed to process death');
+        }
+    }
+
+    async handlePlayerRespawn(ws, data) {
+        const requiredFields = ['player_id', 'room_id', 'hp', 'max_hp', 'armor', 'max_armor'];
+        if (!Utils.isValidMessage(data, requiredFields)) {
+            return Utils.sendError(ws, 'Missing respawn data fields');
+        }
+
+        try {
+            const { player_id, room_id } = data;
+
+            const hp = parseFloat(data.hp) || 0;
+            const armor = parseFloat(data.armor) || 0;
+
+            const currentStats = await this.getPlayerStats(player_id, room_id);
+            if (currentStats.respawn_time && Date.now() < currentStats.respawn_time) {
+                return Utils.sendError(ws, 'Respawn timer has not finished yet');
+            }
+
+            await this.savePlayerTransform(player_id, room_id, {
+                p_x: data.p_x ?? 0,
+                p_y: data.p_y ?? 0,
+                p_z: data.p_z ?? 0,
+                r_x: data.r_x ?? 0,
+                r_y: data.r_y ?? 0,
+                r_z: data.r_z ?? 0,
+                r_w: data.r_w ?? 1,
+                isMoving: false,
+                isShooting: false,
+                isReloading: false,
+                isHealing: false,
+                isReviving: false,
+                isPickingUp: false,
+                isDead: false
+            });
+
+            const updatedStats = await this.updatePlayerStats(player_id, room_id, {
+                new_hp: data.max_hp,
+                new_armor: armor,
+                max_hp: data.max_hp,
+                max_armor: data.max_armor,
+                is_alive: true,
+                respawn_time: 0
+            });
+            
+            const roomManager = getRoomManager();
+            const room = await roomManager.getRoomInfo(room_id);
+            if (room) {
+                roomManager.notifyRoomPlayers(room, {
+                    action: 'player_respawned',
+                    player_id,
+                    stats: updatedStats
+                });
+            }
+
+            ws.send(JSON.stringify({
+                action: 'player_respawn_response',
+                success: true,
+                player_id,
+                stats: updatedStats,
+                timestamp: Date.now()
+            }));
+
+        } catch (error) {
+            console.error('Player respawn handling error:', error);
+            Utils.sendError(ws, 'Failed to process respawn');
         }
     }
 

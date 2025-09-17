@@ -228,9 +228,9 @@ public class Health : MonoBehaviour
 
         if (value > 0)
         {
-            OnTakeDamage?.Invoke();
+            // OnTakeDamage?.Invoke();
 
-            PlaySound(damageSound);
+            // PlaySound(damageSound);
 
             CurrentHealth = value;
         }
@@ -272,17 +272,16 @@ public class Health : MonoBehaviour
         PlaySound(healSound);
     }
 
-    public void Revive(float healthPercentage = 0.5f)
+    public void Revive()
     {
         if (!IsDead) return;
         Debug.Log("Revive");
 
-        player.reviveCount++;
+        CurrentHealth = MaxHealth;
         OnRevive?.Invoke();
+        
+        if (aidKit != null) aidKit.StartFilling();
         state = HealthState.live;
-        CurrentHealth = maxHealth * Mathf.Clamp01(healthPercentage);
-        isInvulnerable = false;
-        timeSinceLastDamage = 0f;
     }
 
     private void Die()
