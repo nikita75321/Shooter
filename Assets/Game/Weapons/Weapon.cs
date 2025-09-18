@@ -9,6 +9,8 @@ public enum WeaponClass
     main,
     secondary
 }
+
+[RequireComponent(typeof(AudioSource))]
 public abstract class Weapon : MonoBehaviour
 {
     [Header("Player")]
@@ -37,7 +39,7 @@ public abstract class Weapon : MonoBehaviour
 
     public int bulletsPerShot = 3;
     [SerializeField] protected ParticleSystem muzzleFlash;
-    [SerializeField] protected AudioClip shootSound;
+    // [SerializeField] protected AudioClip shootSound;
     [SerializeField] protected GameObject bulletPrefab;
 
     [Header("Aiming Settings")]
@@ -59,6 +61,9 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected bool isMoving;
     public float currentAimAngle;
     [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected AudioClip[] audioClips;
+
+    [Space(25)]
 
     public UnityEvent OnStartMoving;
     public UnityEvent OnStopMoving;
@@ -78,7 +83,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (player == null) player = GetComponentInParent<Player>();
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
-        if (ammoInfo == null) ammoInfo = FindAnyObjectByType<AmmoInfo>(FindObjectsInactive.Include);
+        if (ammoInfo == null && player != null) ammoInfo = player.Character.ammoInfo;
     }
 
     protected virtual void Awake()
@@ -199,7 +204,7 @@ public abstract class Weapon : MonoBehaviour
         // --- визуальный фидбек ---
         // SpawnVisualBullet(shootOrigin, spreadDirection);
         // PlayMuzzleFlash();
-        // PlayShootSound();
+        PlayShootSound();
         PlayShotEffects(shootOrigin, spreadDirection);
 
         if (currentAmmo <= 0)
@@ -342,10 +347,9 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void PlayShootSound()
     {
-        if (shootSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(shootSound);
-        }
+        if (audioSource == null) return;
+
+        audioSource.PlayOneShot(audioClips[(int)Random.Range(0f, audioClips.Length)]);
     }
 
     public float GetCurrentAimAngle() => currentAimAngle;
@@ -357,7 +361,7 @@ public abstract class Weapon : MonoBehaviour
         ammoOverall += ammoAmountToPickUp;
         ammoInfo.UpdateUI();
 
-        Debug.Log(player.Character.MainWeapon.ammoOverall+" - 1");
+        Debug.Log(player.Character.MainWeapon.ammoOverall + " - 1");
         // Debug.Log(player.Character);
         // Debug.Log(player);
 
@@ -377,7 +381,7 @@ public abstract class Weapon : MonoBehaviour
     }
 
     #region Fun
-    
+
     private Tween _fireRateResetTween;
 
     public void HellFireRate(float _hellFireRate, float _hellFireDuration)
@@ -404,5 +408,5 @@ public abstract class Weapon : MonoBehaviour
             _fireRateResetTween = null;
         });
     }
-#endregion
+    #endregion
 }

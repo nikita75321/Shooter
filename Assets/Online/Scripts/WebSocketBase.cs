@@ -666,8 +666,8 @@ public class WebSocketBase : MonoBehaviour
                 break;
 
             case "deal_damage_response":
-                Debug.Log("000");
-                // HandlePlayerDamaged(message);
+                // Debug.Log("000");
+                // HandlePlayerDealDamaged(message);
                 break;
             case "player_death_response":
                 HandlePlayerDeath(message);

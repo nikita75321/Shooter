@@ -39,7 +39,7 @@ public class AidKit : MonoBehaviour
         health = player.Character.Health;
         health.useKitImage.gameObject.SetActive(false);
 
-        timeToAddKit = 25f;
+        timeToAddKit = 20f;
         player.Character.currentHealthKits = 0;
 
         loadImage.fillAmount = 0f;
@@ -74,6 +74,7 @@ public class AidKit : MonoBehaviour
                 loadImage.fillAmount = value;
                 currentFillTime = value * timeToAddKit;
             })
+            .SetUpdate(UpdateType.Fixed)
             .SetEase(Ease.Linear)
             .OnComplete(AddKitCharge);
         }
@@ -140,7 +141,7 @@ public class AidKit : MonoBehaviour
         .OnComplete(() =>
         {
             OnHealComplete?.Invoke();
-            health.Heal(health.MaxHealth);
+            health.Heal(health.MaxHealth / 2);
             health.useKitImage.fillAmount = 0f;
             player.IsUseAidKit = false;
             player.Character.currentHealthKits--;

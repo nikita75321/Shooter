@@ -403,6 +403,20 @@ public class OnlineRoom : MonoBehaviour
             var localPlayerId = Geekplay.Instance.PlayerData.id;
             bool isWinner = CurrentRoom.lastMatchResults.Any(result => result.player_id == localPlayerId && result.is_winner);
 
+            // if (response.results localPlayerId)
+            // {
+
+            // }
+            for (int i = 0; i < response.results.Count; i++)
+            {
+                var result = response.results[i];
+
+                if (result.player_id == localPlayerId)
+                {
+                    player.overallKills = result.kills;
+                }
+            }
+
             if (GameStateManager.Instance != null)
             {
                 GameStateManager.Instance.matchState = isWinner ? MatchState.win : MatchState.lose;
@@ -918,8 +932,15 @@ public class OnlineRoom : MonoBehaviour
                     }
                 }
 
+                // if (response.attacker_id == Geekplay.Instance.PlayerData.id)
+                // {
+                //     if (response.new_hp <= 0)
+                //     {
+                //         player.overallKills++;
+                //     }
+                // }
                 // Визуализация
-                UpdatePlayerVisualization(target);
+                    UpdatePlayerVisualization(target);
 
                 UpdatePlayerArmor(response);
                 UpdatePlayerHp(response);
