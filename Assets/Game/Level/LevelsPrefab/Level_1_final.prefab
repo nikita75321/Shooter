@@ -33918,6 +33918,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 4618247948823932680, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4636950745459428417, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -38705,6 +38709,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MagazineUpgrade (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8476241444021493136, guid: 3e8bd37d015d1f8458a9982ed15fdda8, type: 3}
+      propertyPath: id
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -41205,6 +41213,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5927616181617338054, guid: 8432f533daafec9449b05c05f000299b, type: 3}
+      propertyPath: id
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -42543,6 +42555,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 2430087537254581290, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3505231976036458752, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.66
@@ -44925,6 +44941,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 6416267439605183077, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7442168858788926201, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
       value: 
@@ -45031,6 +45051,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4686603201970082214}
     m_Modifications:
+    - target: {fileID: -4283214158876294082, guid: 8a0690ce937956d47b66b9b26f0b09d6, type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2014348824025460957, guid: 8a0690ce937956d47b66b9b26f0b09d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.754414
@@ -49507,6 +49531,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6080473070396264092, guid: f0e7b43502954cf4dbd6fb1e68416445, type: 3}
+      propertyPath: id
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -49774,6 +49802,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4686603201970082214}
     m_Modifications:
+    - target: {fileID: 2839660373562784922, guid: e32a3822647233f4a88faa183823215d, type: 3}
+      propertyPath: id
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5581283636150481351, guid: e32a3822647233f4a88faa183823215d, type: 3}
       propertyPath: m_Name
       value: AimUpgrade
@@ -59585,6 +59617,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8921048830314778565}
     m_Modifications:
+    - target: {fileID: 2474065132863854482, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2723928806071193080, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: aidKit
       value: 
@@ -66030,6 +66066,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 7003257268544821486}
+    - target: {fileID: 4843819660533255598, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5180086883963681183, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: player
       value: 
@@ -74073,6 +74113,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 6580653770446700864, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6930543595637807911, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: player
       value: 
@@ -74966,6 +75010,10 @@ PrefabInstance:
       propertyPath: OnDie.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 8311292777050953594}
+    - target: {fileID: 4660011171118555269, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5101444775136042959, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: player
       value: 
@@ -79233,6 +79281,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 2612860102104675301, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2949183729884076419, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: aidKit
       value: 

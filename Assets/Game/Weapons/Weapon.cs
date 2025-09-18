@@ -84,13 +84,6 @@ public abstract class Weapon : MonoBehaviour
         if (player == null) player = GetComponentInParent<Player>();
         if (audioSource == null) audioSource = GetComponent<AudioSource>();
         if (ammoInfo == null && player != null) ammoInfo = player.Character.ammoInfo;
-    }
-
-    protected virtual void Awake()
-    {
-        currentAimAngle = maxAimAngle;
-        if (reloadImage != null)
-            reloadImage.fillAmount = 0;
 
         fireRateCooldown = fireRate;
         InitMinAngle = minAimAngle;
@@ -100,6 +93,13 @@ public abstract class Weapon : MonoBehaviour
         maxMagazineSize = magazineSize;
         InitReloadTime = reloadTime;
         InitNoiseShoot = noiseShoot;
+    }
+
+    protected virtual void Awake()
+    {
+        currentAimAngle = maxAimAngle;
+        if (reloadImage != null)
+            reloadImage.fillAmount = 0;
     }
 
     private void Start()
@@ -199,7 +199,7 @@ public abstract class Weapon : MonoBehaviour
         Vector3 spreadDirection = (baseDirection + player.Character.transform.right * randomSpread).normalized;
 
         // 🚀 отправляем на сервер
-        WebSocketBase.Instance.SendDealDamage(shootOrigin, spreadDirection, (int)damage);
+        WebSocketBase.Instance.SendDealDamage(shootOrigin, spreadDirection, (int)damage, armorPenetration);
 
         // --- визуальный фидбек ---
         // SpawnVisualBullet(shootOrigin, spreadDirection);

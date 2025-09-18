@@ -13,7 +13,7 @@ public class DamageUpgrade : Upgrade
         if (player != null)
         {
             UpgradesManager.Instance.PickUpUpgrade(id);
-            player.Character.MainWeapon.damage = player.Character.MainWeapon.InitMaxDamage + player.Character.MainWeapon.InitMaxDamage * damageBonus;
+            player.Character.MainWeapon.damage = player.Character.MainWeapon.damage + player.Character.MainWeapon.damage * damageBonus;
             player.Character.MainWeapon.armorPenetration = damagePenetration;
         }
     }

@@ -539,8 +539,8 @@ public class OnlineRoom : MonoBehaviour
             var player = GetLocalPlayerInfo();
             player.hp = response.new_hp;
 
-            // Level.Instance.currentLevel.player.Character.Health.ChangeHp(response.new_hp);
-            Level.Instance.currentLevel.player.Character.Health.NewTakeDamage(response.damage);
+            Level.Instance.currentLevel.player.Character.Health.ChangeHp(response.new_hp);
+            // Level.Instance.currentLevel.player.Character.Health.NewTakeDamage(response.damage);
         }
         else
         {

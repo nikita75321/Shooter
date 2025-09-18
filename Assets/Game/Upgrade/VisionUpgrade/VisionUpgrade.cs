@@ -1,6 +1,6 @@
 public class VisionUpgrade : Upgrade 
 {
-    private float visionBonus = 0.2f; // 15% от максимального радиуса
+    private float visionBonus = 0.2f; // 20% от максимального радиуса
     
     public void OnValidate()
     {
@@ -13,6 +13,7 @@ public class VisionUpgrade : Upgrade
         {
             UpgradesManager.Instance.PickUpUpgrade(id);
             player.Controller.VisionRadius += player.Controller.MaxVisionRadius * visionBonus;
+            player.visibilityZone.AimViewRadius *= 1 + visionBonus;
         }
     }
     
@@ -21,6 +22,7 @@ public class VisionUpgrade : Upgrade
         if (player != null)
         {
             player.Controller.VisionRadius -= player.Controller.MaxVisionRadius * visionBonus;
+            player.visibilityZone.AimViewRadius *= 1 - visionBonus;
         }
     }
 

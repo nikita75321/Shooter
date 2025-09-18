@@ -3884,7 +3884,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4050296889477849273
 MonoBehaviour:
@@ -3918,7 +3918,7 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -7817,12 +7817,12 @@ MonoBehaviour:
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0

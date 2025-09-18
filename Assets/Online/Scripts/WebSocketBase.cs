@@ -2144,7 +2144,7 @@ public class WebSocketBase : MonoBehaviour
 
 
     #region DamageInfo
-    public void SendDealDamage(Vector3 origin, Vector3 direction, int damage)
+    public void SendDealDamage(Vector3 origin, Vector3 direction, int damage, float penetration)
     {
 
         var data = new Dictionary<string, object>
@@ -2157,7 +2157,8 @@ public class WebSocketBase : MonoBehaviour
             { "shot_dir_x", direction.x },
             { "shot_dir_y", direction.y },
             { "shot_dir_z", direction.z },
-            { "damage", damage }
+            { "damage", damage },
+            { "penetration" , penetration}
         };
 
         SendWebSocketRequest("deal_damage", data);
