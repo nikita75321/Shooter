@@ -203,7 +203,7 @@ class RoomManager {
             level: heroLevel,
             rank: heroRank
         });
-        pipeline.expire(heroKey, 60 * 10); // TTL 10 минут
+        pipeline.expire(heroKey, 60 * 5); // TTL 5 минут
 
         await pipeline.exec();
 

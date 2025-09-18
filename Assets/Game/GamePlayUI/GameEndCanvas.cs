@@ -105,6 +105,7 @@ public class GameEndCanvas : MonoBehaviour
                     if (result.is_winner)
                     {
                         ShowWinPanel();
+                        GameStateManager.Instance.matchState = MatchState.win;
                         winPlaceTXT.text = $"Топ - {result.place}";
                         switch (result.place)
                         {
@@ -116,6 +117,7 @@ public class GameEndCanvas : MonoBehaviour
                     else
                     {
                         ShowLosePanel();
+                        GameStateManager.Instance.matchState = MatchState.lose;
                         losePlaceTXT.text = $"Ваше место - {result.place}";
                         loseRating = (int)Random.Range(loseRatingMin, loseRatingMax);
                     }
@@ -326,6 +328,5 @@ public class GameEndCanvas : MonoBehaviour
         loseMoneyTXT.text = loseMoney.ToString();
         loseRatingTXT.text = $"-{loseRating}";
         loseDonatMoneyTXT.text = loseDonatMoney.ToString();
-        rewardWin.gameObject.SetActive(false);
     }
 }

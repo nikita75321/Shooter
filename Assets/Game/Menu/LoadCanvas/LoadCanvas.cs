@@ -134,10 +134,10 @@ public class LoadCanvas : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            if (response.room_id == currentRoomId)
-            {
-                UpdateRoomInfo($"Игрок вышел. Осталось: {response.players_remaining}");
-            }
+            // if (response.room_id == currentRoomId)
+            // {
+            //     UpdateRoomInfo($"Игрок вышел. Осталось: {response.players_remaining}");
+            // }
         });
     }
 

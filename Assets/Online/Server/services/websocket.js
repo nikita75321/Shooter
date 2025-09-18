@@ -160,7 +160,7 @@ function setupWebSocketServer(server) {
                 case 'deal_damage': await damageController.handleDealDamage(ws, data); break;
                 case 'player_death': await damageController.handlePlayerDeath(ws, data); break;
                 case 'player_respawn': await playerInGameController.handlePlayerRespawn(ws, data); break;
-                
+
                 // =================== Boost ===================
                 case 'spawn_room_boosts': await boostController.spawnBoosts(ws, data); break;
                 case 'boost_pickup': await boostController.handleBoostPickup(ws, data); break;
@@ -358,7 +358,7 @@ async function handleJoinMatchmaking(ws, data) {
             level: heroLevel,
             rank: heroRank
         });
-        await global.redisClient.expire(heroKey, 60 * 60); // TTL 1 час
+        await global.redisClient.expire(heroKey, 60 * 5); // TTL 5 минут
 
         // Добавляем игрока в комнату с передачей всех параметров героя
         const updatedRoom = await roomManager.addPlayerToRoom(

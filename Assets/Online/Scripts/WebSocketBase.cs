@@ -614,7 +614,7 @@ public class WebSocketBase : MonoBehaviour
             case "join_matchmaking_response":
                 HandleMatchmakingJoinedResponse(message);
                 break;
-            case "room_left":
+            case "player_left":
                 HandlePlayerLeftRoomResponse(message);
                 break;
             case "match_start":

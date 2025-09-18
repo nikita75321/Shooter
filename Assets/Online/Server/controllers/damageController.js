@@ -110,7 +110,6 @@ class DamageController {
 
       const { attacker_id, room_id } = data;
       const baseDamage = Number(data.damage) || 0;
-      const penetration = Math.min(Math.max(Number(data.penetration) || 0, 0), 1); // 0..1
       const mode = data.pierce ? 'pierce' : (data.mode || 'single'); // 'single' | 'pierce'
 
       const shot_origin = { x: data.shot_origin_x, y: data.shot_origin_y, z: data.shot_origin_z };
@@ -192,39 +191,28 @@ class DamageController {
         let hp = Number(targetStats.hp) || 0;
         let armor = Number(targetStats.armor) || 0;
 
-        // делим входящий damage
-        const armorPart = baseDamage * (1 - penetration); // идёт в броню
-        const hpDirect  = baseDamage * penetration;       // сразу по HP
-
-        // сначала — прямой урон по HP (от пробития)
-        let damageToHp = hpDirect;
-        hp -= hpDirect;
-
-        // затем — урон по броне с возможным переливом в HP
+        let damageToHp = 0;
         if (armor > 0) {
-        if (armorPart <= armor) {
-            armor -= armorPart;
-        } else {
-            const overflow = armorPart - armor; // перелив
+          if (baseDamage <= armor) {
+            armor -= baseDamage;
+          } else {
+            const rest = baseDamage - armor;
             armor = 0;
-            hp -= overflow;
-            damageToHp += overflow;
-        }
+            hp -= rest;
+            damageToHp = rest;
+          }
         } else {
-        // брони нет — вся "бронечасть" тоже по HP
-        hp -= armorPart;
-        damageToHp += armorPart;
+          hp -= baseDamage;
+          damageToHp = baseDamage;
         }
 
-        // финальная нормализация
+        totalDamageToHp += Math.max(0, damageToHp);
+
         if (hp < 0) hp = 0;
         if (armor < 0) armor = 0;
 
         pipeline.hSet(statsKey, 'hp', hp);
         pipeline.hSet(statsKey, 'armor', armor);
-        
-        // суммарная статистика урона стрелка
-        totalDamageToHp += Math.max(0, damageToHp);
 
         // Смерть
         if (hp <= 0) {

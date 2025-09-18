@@ -260,6 +260,8 @@ public class OnlineRoom : MonoBehaviour
 
         WebSocketBase.Instance.OnHealPlayer += HandleHealPlayer;
         WebSocketBase.Instance.OnPlayerRespawned += HandlePlayerRespawned;
+
+        WebSocketBase.Instance.OnPlayerLeftRoom += HandlePlayerLeft;
     }
 
     private void Start()
@@ -298,6 +300,8 @@ public class OnlineRoom : MonoBehaviour
 
             WebSocketBase.Instance.OnHealPlayer -= HandleHealPlayer;
             WebSocketBase.Instance.OnPlayerRespawned -= HandlePlayerRespawned;
+
+            WebSocketBase.Instance.OnPlayerLeftRoom -= HandlePlayerLeft;
         }
 
         if (serverCor != null)
@@ -340,13 +344,15 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            if (IsInRoom && CurrentRoom.id == response.room_id)
-            {
+            // if (IsInRoom && CurrentRoom.id == response.room_id)
+            // {
+                var enemy = EnemiesInGame.Instance.GetEnemy(response.player_id);
+                Destroy(enemy.gameObject);
                 CurrentRoom.RemovePlayer(response.player_id);
                 Geekplay.Instance.PlayerData.roomId = null;
                 Geekplay.Instance.Save();
                 Debug.Log($"Player {response.player_id} left room {response.room_id}");
-            }
+            // }
         });
     }
 
@@ -987,7 +993,7 @@ public class OnlineRoom : MonoBehaviour
         });
     }
     #endregion
-    
+
     private void HandlePlayerRespawned(WebSocketBase.PlayerRespawnedMessage response)
     {
         if (response == null)
@@ -1037,7 +1043,7 @@ public class OnlineRoom : MonoBehaviour
                         localPlayer.Character.Health.FullHeal();
                         // if (!Mathf.Approximately(stats.hp, localPlayer.Character.Health.MaxHealth))
                         // {
-                            localPlayer.Character.Health.ChangeHp(stats.hp);
+                        localPlayer.Character.Health.ChangeHp(stats.hp);
                         // }
                         // localPlayer.Character.Armor.ChangeArmor(stats.armor);
                     }
@@ -1059,4 +1065,10 @@ public class OnlineRoom : MonoBehaviour
             UpdatePlayerVisualization(player);
         });
     }
+
+    private void HandlePlayerLeft(PlayerLeftRoomResponse response)
+    {
+
+    }
+
 }
