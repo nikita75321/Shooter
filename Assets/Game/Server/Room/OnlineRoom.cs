@@ -940,7 +940,7 @@ public class OnlineRoom : MonoBehaviour
                 //     }
                 // }
                 // Визуализация
-                    UpdatePlayerVisualization(target);
+                UpdatePlayerVisualization(target);
 
                 UpdatePlayerArmor(response);
                 UpdatePlayerHp(response);

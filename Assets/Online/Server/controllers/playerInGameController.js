@@ -476,29 +476,31 @@ class PlayerInGameController {
 
         try {
             const { player_id, room_id, killer_id } = data;
-            
-            // Обновляем статистику смерти
-            await this.updatePlayerStats(player_id, room_id, {
-                deaths: (await this.getPlayerStats(player_id, room_id)).deaths + 1,
-                is_alive: false
-            });
-            
-            // Если есть убийца, обновляем его статистику
-            if (killer_id && killer_id !== player_id) {
-                await this.updatePlayerStats(killer_id, room_id, {
-                    kills: (await this.getPlayerStats(killer_id, room_id)).kills + 1
-                });
-            }
-            
-            // Очищаем трансформ мертвого игрока
+
+            // Никаких инкрементов kills/deaths здесь!
+            // Всё уже посчитано внутри damageController.
+
+            // Очистить трансформ мёртвого игрока
             await this.clearPlayerTransform(player_id);
-            
-            ws.send(JSON.stringify({
-                action: 'player_death_response',
-                success: true,
-                player_id: player_id,
-                killer_id: killer_id,
+
+            // (опционально) оповестить комнату, если нужно единое событие
+            const roomManager = getRoomManager();
+            const room = await roomManager.getRoomInfo(room_id);
+            if (room) {
+            roomManager.notifyRoomPlayers(room, {
+                action: 'player_died',
+                player_id,
+                killer_id,
                 timestamp: Date.now()
+            });
+            }
+
+            ws.send(JSON.stringify({
+            action: 'player_death_response',
+            success: true,
+            player_id,
+            killer_id,
+            timestamp: Date.now()
             }));
 
         } catch (error) {
