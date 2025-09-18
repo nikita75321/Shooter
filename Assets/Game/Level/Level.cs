@@ -42,7 +42,7 @@ public class Level : MonoBehaviour
 
     public void LevelFinish()
     {
-        WebSocketBase.Instance.LeaveRoom();
+        // WebSocketBase.Instance.LeaveRoom();
         Destroy(currentLevel.gameObject);
         mainMenu.OpenMenu();
     }

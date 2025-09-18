@@ -59,7 +59,7 @@ public class ArmorBar : MonoBehaviour
         float cameraYRotation = mainCamera.transform.eulerAngles.y;
 
         // 2. Позиция HP-bar'а (орбита вокруг персонажа)
-        Vector3 orbitOffset = Quaternion.Euler(0, cameraYRotation, 0) * new Vector3(0, 0, -0.5f);
+        Vector3 orbitOffset = Quaternion.Euler(0, cameraYRotation, 0) * new Vector3(0, 0, -0.6f);
         transform.position = Armor.transform.position + orbitOffset;
 
         // 3. Поворот HP-bar'а (горизонтально, но с учетом поворота камеры)

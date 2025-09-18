@@ -92,7 +92,7 @@ public class Healthbar : MonoBehaviour
         if (Health == null || mainCamera == null) return;
 
         float cameraYRotation = mainCamera.transform.eulerAngles.y;
-        Vector3 orbitOffset = Quaternion.Euler(0, cameraYRotation, 0) * new Vector3(0, 0, -0.2f);
+        Vector3 orbitOffset = Quaternion.Euler(0, cameraYRotation, 0) * new Vector3(0, 0, -0.3f);
         transform.position = Health.transform.position + orbitOffset;
         transform.rotation = Quaternion.Euler(0, cameraYRotation, 0);
     }

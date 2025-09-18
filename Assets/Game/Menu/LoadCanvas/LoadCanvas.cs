@@ -170,7 +170,6 @@ public class LoadCanvas : MonoBehaviour
 
     private void CancelMatchmaking()
     {
-        
         if (isInMatchmaking)
         {
             // Отправляем запрос на выход из матчмейкинга

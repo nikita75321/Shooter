@@ -274,29 +274,6 @@ public class HeroesCanvas : MonoBehaviour
             infoRankTXT.text = $"Тренируйте героя до {GetRequiredLevel(person.level)} уровня, чтобы повысить ранг";
         }
 
-        // if (person.rank < 5)
-        // {
-        //     cardInfo.text = $"{person.heroCard}/{GetRequiredCardsForRank(person.rank)}";
-        //     cardInfoUp.text = $"{person.heroCard}/{GetRequiredCardsForRank(person.rank)}";
-
-        //     // Обновленное условие проверки для текста
-        //     if (person.level % 10 == 0 && !IsRankUpCompleted(person.level, person.rank))
-        //     {
-        //         infoRankTXT.text = $"Требуется {GetRequiredCardsForRank(person.rank)} карт для повышения ранга";
-        //     }
-        //     else
-        //     {
-        //         int nextRankLevel = ((person.level / 10) + 1) * 10;
-        //         infoRankTXT.text = $"Тренируйте героя до {nextRankLevel} уровня";
-        //     }
-        // }
-        // else
-        // {
-        //     cardInfo.text = "MAX";
-        //     cardInfoUp.text = "MAX";
-        //     infoRankTXT.text = "Максимальный ранг достигнут";
-        // }
-
         UpdateSliders(person.level, person.rank);
     }
 
@@ -316,19 +293,19 @@ public class HeroesCanvas : MonoBehaviour
 
         if (person.rank < GetRequiredRank(person.level))
         {
-            // Для ранга показываем увеличение на 50%
+            // Для ранга показываем увеличение на 15%
             lvlupLevel.text = $"Rank {person.rank + 1}";
-            lvlupHelth.text = (currentHealth * 1.5f).ToString("0");
-            lvlupArmor.text = (currentArmor * 1.5f).ToString("0");
-            lvlupDamage.text = (currentDamage * 1.5f).ToString("0");
+            lvlupHelth.text = (currentHealth * 1.15f).ToString("0");
+            lvlupArmor.text = (currentArmor * 1.15f).ToString("0");
+            lvlupDamage.text = (currentDamage * 1.15f).ToString("0");
         }
         else
         {
-            // Для обычного уровня показываем увеличение на 10%
+            // Для обычного уровня показываем увеличение на 5%
             lvlupLevel.text = $"Level {person.level + 1}";
-            lvlupHelth.text = (currentHealth * 1.1f).ToString("0");
-            lvlupArmor.text = (currentArmor * 1.1f).ToString("0");
-            lvlupDamage.text = (currentDamage * 1.1f).ToString("0");
+            lvlupHelth.text = (currentHealth * 1.05f).ToString("0");
+            lvlupArmor.text = (currentArmor * 1.05f).ToString("0");
+            lvlupDamage.text = (currentDamage * 1.05f).ToString("0");
         }
 
         moneyLvlUpTXT.text = (person.level * 100).ToString();
@@ -358,26 +335,26 @@ public class HeroesCanvas : MonoBehaviour
     public float GetCurrentHealth(int level, int rank)
     {
         float health = curHeroData.health;
-        // Умножаем на множитель ранга (50% за каждый ранг)
-        health *= Mathf.Pow(1.5f, rank);
-        // Умножаем на множитель уровня (10% за каждый уровень)
-        health *= Mathf.Pow(1.1f, level);
+        // Умножаем на множитель ранга (15% за каждый ранг)
+        health *= Mathf.Pow(1.15f, rank);
+        // Умножаем на множитель уровня (5% за каждый уровень)
+        health *= Mathf.Pow(1.05f, level);
         return health;
     }
 
     public float GetCurrentArmor(int level, int rank)
     {
         float armor = curHeroData.armor;
-        armor *= Mathf.Pow(1.5f, rank);
-        armor *= Mathf.Pow(1.1f, level);
+        armor *= Mathf.Pow(1.15f, rank);
+        armor *= Mathf.Pow(1.05f, level);
         return armor;
     }
 
     public float GetCurrentDamage(int level, int rank)
     {
         float damage = curHeroData.damage;
-        damage *= Mathf.Pow(1.5f, rank);
-        damage *= Mathf.Pow(1.1f, level);
+        damage *= Mathf.Pow(1.15f, rank);
+        damage *= Mathf.Pow(1.05f, level);
         return damage;
     }
 
@@ -385,27 +362,27 @@ public class HeroesCanvas : MonoBehaviour
     {
         float health = this.level.heroDatas[id].health;
 
-        health *= Mathf.Pow(1.5f, rank);
+        health *= Mathf.Pow(1.15f, rank);
 
-        health *= Mathf.Pow(1.1f, level);
+        health *= Mathf.Pow(1.05f, level);
         return health;
     }
     public float GetCurrentArmor(int level, int rank, int id)
     {
         float armor = this.level.heroDatas[id].armor;
 
-        armor *= Mathf.Pow(1.5f, rank);
+        armor *= Mathf.Pow(1.15f, rank);
 
-        armor *= Mathf.Pow(1.1f, level);
+        armor *= Mathf.Pow(1.05f, level);
         return armor;
     }
     public float GetCurrentDamage(int level, int rank, int id)
     {
         float damage = this.level.heroDatas[id].damage;
 
-        damage *= Mathf.Pow(1.5f, rank);
+        damage *= Mathf.Pow(1.15f, rank);
 
-        damage *= Mathf.Pow(1.1f, level);
+        damage *= Mathf.Pow(1.05f, level);
         return damage;
     }
 

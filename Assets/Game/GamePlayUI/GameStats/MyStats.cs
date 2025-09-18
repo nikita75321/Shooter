@@ -5,7 +5,7 @@ public class MyStats : MonoBehaviour
 {
     [SerializeField] private TMP_Text placeTXT;
     [SerializeField] private TMP_Text nameTXT;
-    [SerializeField] private TMP_Text ratingTXT;
+    [SerializeField] private TMP_Text damageTXT;
     [SerializeField] private TMP_Text killsTXT;
     [SerializeField] private TMP_Text deathsTXT;
 
@@ -13,7 +13,7 @@ public class MyStats : MonoBehaviour
     {
         placeTXT.text = result.place.ToString();
         nameTXT.text = result.player_name.ToString();
-        // ratingTXT.text = result.rating.ToString();
+        damageTXT.text = ((int)result.damage).ToString();
         killsTXT.text = result.kills.ToString();
         deathsTXT.text = result.deaths.ToString();
     }

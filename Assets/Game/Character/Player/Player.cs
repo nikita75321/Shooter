@@ -75,6 +75,8 @@ public class Player : MonoBehaviour
     public int shotCount;
     public int reviveCount;
 
+    private Coroutine respawnCoroutine;
+
     private void OnValidate()
     {
         if (Controller == null) Controller = GetComponentInChildren<CharacterControllerCustom>();
@@ -82,6 +84,34 @@ public class Player : MonoBehaviour
         // if (Health == null) Health = GetComponentInChildren<Health>();
     }
 
+    private void OnEnable()
+    {
+        WebSocketBase.Instance.OnMatchEnd += response =>
+        {
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+            {
+                if (respawnCoroutine != null)
+                {
+                    StopCoroutine(respawnCoroutine);
+                    respawnCoroutine = null;
+                }
+            });
+        };
+    }
+    private void OnDisable()
+    {
+        WebSocketBase.Instance.OnMatchEnd -= response =>
+        {
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+            {
+                if (respawnCoroutine != null)
+                {
+                    StopCoroutine(respawnCoroutine);
+                    respawnCoroutine = null;
+                }
+            });
+        };
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
@@ -271,7 +301,7 @@ public class Player : MonoBehaviour
         GameStateManager.Instance.GameDeath();
         currentState = PlayerState.Dead;
         
-        StartCoroutine(RespawnRoutine());
+        respawnCoroutine = StartCoroutine(RespawnRoutine());
     }
 
     [SerializeField] private float respawnDelay = 5f;

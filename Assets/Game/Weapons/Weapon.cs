@@ -228,7 +228,6 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void SpawnVisualBullet(Vector3 origin, Vector3 direction)
     {
         // Debug.Log("SpawnVisualBullet");
-        // GameObject bullet = Instantiate(bulletPrefab, muzzle.position, Quaternion.identity);
         Vector3 spawnPosition = muzzle != null ? muzzle.position : origin;
         GameObject bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
         bullet.transform.forward = direction;

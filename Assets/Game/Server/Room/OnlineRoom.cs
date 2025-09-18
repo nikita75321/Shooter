@@ -678,6 +678,7 @@ public class OnlineRoom : MonoBehaviour
                 player.position = transformData.position.ToVector3();
                 player.rotation = transformData.rotation.ToQuaternion();
                 player.isAlive = transformData.is_alive;
+                player.current_weapon = transformData.current_weapon;
 
                 // Обновляем визуальное представление
                 UpdatePlayerVisualization(player);
@@ -791,6 +792,7 @@ public class OnlineRoom : MonoBehaviour
             player.position = transformData.position.ToVector3();
             player.rotation = transformData.rotation.ToQuaternion();
             player.isAlive = transformData.is_alive;
+            player.current_weapon = transformData.current_weapon;
 
             // Обновляем визуальное представление
             UpdatePlayerVisualization(player);

@@ -145,14 +145,14 @@ public class Enemy : MonoBehaviour
         float armor = Level.Instance.heroDatas[playerInfo.hero_id].armor;
         // float damage = Level.Instance.heroDatas[playerInfo.hero_id].damage;
 
-        // Apply rank multiplier (50% per rank)
-        health *= Mathf.Pow(1.5f, playerInfo.hero_rank);
-        armor *= Mathf.Pow(1.5f, playerInfo.hero_rank);
+        // Apply rank multiplier (15% per rank)
+        health *= Mathf.Pow(1.15f, playerInfo.hero_rank);
+        armor *= Mathf.Pow(1.15f, playerInfo.hero_rank);
         // damage *= Mathf.Pow(1.5f, playerInfo.hero_rank);
 
-        // Apply level multiplier (10% per level)
-        health *= Mathf.Pow(1.1f, playerInfo.hero_level);
-        armor *= Mathf.Pow(1.1f, playerInfo.hero_level);
+        // Apply level multiplier (5% per level)
+        health *= Mathf.Pow(1.05f, playerInfo.hero_level);
+        armor *= Mathf.Pow(1.05f, playerInfo.hero_level);
         // damage *= Mathf.Pow(1.1f, playerInfo.hero_level);
 
         // Set character stats
@@ -309,6 +309,9 @@ public class Enemy : MonoBehaviour
 
     public void UpdateNoizeState(float value)
     {
+        if (GameStateManager.Instance.GameState == GameState.death)
+            trace.HideTraces();
+
         var distance = Vector3.Distance(player.Character.transform.position, transform.position);
         // Debug.Log($"distance - {distance}, value - {value}");
         if (distance <= value)

@@ -250,9 +250,9 @@ class RoomManager {
         let vision = parseFloat(hero.vision);
 
         // Применяем формулы ранга и уровня
-        maxHp *= Math.pow(1.5, rank) * Math.pow(1.1, level);
-        maxArmor *= Math.pow(1.5, rank) * Math.pow(1.1, level);
-        damage *= Math.pow(1.5, rank) * Math.pow(1.1, level);
+        maxHp *= Math.pow(1.15, rank) * Math.pow(1.05, level);
+        maxArmor *= Math.pow(1.15, rank) * Math.pow(1.05, level);
+        damage *= Math.pow(1.15, rank) * Math.pow(1.05, level);
 
         const statsKey = `player_stats:${roomId}:${playerId}`;
         await global.redisClient.hSet(statsKey, {
@@ -351,7 +351,7 @@ class RoomManager {
             } finally {
                 this.roomTimers.delete(room.id);
             }
-        }, 2000); // 2 секунды
+        }, GameConstants.MATCHMAKING_TIME);
 
         this.roomTimers.set(room.id, timer);
     }
@@ -505,22 +505,30 @@ class RoomManager {
                 return Number.isFinite(parsed) ? parsed : 0;
             };
 
-            matchResults = (stats || [])
-                .sort((a, b) => {
-                    const killDiff = toInt(b.kills) - toInt(a.kills);
-                    if (killDiff !== 0) return killDiff;
-                    return toFloat(b.score) - toFloat(a.score);
-                })
-                .map((stat, index) => ({
-                    player_id: stat.player_id,
-                    player_name: stat.player_name,
-                    kills: toInt(stat.kills),
-                    deaths: toInt(stat.deaths),
-                    damage: toFloat(stat.damage),
-                    score: toFloat(stat.score),
-                    place: index + 1,
-                    is_winner: index < 3
-                }));
+        matchResults = (stats || [])
+            .sort((a, b) => {
+                const killsA = toInt(a.kills);
+                const killsB = toInt(b.kills);
+                if (killsA !== killsB) return killsB - killsA; // больше киллов — выше
+
+                const deathsA = toInt(a.deaths);
+                const deathsB = toInt(b.deaths);
+                if (deathsA !== deathsB) return deathsA - deathsB; // меньше смертей — выше
+
+                const damageA = toFloat(a.damage);
+                const damageB = toFloat(b.damage);
+                return damageB - damageA; // больше урона — выше
+            })
+            .map((stat, index) => ({
+                player_id: stat.player_id,
+                player_name: stat.player_name,
+                kills: toInt(stat.kills),
+                deaths: toInt(stat.deaths),
+                damage: toFloat(stat.damage),
+                score: toFloat(stat.score), // можно оставить, но он больше не влияет на место
+                place: index + 1,
+                is_winner: index < 3
+            }));
         } catch (err) {
             console.error(`Failed to build match results for room ${room.id}:`, err);
         }

@@ -5,227 +5,297 @@ const playerInGameController = require('./playerInGameController');
 const { roomManager } = require('./roomManager');
 
 class DamageController {
-    constructor() {
-        this.matchTTL = 60 * 60 * 2;
-        this.maxShotDistance = 50;   // дальность стрельбы
-        this.playerHitRadius = 1.3;  // радиус попадания
+  constructor() {
+    this.matchTTL = 60 * 15;           // 15 минут
+    this.maxShotDistance = 50;
+
+    // Параметры из Unity CharacterController
+    this.playerCapsuleRadius = 0.5;     // CC Radius
+    this.playerCapsuleHeight = 2.0;     // CC Height
+    this.playerCapsuleCenter = { x: 0, y: 1, z: 0 }; // CC Center
+
+    // Небольшой зазор под сетевые неточности (можно поднять до 0.1 при желании)
+    this.hitPadding = 0.05;
+  }
+
+  // ---------------- vector utils ----------------
+  sub(a, b) { return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z }; }
+  add(a, b) { return { x: a.x + b.x, y: a.y + b.y, z: a.z + b.z }; }
+  mul(a, k) { return { x: a.x * k, y: a.y * k, z: a.z * k }; }
+  dot(a, b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+  length(a) { return Math.sqrt(this.dot(a, a)); }
+  normalize(v) {
+    const len = this.length(v);
+    return (len > 1e-8) ? { x: v.x / len, y: v.y / len, z: v.z / len } : { x: 0, y: 0, z: 0 };
+  }
+
+  // Ближайшие точки между двумя отрезками P1Q1 и P2Q2.
+  // Возвращает { s, t, c1, c2, dist2 }, где s,t в [0,1].
+  closestPtSegmentSegment(P1, Q1, P2, Q2) {
+    const EPS = 1e-8;
+    const u = this.sub(Q1, P1);
+    const v = this.sub(Q2, P2);
+    const w = this.sub(P1, P2);
+    const a = this.dot(u, u);
+    const b = this.dot(u, v);
+    const c = this.dot(v, v);
+    const d = this.dot(u, w);
+    const e = this.dot(v, w);
+    let D = a * c - b * b;
+    let sN, sD = D;
+    let tN, tD = D;
+
+    if (D < EPS) {
+      sN = 0.0; sD = 1.0;
+      tN = e;   tD = c;
+    } else {
+      sN = (b * e - c * d);
+      tN = (a * e - b * d);
+      if (sN < 0) { sN = 0; tN = e; tD = c; }
+      else if (sN > sD) { sN = sD; tN = e + b; tD = c; }
     }
 
-   async handleDealDamage(ws, data) {
-        try {
-            const requiredFields = [
-                'attacker_id', 'room_id',
-                'shot_origin_x', 'shot_origin_y', 'shot_origin_z',
-                'shot_dir_x', 'shot_dir_y', 'shot_dir_z',
-                'damage'
-            ];
+    if (tN < 0) {
+      tN = 0;
+      if (-d < 0) sN = 0;
+      else if (-d > a) sN = sD;
+      else { sN = -d; sD = a; }
+    } else if (tN > tD) {
+      tN = tD;
+      if ((-d + b) < 0) sN = 0;
+      else if ((-d + b) > a) sN = sD;
+      else { sN = (-d + b); sD = a; }
+    }
 
-            for (const field of requiredFields) {
-                if (data[field] === undefined || data[field] === null) {
-                    console.warn(`Missing damage data field: ${field}`);
-                    return Utils.sendError(ws, `Missing damage data field: ${field}`);
-                }
-            }
+    const s = (Math.abs(sN) < EPS ? 0 : sN / sD);
+    const t = (Math.abs(tN) < EPS ? 0 : tN / tD);
 
-            const { attacker_id, room_id, damage } = data;
-            console.log('handleDealDamage called', data);
+    const c1 = this.add(P1, this.mul(u, s));
+    const c2 = this.add(P2, this.mul(v, t));
+    const diff = this.sub(c1, c2);
+    const dist2 = this.dot(diff, diff);
+    return { s, t, c1, c2, dist2 };
+  }
 
-            const shot_origin = {
-                x: data.shot_origin_x,
-                y: data.shot_origin_y,
-                z: data.shot_origin_z
-            };
+  // Проверка пересечения "луча-отрезка" с капсулой (ось капсулы — вертикальная по Y).
+  // Возвращает { hit:bool, tRay:[0..1], point:{x,y,z} }
+  checkHitCapsuleRay(origin, dirNorm, maxDist, capsuleBase, height, radius) {
+    const P0 = origin;
+    const P1 = this.add(origin, this.mul(dirNorm, maxDist));
+    const A0 = capsuleBase;
+    const A1 = { x: A0.x, y: A0.y + height, z: A0.z };
 
-            const shot_direction = {
-                x: data.shot_dir_x,
-                y: data.shot_dir_y,
-                z: data.shot_dir_z
-            };
+    const { s, c1, dist2 } = this.closestPtSegmentSegment(P0, P1, A0, A1);
+    if (dist2 <= radius * radius) {
+      return { hit: true, tRay: s, point: c1 };
+    }
+    return { hit: false, tRay: Infinity, point: null };
+  }
 
-            const dir = this.normalize(shot_direction);
-
-            const room = await roomManager.getRoomInfo(room_id);
-            if (!room) {
-                console.warn(`Room not found: ${room_id}`);
-                return Utils.sendError(ws, 'Room not found');
-            }
-            
-            const pipeline = global.redisClient.multi();
-            console.log(`Room loaded: ${room_id}, players: ${room.players.join(', ')}`);
-
-            for (const playerId of room.players) {
-                if (!playerId) continue; // защита от пустых значений
-                if (playerId === attacker_id) continue;
-
-                console.log(`Processing target player: ${playerId}`);
-
-                const targetTransform = await playerInGameController.getPlayerTransform(playerId);
-                if (!targetTransform) {
-                    console.log(`No transform for player: ${playerId}`);
-                    continue;
-                }
-
-                const hit = this.checkHit(shot_origin, dir, targetTransform.position);
-                // const hit = true;
-                console.log(`Check hit for player ${playerId}: ${hit}`);
-                if (!hit) continue;
-
-                const statsKey = `player_stats:${room_id}:${playerId}`;
-                const targetStats = await global.redisClient.hGetAll(statsKey);
-
-                if (!targetStats || !targetStats.hp) {
-                    console.warn(`Stats not found for player: ${playerId}`);
-                    continue;
-                }
-
-                let hp = parseFloat(targetStats.hp);
-                let armor = parseFloat(targetStats.armor);
-
-                console.log(`Before damage: player=${playerId}, hp=${hp}, armor=${armor}`);
-
-                let damageToHp = 0;
-
-                if (armor > 0) {
-                    if (damage <= armor) {
-                        armor -= damage; // урон уходит в броню
-                    } else {
-                        const remainingDamage = damage - armor;
-                        armor = 0;
-                        hp -= remainingDamage; // остаток урона по хп
-                        damageToHp = remainingDamage;
-                    }
-                } else {
-                    hp -= damage;
-                    damageToHp = damage;
-                }
-
-                console.log(`After damage: player=${playerId}, hp=${hp}, armor=${armor}`);
-
-                // --- запись в Redis через pipeline ---
-                console.log("Saving to redis:", { hp, armor });
-                pipeline.hSet(statsKey, 'hp', hp);
-                pipeline.hSet(statsKey, 'armor', armor);
-
-                console.log(`Updated Redis for player ${playerId}: hp=${hp}, armor=${armor}`);
-
-                // Обновляем статистику стрелка
-                const attackerStats = await playerInGameController.getPlayerStats(attacker_id, room_id);
-                
-                await playerInGameController.updatePlayerStats(attacker_id, room_id, {
-                    damage: attackerStats.damage + damage
-                });
-                console.log(`Updated attacker ${attacker_id} total damage: ${attackerStats.damage + damage}`);
-
-                // Проверка смерти
-                if (hp <= 0) {
-                    const deaths = parseInt(targetStats.deaths || "0", 10) + 1;
-                    const respawnTime = Date.now() + 5000; // респаун через 5 секунд
-
-                    await global.redisClient.hSet(statsKey, {
-                        deaths,
-                        respawn_time: respawnTime,
-                        hp: 0,
-                        armor: 0
-                    });
-                    console.log(`Player ${playerId} died. Respawn at ${new Date(respawnTime).toLocaleTimeString()}`);
-
-                    if (attacker_id !== playerId) {
-                        const attackerStatsKey = `player_stats:${room_id}:${attacker_id}`;
-                        const attackerKills = parseInt(attackerStats.kills || "0", 10) + 1;
-                        await global.redisClient.hSet(attackerStatsKey, 'kills', attackerKills);
-                        console.log(`Attacker ${attacker_id} kills incremented: ${attackerKills}`);
-                    }
-
-                    await playerInGameController.handlePlayerDeath(ws, {
-                        player_id: playerId,
-                        room_id,
-                        killer_id: attacker_id
-                    });
-                }
-
-                // Уведомляем всех игроков
-                await roomManager.notifyRoomPlayers(room, {
-                    action: 'player_damaged',
-                    attacker_id,
-                    target_id: playerId,
-                    damage: damage,
-                    new_hp: Math.max(hp, 0),
-                    new_armor: Math.max(armor, 0),
-                    shot_origin,
-                    shot_direction: dir,
-                    timestamp: Date.now()
-                });
-                console.log(`Notified room players about damage to ${playerId}`);
-                
-                ws.send(JSON.stringify({
-                    action: 'deal_damage_response',
-                    success: true,
-                    attacker_id,
-                    target_id: playerId,
-                    damage,
-                    new_hp: hp,
-                    new_armor: armor,
-                    room_id,
-                    shot_origin,
-                    shot_direction: dir
-                }));
-                console.log(`Damage response sent to attacker ${attacker_id}`);
-            }
-
-            // вот тут выполняем все команды разом
-            await pipeline.exec();
-
-        } catch (error) {
-            console.error('Damage handling error:', error);
-            Utils.sendError(ws, 'Failed to deal damage');
+  // ---------------- main ----------------
+  async handleDealDamage(ws, data) {
+    try {
+      const required = [
+        'attacker_id', 'room_id',
+        'shot_origin_x', 'shot_origin_y', 'shot_origin_z',
+        'shot_dir_x', 'shot_dir_y', 'shot_dir_z',
+        'damage'
+      ];
+      for (const f of required) {
+        if (data[f] === undefined || data[f] === null) {
+          console.warn(`Missing damage data field: ${f}`);
+          return Utils.sendError(ws, `Missing damage data field: ${f}`);
         }
-    }
+      }
 
-    checkHit(origin, dir, targetPos) {
-        // Игнорируем высоту (y)
-        const toTarget = {
-            x: targetPos.x - origin.x,
-            z: targetPos.z - origin.z
+      const { attacker_id, room_id } = data;
+      const baseDamage = Number(data.damage) || 0;
+      const mode = data.pierce ? 'pierce' : (data.mode || 'single'); // 'single' | 'pierce'
+
+      const shot_origin = { x: data.shot_origin_x, y: data.shot_origin_y, z: data.shot_origin_z };
+      const dir = this.normalize({ x: data.shot_dir_x, y: data.shot_dir_y, z: data.shot_dir_z });
+      if (dir.x === 0 && dir.y === 0 && dir.z === 0) {
+        return Utils.sendError(ws, 'Invalid shot direction');
+      }
+
+      const room = await roomManager.getRoomInfo(room_id);
+      if (!room) {
+        console.warn(`Room not found: ${room_id}`);
+        return Utils.sendError(ws, 'Room not found');
+      }
+      console.log(`Room loaded: ${room_id}, players: ${room.players.join(', ')}`);
+
+      // Собираем хиты
+      const hits = [];
+      for (const playerId of room.players) {
+        if (!playerId || playerId === attacker_id) continue;
+
+        const targetTransform = await playerInGameController.getPlayerTransform(playerId);
+        if (!targetTransform || !targetTransform.position) continue;
+
+        // Привязываем серверную капсулу к CC: база у пола
+        const pos = targetTransform.position; // мировая позиция объекта игрока
+        const baseY = pos.y + this.playerCapsuleCenter.y - this.playerCapsuleHeight * 0.5;
+        const capsuleBase = {
+          x: pos.x + this.playerCapsuleCenter.x,
+          y: baseY,
+          z: pos.z + this.playerCapsuleCenter.z
         };
+        const radius = this.playerCapsuleRadius + this.hitPadding;
 
-        const dir2D = { x: dir.x, z: dir.z };
-        const len = Math.sqrt(dir2D.x * dir2D.x + dir2D.z * dir2D.z);
-        if (len === 0) return false;
+        const result = this.checkHitCapsuleRay(
+          shot_origin, dir, this.maxShotDistance,
+          capsuleBase, this.playerCapsuleHeight, radius
+        );
 
-        // нормализуем
-        dir2D.x /= len;
-        dir2D.z /= len;
+        if (result.hit) {
+          hits.push({ playerId, tRay: result.tRay, hitPoint: result.point });
+        }
+      }
 
-        const proj = toTarget.x * dir2D.x + toTarget.z * dir2D.z;
-        if (proj < 0 || proj > this.maxShotDistance) return false;
+      if (hits.length === 0) {
+        // Сообщение об отсутствии попаданий (по желанию)
+        ws.send(JSON.stringify({
+          action: 'deal_damage_response',
+          success: true,
+          hit: false,
+          attacker_id,
+          room_id,
+          shot_origin,
+          shot_direction: dir
+        }));
+        return;
+      }
 
-        const closestPoint = {
-            x: origin.x + dir2D.x * proj,
-            z: origin.z + dir2D.z * proj
-        };
+      // Выбор целей
+      hits.sort((a, b) => a.tRay - b.tRay);
+      const targets = (mode === 'single') ? [hits[0]] : hits;
 
-        const dx = closestPoint.x - targetPos.x;
-        const dz = closestPoint.z - targetPos.z;
-        const distSq = dx * dx + dz * dz;
+      // Пакетные обновления Redis
+      const pipeline = global.redisClient.multi();
+      const notifications = [];
+      const deathEvents = [];
 
-        return distSq <= this.playerHitRadius * this.playerHitRadius;
+      let totalDamageToHp = 0;
+      let killsToAdd = 0;
+
+      for (const t of targets) {
+        const playerId = t.playerId;
+        const statsKey = `player_stats:${room_id}:${playerId}`;
+        const targetStats = await global.redisClient.hGetAll(statsKey);
+        if (!targetStats || targetStats.hp === undefined) {
+          console.warn(`Stats not found for player: ${playerId}`);
+          continue;
+        }
+
+        let hp = Number(targetStats.hp) || 0;
+        let armor = Number(targetStats.armor) || 0;
+
+        let damageToHp = 0;
+        if (armor > 0) {
+          if (baseDamage <= armor) {
+            armor -= baseDamage;
+          } else {
+            const rest = baseDamage - armor;
+            armor = 0;
+            hp -= rest;
+            damageToHp = rest;
+          }
+        } else {
+          hp -= baseDamage;
+          damageToHp = baseDamage;
+        }
+
+        totalDamageToHp += Math.max(0, damageToHp);
+
+        if (hp < 0) hp = 0;
+        if (armor < 0) armor = 0;
+
+        pipeline.hSet(statsKey, 'hp', hp);
+        pipeline.hSet(statsKey, 'armor', armor);
+
+        // Смерть
+        if (hp <= 0) {
+          const deaths = (parseInt(targetStats.deaths || '0', 10) + 1);
+          const respawnTime = Date.now() + 5000;
+
+          pipeline.hSet(statsKey, 'deaths', deaths);
+          pipeline.hSet(statsKey, 'respawn_time', respawnTime);
+          pipeline.hSet(statsKey, 'hp', 0);
+          pipeline.hSet(statsKey, 'armor', 0);
+
+          if (attacker_id !== playerId) {
+            killsToAdd += 1;
+          }
+
+          deathEvents.push({ player_id: playerId, room_id, killer_id: attacker_id, respawnTime });
+        }
+
+        // Для нотификаций
+        notifications.push({
+          action: 'player_damaged',
+          attacker_id,
+          target_id: playerId,
+          damage: baseDamage,
+          damage_to_hp: Math.max(0, damageToHp),
+          new_hp: hp,
+          new_armor: armor,
+          hit_point: t.hitPoint,
+          shot_origin,
+          shot_direction: dir,
+          timestamp: Date.now()
+        });
+      }
+
+      // Статистика стрелка
+      const attackerStatsKey = `player_stats:${room_id}:${attacker_id}`;
+      if (totalDamageToHp > 0) {
+        pipeline.hIncrByFloat(attackerStatsKey, 'damage', totalDamageToHp);
+      }
+      if (killsToAdd > 0) {
+        pipeline.hIncrBy(attackerStatsKey, 'kills', killsToAdd);
+      }
+
+      // Фиксация всех изменений
+      await pipeline.exec();
+
+      // Уведомляем игроков
+      for (const n of notifications) {
+        await roomManager.notifyRoomPlayers(room, n);
+
+        // Ответ стрелку по каждой цели
+        ws.send(JSON.stringify({
+          action: 'deal_damage_response',
+          success: true,
+          hit: true,
+          mode,
+          attacker_id,
+          target_id: n.target_id,
+          damage: n.damage,
+          damage_to_hp: n.damage_to_hp,
+          new_hp: n.new_hp,
+          new_armor: n.new_armor,
+          room_id,
+          shot_origin,
+          shot_direction: dir,
+          hit_point: n.hit_point
+        }));
+      }
+
+      // Смерти — после фиксации Redis
+      for (const d of deathEvents) {
+        await playerInGameController.handlePlayerDeath(ws, {
+          player_id: d.player_id,
+          room_id: d.room_id,
+          killer_id: d.killer_id
+        });
+      }
+
+    } catch (error) {
+      console.error('Damage handling error:', error);
+      Utils.sendError(ws, 'Failed to deal damage');
     }
-
-    normalize(v) {
-        const len = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-        return len > 0 ? { x: v.x / len, y: v.y / len, z: v.z / len } : { x: 0, y: 0, z: 0 };
-    }
-
-    dot(a, b) {
-        return a.x * b.x + a.y * b.y + a.z * b.z;
-    }
-
-    distanceSquared(a, b) {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dz = a.z - b.z;
-        return dx * dx + dy * dy + dz * dz;
-    }
+  }
 }
 
 module.exports = new DamageController();

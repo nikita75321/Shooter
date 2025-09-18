@@ -83,7 +83,6 @@ public class GameEndCanvas : MonoBehaviour
     private void Start()
     {
         level = GetComponentInParent<Level>();
-        UpdateUI();
     }
 
     public void OpenMenu()
@@ -107,11 +106,18 @@ public class GameEndCanvas : MonoBehaviour
                     {
                         ShowWinPanel();
                         winPlaceTXT.text = $"Топ - {result.place}";
+                        switch (result.place)
+                        {
+                            case 1: winRating = (int)Random.Range(10, 15f); break;
+                            case 2: winRating = (int)Random.Range(7, 12f); break;
+                            case 3: winRating = (int)Random.Range(4, 7f); break;
+                        }
                     }
                     else
                     {
                         ShowLosePanel();
                         losePlaceTXT.text = $"Ваше место - {result.place}";
+                        loseRating = (int)Random.Range(loseRatingMin, loseRatingMax);
                     }
                     place = result.place;
                 }
@@ -233,12 +239,6 @@ public class GameEndCanvas : MonoBehaviour
     private void ClaimWin()
     {
         // Локальное обновление
-        switch (place)
-        {
-            case 1: winRating = (int)Random.Range(10, 15f); break;
-            case 2: winRating = (int)Random.Range(7, 12f); break;
-            case 3: winRating = (int)Random.Range(4, 7f); break;
-        }
 
         Rating.Instance.AddRating(winRating);
         Currency.Instance.AddMoney((int)winMoney);
@@ -266,7 +266,6 @@ public class GameEndCanvas : MonoBehaviour
     private void ClaimLose()
     {
         // Локальное обновление
-        loseRating = (int)Random.Range(loseRatingMin, loseRatingMax);
 
         Rating.Instance.SpendRating(loseRating);
         Currency.Instance.AddMoney((int)loseMoney);

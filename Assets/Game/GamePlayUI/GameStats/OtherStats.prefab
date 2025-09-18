@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   placeTXT: {fileID: 4372590118451290508}
   nameTXT: {fileID: 854561324113895773}
-  ratingTXT: {fileID: 4838908021419894629}
+  damageTXT: {fileID: 4838908021419894629}
   killsTXT: {fileID: 7169128661090125863}
   deathsTXT: {fileID: 4333630212039108060}
 --- !u!1 &1872200713304739449
