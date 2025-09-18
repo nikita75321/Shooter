@@ -15,7 +15,7 @@ public class MagazineUpgrade : Upgrade
         if (player != null)
         {
             UpgradesManager.Instance.PickUpUpgrade(id);
-            player.Character.MainWeapon.magazineSize = Mathf.RoundToInt(player.Character.MainWeapon.maxMagazineSize * (1 + magazineBonus));
+            player.Character.MainWeapon.magazineSize = Mathf.RoundToInt(player.Character.MainWeapon.magazineSize * (1 + magazineBonus));
             player.Character.MainWeapon.reloadTime = player.Character.MainWeapon.InitReloadTime / (1 + reloadBonus);
             player.Character.ammoInfo.UpdateUI();
         }
