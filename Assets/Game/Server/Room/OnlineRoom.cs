@@ -920,7 +920,7 @@ public class OnlineRoom : MonoBehaviour
                 }
 
                 if (!string.IsNullOrEmpty(response.attacker_id) &&
-                    response.attacker_id != Geekplay.Instance.PlayerData.id &&
+                    // response.attacker_id != Geekplay.Instance.PlayerData.id &&
                     response.shot_origin != null &&
                     response.shot_direction != null)
                 {
