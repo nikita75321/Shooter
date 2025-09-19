@@ -17,6 +17,7 @@ public class Chest : MonoBehaviour
 
     public void Initialize(ChestConfigSO config)
     {
+        // Debug.Log("init chestconfig");
         this.config = config;
 
         chestImage.sprite = config.chestSprite;
@@ -47,6 +48,8 @@ public class Chest : MonoBehaviour
         }
 
         int totalWeight = randomRewards.Sum(r => Mathf.Max(0, r.GetWeight()));
+        // Debug.Log($"totalWeight = {totalWeight}");
+
         if (totalWeight <= 0)
         {
             // Если веса некорректны, выбираем самый редкий предмет
@@ -68,6 +71,7 @@ public class Chest : MonoBehaviour
             }
 
             int roll = Random.Range(0, totalWeight);
+            // Debug.Log($"Current roll = {roll}, weight = {weight}");
             if (roll < weight)
             {
                 selectedRewards.Add(rewardConfig);

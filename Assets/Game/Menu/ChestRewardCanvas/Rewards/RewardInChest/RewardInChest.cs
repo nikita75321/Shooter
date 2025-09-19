@@ -103,7 +103,7 @@ public class RewardInChest : MonoBehaviour
 
         // Сохраняем оригинальный тип награды
         type = rewardConfig.rewardPrefab.rewardType;
-        Debug.Log($"Type before - {type}");
+        // Debug.Log($"Type before - {type}");
 
         // Обработка награды типа Hero
         if (type == RewardInChestType.Hero)
@@ -159,11 +159,11 @@ public class RewardInChest : MonoBehaviour
         }
 
 
-        Debug.Log($"Type after - {type}");
+        // Debug.Log($"Type after - {type}");
         if (type == RewardInChestType.HeroCard)
         {
             rewardValue = rewardConfig.amount;
-            Debug.Log($"InitSliderHeroCard rewardValue={rewardValue}");
+            // Debug.Log($"InitSliderHeroCard rewardValue={rewardValue}");
             InitSliderHeroCard(rewardValue);
         }
         else
@@ -252,7 +252,7 @@ public class RewardInChest : MonoBehaviour
     
     private void AnimateSlider(int currentValue, int addValue, int maxValue)
     {
-        Debug.Log($"currentValue={currentValue}, addValue={addValue}, maxValue={maxValue}");
+        // Debug.Log($"currentValue={currentValue}, addValue={addValue}, maxValue={maxValue}");
         // Останавливаем предыдущую анимацию, если она есть
         StopCurrentAnimation();
 
@@ -333,7 +333,7 @@ public class RewardInChest : MonoBehaviour
     {
         // Логика при завершении анимации
         // heroCardSlider.transform.DOScale(1.1f, 0.5f);
-        Debug.Log("Slider animation completed!");
+        // Debug.Log("Slider animation completed!");
     }
     
     private int GetMaxValueHeroCard(int id)

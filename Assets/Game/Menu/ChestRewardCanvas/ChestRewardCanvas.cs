@@ -367,7 +367,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 {
-                    Debug.Log($"Random value - {randomRewardCount}");
+                    // Debug.Log($"Random value - {randomRewardCount}");
                 }
             }
             else
@@ -380,7 +380,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
                 }
                 else
                 {
-                    Debug.Log($"Amount value - {rewardCard.amount}");
+                    // Debug.Log($"Amount value - {rewardCard.amount}");
                 }
             }
         }
@@ -924,7 +924,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
     {
         if (isInstantReward)
         {
-            Debug.Log(1);
+            // Debug.Log(1);
             var reward = allReward[0];
             UpdateRewardsUI(reward);
             // claimAllButtonAd.interactable = false;
@@ -933,7 +933,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            Debug.Log(2);
+            // Debug.Log(2);
             isNeededX2 = false;
             overlapPercentage = 0.85f;
             foreach (var item in allReward)
