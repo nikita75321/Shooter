@@ -49,7 +49,7 @@ async function saveClanToRedis(clanId, clanData) {
         // Обновляем рейтинг (по clan_points)
         if (clanData.clan_points !== undefined) {
             await redisClient.zAdd("clans:ranking", {
-                score: Number(clanData.clan_points || - 1),
+                score: Number(clanData.clan_points ?? -1),
                 value: clanId.toString()
             });
         }
@@ -61,46 +61,6 @@ async function saveClanToRedis(clanId, clanData) {
     }
 }
 
-// async function getClanFromRedis(clanId) {
-//     try {
-//         if (!clanId) return null;
-
-//         // Получаем данные хэша
-//         const data = await redisClient.hGetAll(`clan:${clanId}:info`);
-//         if (Object.keys(data).length === 0) return null;
-
-//         // Преобразуем в объект
-//         const clan = parseClanData(data);
-
-//         // Получаем место в рейтинге
-//         // zRevRank возвращает индекс в порядке убывания (0 = лучший)
-//         const rank = await redisClient.zRevRank("clans:ranking", clanId.toString());
-//         clan.place = rank !== null ? rank + 1 : null;
-
-//         return clan;
-//     } catch (err) {
-//         console.error(`Error getting clan ${clanId} from Redis:`, err);
-//         return null;
-//     }
-// }
-// async function getClanFromRedis(clanId) {
-//     if (!clanId) return null;
-    
-//     const data = await redisClient.hGetAll(`clan:${clanId}:info`);
-//     if (!data || Object.keys(data).length === 0) return null;
-
-//     const clan = parseClanData(data);
-
-//     // Получаем всех участников и считаем клановые очки
-//     const members = await getClanMembersFromRedis(clanId);
-//     clan.clan_points = members.reduce((sum, m) => sum + (m.clan_points || 0), 0);
-
-//     // Место в рейтинге
-//     const rank = await redisClient.zRevRank("clans:ranking", clanId.toString());
-//     clan.place = rank !== null ? rank + 1 : null;
-
-//     return clan;
-// }
 async function getClanFromRedis(clanId) {
     if (!clanId) return null;
 
@@ -112,9 +72,19 @@ async function getClanFromRedis(clanId) {
 
     const clan = parseClanData(data);
 
-    // Получаем всех участников и считаем клановые очки
+    // Пересчёт очков по участникам
     const members = await getClanMembersFromRedis(clanIdStr);
-    clan.clan_points = members.reduce((sum, m) => sum + (m.clan_points || 0), 0);
+    const newPoints = members.reduce((sum, m) => sum + (m.clan_points || 0), 0);
+    clan.clan_points = newPoints;
+
+    // ⬅️ Пересчёт уровня по очкам
+    clan.clan_level = getClanLevelByPoints(newPoints);
+
+    // Синхронизируем рейтинг по актуальным очкам
+    await redisClient.zAdd("clans:ranking", {
+        score: Number(newPoints),
+        value: clanIdStr
+    });
 
     // Место в рейтинге
     const rank = await redisClient.zRevRank("clans:ranking", clanIdStr);
@@ -132,16 +102,7 @@ async function updateClanInRedis(clanId, updates) {
         const updated = { ...existing, ...updates };
 
         // Сохраняем обновлённый клан в хэш
-        // await redisClient.hSet(`clan:${clanId}:info`, serializeClanData(updated));
         await saveClanToRedis(clanId, updated);
-
-        // // Если обновились очки, обновляем zset рейтинга
-        // if (updates.clan_points !== undefined) {
-        //     await redisClient.zAdd('clans:ranking', {
-        //         score: updated.clan_points,
-        //         value: String(clanId)
-        //     });
-        // }
 
         // Обновляем место в рейтинге
         const rank = await redisClient.zRevRank('clans:ranking', String(clanId));
@@ -169,49 +130,6 @@ async function removeClanFromRedis(clanId) {
     }
 }
 
-// ==================== Участники ====================
-// async function saveClanMembersToRedis(clanId, members = []) {
-//     try {
-//         if (!clanId || !Array.isArray(members)) return false;
-//         await redisClient.del(`clan:${clanId}:members`);
-//         for (const member of members) {
-//             await redisClient.hSet(
-//                 `clan:${clanId}:members`,
-//                 member.player_id.toString(),
-//                 JSON.stringify(member)
-//             );
-//         }
-//         return true;
-//     } catch (err) {
-//         console.error(`Error saving clan members for clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
-// async function saveClanMembersToRedis(clanId, members = []) {
-//     try {
-//         if (!clanId || !Array.isArray(members)) return false;
-//         await redisClient.del(`clan:${clanId}:members`);
-
-//         let totalPoints = 0;
-
-//         for (const member of members) {
-//             totalPoints += Number(member.player_points || 0);
-//             await redisClient.hSet(
-//                 `clan:${clanId}:members`,
-//                 member.player_id.toString(),
-//                 JSON.stringify(member)
-//             );
-//         }
-
-//         // обновляем clan_points в инфо
-//         await updateClanInRedis(clanId, { clan_points: totalPoints });
-
-//         return true;
-//     } catch (err) {
-//         console.error(`Error saving clan members for clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
 async function saveClanMembersToRedis(clanId, members = []) {
     try {
         if (!clanId || !Array.isArray(members)) return false;
@@ -230,16 +148,6 @@ async function saveClanMembersToRedis(clanId, members = []) {
     }
 }
 
-// async function getClanMembersFromRedis(clanId) {
-//     try {
-//         if (!clanId) return [];
-//         const data = await redisClient.hGetAll(`clan:${clanId}:members`);
-//         return Object.values(data).map(x => JSON.parse(x));
-//     } catch (err) {
-//         console.error(`Error getting members of clan ${clanId}:`, err);
-//         return [];
-//     }
-// }
 async function getClanMembersFromRedis(clanId) {
     const membersKey = `clan:${clanId}:members`;
     const raw = await redisClient.hGetAll(membersKey);
@@ -260,52 +168,7 @@ async function getClanMembersFromRedis(clanId) {
 
     return detailed;
 }
-// async function getClanMembersFromRedis(clanId) {
-//     try {
-//         if (!clanId) return [];
-//         const data = await redisClient.hGetAll(`clan:${clanId}:members`);
-//         return Object.values(data).map(x => JSON.parse(x));
-//     } catch (err) {
-//         console.error(`Error getting members of clan ${clanId}:`, err);
-//         return [];
-//     }
-// }
 
-// async function addClanMemberToRedis(clanId, memberData) {
-//     try {
-//         if (!clanId || !memberData || !memberData.player_id) return false;
-//         await redisClient.hSet(
-//             `clan:${clanId}:members`,
-//             memberData.player_id.toString(),
-//             JSON.stringify(memberData)
-//         );
-//         return true;
-//     } catch (err) {
-//         console.error(`Error adding member ${memberData.player_id} to clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
-// async function addClanMemberToRedis(clanId, memberData) {
-//     try {
-//         if (!clanId || !memberData || !memberData.player_id) return false;
-
-//         await redisClient.hSet(
-//             `clan:${clanId}:members`,
-//             memberData.player_id.toString(),
-//             JSON.stringify(memberData)
-//         );
-
-//         // пересчёт очков
-//         const members = await getClanMembersFromRedis(clanId);
-//         const totalPoints = members.reduce((sum, m) => sum + (Number(m.player_points) || 0), 0);
-//         await updateClanInRedis(clanId, { clan_points: totalPoints });
-
-//         return true;
-//     } catch (err) {
-//         console.error(`Error adding member ${memberData.player_id} to clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
 async function addClanMemberToRedis(clanId, memberData) {
     try {
         if (!clanId || !memberData || !memberData.player_id) return false;
@@ -321,33 +184,6 @@ async function addClanMemberToRedis(clanId, memberData) {
     }
 }
 
-// async function removeClanMemberFromRedis(clanId, playerId) {
-//     try {
-//         if (!clanId || !playerId) return false;
-//         await redisClient.hDel(`clan:${clanId}:members`, playerId.toString());
-//         return true;
-//     } catch (err) {
-//         console.error(`Error removing member ${playerId} from clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
-// async function removeClanMemberFromRedis(clanId, playerId) {
-//     try {
-//         if (!clanId || !playerId) return false;
-
-//         await redisClient.hDel(`clan:${clanId}:members`, playerId.toString());
-
-//         // пересчёт очков
-//         const members = await getClanMembersFromRedis(clanId);
-//         const totalPoints = members.reduce((sum, m) => sum + (Number(m.player_points) || 0), 0);
-//         await updateClanInRedis(clanId, { clan_points: totalPoints });
-
-//         return true;
-//     } catch (err) {
-//         console.error(`Error removing member ${playerId} from clan ${clanId}:`, err);
-//         return false;
-//     }
-// }
 async function removeClanMemberFromRedis(clanId, playerId) {
     try {
         if (!clanId || !playerId) return false;
@@ -415,6 +251,16 @@ async function getAllClansFromRedis() {
         console.error('Error getting all clans from Redis:', err);
         return [];
     }
+}
+
+function getClanLevelByPoints(points) {
+  const thresholds = [150, 500, 2000, 5000, 10000, 20000, 35000, 60000, 100000, 150000];
+  let level = 0;
+  for (let i = 0; i < thresholds.length; i++) {
+    if (points >= thresholds[i]) level = i + 1;
+    else break;
+  }
+  return level;
 }
 
 module.exports = {

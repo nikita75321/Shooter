@@ -111,6 +111,13 @@ public class Cheat : MonoBehaviour
                                                                 KeyCode.A,
                                                                 KeyCode.N,
                                                                 KeyCode.Alpha1 };
+    [ShowInInspector] private readonly KeyCode[] _newData = { KeyCode.N,
+                                                                KeyCode.E,
+                                                                 KeyCode.W,
+                                                                  KeyCode.D,
+                                                                   KeyCode.A,
+                                                                    KeyCode.T,
+                                                                     KeyCode.A };
     public string loadId;
 
     private List<KeyCode> _currentInputSequence = new List<KeyCode>();
@@ -298,12 +305,20 @@ public class Cheat : MonoBehaviour
             player.Character.Health.aidKit.AddKitCharge();
             Debug.Log($"(Cheat) Test (cur leaveClan) {loadId}!");
             return;
-        } 
+        }
         if (CheckSequence(_leaveClan))
         {
             Geekplay.Instance.PlayerData.clanId = "";
             Geekplay.Instance.PlayerData.clanName = "";
             Debug.Log($"(Cheat) Test (cur leaveClan) {loadId}!");
+            return;
+        }
+        if (CheckSequence(_newData))
+        {
+            PlayerPrefs.DeleteAll();
+            Geekplay.Instance.PlayerData.ResetData();
+            Geekplay.Instance.Save();
+            Debug.Log($"(Cheat) NewData!");
             return;
         }
 #endregion

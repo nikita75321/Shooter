@@ -26,8 +26,8 @@ public class RewardInChestSO : ScriptableObject
 
     [ShowIf("IsShoodIdShow")]
     public int id;
-    private bool IsShoodIdShow => (rewardType == RewardInChestType.HeroCard || rewardType == RewardInChestType.Hero)
-                                    || (!IsRandomSkin);
+    private bool IsShoodIdShow => rewardType == RewardInChestType.HeroCard || rewardType == RewardInChestType.Hero
+                                    || !IsRandomSkin;
 
     [ShowIf("IsRandomSkin")]
     public RandomSkin[] randomSkins;

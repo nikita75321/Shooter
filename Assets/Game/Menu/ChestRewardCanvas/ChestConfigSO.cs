@@ -85,20 +85,24 @@ public class RewardConfig
                                  rewardPrefab.rewardType == RewardInChestType.Hero;
 
     // Условия для полей героя
-    private bool ShowIdHero => (IsHeroSelected && skinReward != null && !randomHero) ||
+    private bool ShowIdHero =>  ((IsHeroSelected && skinReward != null && !randomHero) ||
                                 (rewardPrefab != null && rewardPrefab.rewardType == RewardInChestType.RandomSkin && !randomHero) ||
-                                !allSkin && !randomHero;
+                                !allSkin && !randomHero) &&
+                                rewardPrefab.rewardType != RewardInChestType.DonatMoney;
     private bool ShowRandomHero => (IsHeroSelected && skinReward != null && !allSkin) ||
                                 (rewardPrefab != null && rewardPrefab.rewardType == RewardInChestType.RandomSkin) ||
-                                !allSkin;
+                                !allSkin &&
+                                rewardPrefab.rewardType != RewardInChestType.DonatMoney && rewardPrefab.rewardType != RewardInChestType.Money;
 
     // Условия для полей скина
     private bool ShowIdSkin => (IsHeroSelected && skinReward != null && !randomSkin && !allSkin) ||
                                 (rewardPrefab != null && rewardPrefab.rewardType == RewardInChestType.RandomSkin && !randomSkin && !allSkin) ||
-                                !allSkin && !randomSkin;
+                                !allSkin && !randomSkin &&
+                                rewardPrefab.rewardType != RewardInChestType.DonatMoney && rewardPrefab.rewardType != RewardInChestType.Money;
     private bool ShowRandomSkin => IsHeroSelected && skinReward != null && !allSkin ||
                                     rewardPrefab != null && rewardPrefab.rewardType == RewardInChestType.RandomSkin && !allSkin ||
-                                    !allSkin;
+                                    !allSkin &&
+                                    rewardPrefab.rewardType != RewardInChestType.DonatMoney && rewardPrefab.rewardType != RewardInChestType.Money;
 
     private bool ShouldHideInRange => IsHeroSelected && cardReward == null || IsRandomSkinSelected;
 
@@ -109,5 +113,6 @@ public class RewardConfig
         (IsHeroSelected && cardReward != null && inRange) ||
         (!IsRandomSkinSelected && inRange);
 
-    private bool IsRandomSkin => randomSkin;
+    private bool IsRandomSkin => randomSkin || rewardPrefab.rewardType == RewardInChestType.DonatMoney
+                                            || rewardPrefab.rewardType == RewardInChestType.Money;
 }

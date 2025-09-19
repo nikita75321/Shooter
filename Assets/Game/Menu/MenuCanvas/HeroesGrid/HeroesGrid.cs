@@ -18,7 +18,7 @@ public class HeroesGrid : MonoBehaviour
     private void OnValidate()
     {
         // heroCardLock = GetComponentsInChildren<HeroCardLock>(true);
-        heroCards = GetComponentsInChildren<HeroCard>(true);
+        // heroCards = GetComponentsInChildren<HeroCard>(true);
     }
 
     public void InitGrid()

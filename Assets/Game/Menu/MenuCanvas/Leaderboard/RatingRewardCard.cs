@@ -23,14 +23,12 @@ public class RatingRewardCard : MonoBehaviour
 
 
     [Space(15)]
-    public bool isRewardChest = false;
     [HideIf("isRewardChest")]
     [SerializeField] private RewardConfig rewardConfig;
-    // [Space(15)]
-
-    // [Space(15)]
     [ShowIf("isRewardChest")]
     [SerializeField] private ChestConfigSO rewardChestConfig;
+    public bool isRewardChest = false;
+    public bool isSkin = false;
     [Space(15)]
 
 
@@ -40,74 +38,77 @@ public class RatingRewardCard : MonoBehaviour
 
     private void OnValidate()
     {
-        if (kycha == null) kycha = FindAnyObjectByType<Kycha>();
+        rewardCountTXT.raycastTarget = false;
+    //     if (kycha == null) kycha = FindAnyObjectByType<Kycha>();
 
-        id = transform.GetSiblingIndex();
-        needRatingTXT.text = $"{needRating}";
-        needRatingTXT.raycastTarget = false;
+        //     id = transform.GetSiblingIndex();
+        //     needRatingTXT.text = $"{needRating}";
+        //     needRatingTXT.raycastTarget = false;
 
-        if (isRewardChest)
-        {
-            // iconReward.sprite = kycha.Uncommon_chest;
-            // iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 158);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 149);
+        //     if (isRewardChest)
+        //     {
+        //         // iconReward.sprite = kycha.Uncommon_chest;
+        //         // iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 158);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 149);
 
-            // iconReward.sprite = kycha.Rare_chest;
-            // iconReward.rectTransform.anchoredPosition = new Vector2(0, 30);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 169);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 197);
+        //         // iconReward.sprite = kycha.Rare_chest;
+        //         // iconReward.rectTransform.anchoredPosition = new Vector2(0, 30);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 169);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 197);
 
-            // iconReward.sprite = kycha.Epic_chest;
-            // iconReward.rectTransform.anchoredPosition = new Vector2(0, 0);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 164);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 154);
+        //         // iconReward.sprite = kycha.Epic_chest;
+        //         // iconReward.rectTransform.anchoredPosition = new Vector2(0, 0);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 164);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 154);
 
-            // iconReward.sprite = kycha.Legendary_chest;
-            // iconReward.rectTransform.anchoredPosition = new Vector2(0, 5);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 177);
-            // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 160);
+        //         // iconReward.sprite = kycha.Legendary_chest;
+        //         // iconReward.rectTransform.anchoredPosition = new Vector2(0, 5);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 177);
+        //         // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 160);
 
-            rewardCountTXT.enabled = false;
-            rewardConfig = null;
+        //         rewardCountTXT.enabled = false;
+        //         rewardConfig = null;
+        //     }
+
+        //     if (rewardConfig != null)
+        //     {
+        //         rewardCountTXT.enabled = true;
+        //         rewardCountTXT.text = $"{rewardConfig.amount}";
+
+        //         if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.Hero)
+        //         {
+        //             rewardCountTXT.text = $"New";
+        //             iconReward.sprite = kycha.heroIcons[rewardConfig.rewardPrefab.id];
+        //             // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 107);
+        //             // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 196);
+        //         }
+        //         if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.HeroCard)
+        //         {
+        //             // rewardCountTXT.text = $"New";
+        //             iconReward.sprite = kycha.heroIcons[rewardConfig.rewardPrefab.id];
+        //             // if (rewardConfig.rewardPrefab.id == 1) iconReward.rectTransform.anchoredPosition = new Vector2(-10, 15);
+        //             // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 107);
+        //             // iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 196);
+        //         }
+        //         if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.Money)
+        //         {
+        //             iconReward.sprite = kycha.money;
+        //             // iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
+        //         }
+        //         if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.DonatMoney)
+        //         {
+        //             iconReward.sprite = kycha.donatMoney;
+        //             // iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
+        //         }
+        //     }
         }
-
-        if (rewardConfig != null)
-        {
-            rewardCountTXT.enabled = true;
-            rewardCountTXT.text = $"{rewardConfig.amount}";
-
-            if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.Hero)
-            {
-                rewardCountTXT.text = $"New";
-                iconReward.sprite = kycha.heroIcons[rewardConfig.rewardPrefab.id];
-                iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 107);
-                iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 196);
-            }
-            if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.HeroCard)
-            {
-                // rewardCountTXT.text = $"New";
-                iconReward.sprite = kycha.heroIcons[rewardConfig.rewardPrefab.id];
-                if (rewardConfig.rewardPrefab.id == 1) iconReward.rectTransform.anchoredPosition = new Vector2(-10, 15);
-                iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 107);
-                iconReward.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 196);
-            }
-            if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.Money)
-            {
-                iconReward.sprite = kycha.money;
-                iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
-            }
-            if (rewardConfig.rewardPrefab.rewardType == RewardInChestType.DonatMoney)
-            {
-                iconReward.sprite = kycha.donatMoney;
-                iconReward.rectTransform.anchoredPosition = new Vector2(0, 15);
-            }
-        }
-    }
 
     private void Start()
     {
         button.onClick.AddListener(ClaimReward);
+
+        if (rewardCountTXT != null) rewardCountTXT.raycastTarget = false;
     }
 
     public void ShowDone()
@@ -201,9 +202,9 @@ public class RatingRewardCard : MonoBehaviour
         }
 
         // Отключаем у всех TMP-текстов
-        foreach (var tmp in GetComponentsInChildren<TextMeshProUGUI>(true))
-        {
-            tmp.raycastTarget = true;
-        }
+        // foreach (var tmp in GetComponentsInChildren<TextMeshProUGUI>(true))
+        // {
+        //     tmp.raycastTarget = true;
+        // }
     }
 }

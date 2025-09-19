@@ -25,7 +25,7 @@ public class InAppCanvas : MonoBehaviour
     [SerializeField] private Button[] specialButtons;
     [ShowInInspector] public SpecialRewardArray[] specialReward;
     [ShowInInspector] public SpecialRewardChestArray[] chestsReward = new SpecialRewardChestArray[1];
-    [SerializeField] private InAppSO[] specialInAppSOs;
+    [SerializeField] private int[] priceSpecial;
 
     [Header("Panel_Gold")]
     [SerializeField] private Button[] goldButtons;
@@ -36,13 +36,13 @@ public class InAppCanvas : MonoBehaviour
     [Header("Panel_Chest")]
     [SerializeField] private Button[] chestButtons;
     [SerializeField] private ChestConfigSO[] chestReward;
-    [SerializeField] private InAppSO[] chestInAppSOs;
+    [SerializeField] private int[] priceChest;
 
     [Header("Panel_Skins")]
     [SerializeField] private Button[] skinButtons;
     [SerializeField] private RewardConfig[] skinReward;
     [SerializeField] private ChestConfigSO skinChest;
-    [SerializeField] private InAppSO[] skinInAppSOs;
+    [SerializeField] private int[] priceSkin;
 
     private void OnValidate()
     {
@@ -58,9 +58,7 @@ public class InAppCanvas : MonoBehaviour
 
     private void Start()
     {
-        var playerData = Geekplay.Instance.PlayerData;
-
-        bool allAreOne = playerData.persons.All(person =>
+        bool allAreOne = Geekplay.Instance.PlayerData.persons.All(person =>
                   person.openSkinBody.All(skin => skin == 1));
         if (allAreOne)
         {
@@ -71,15 +69,20 @@ public class InAppCanvas : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             var index = i;
-            specialInAppSOs[i].Subscribe(() => ChestRewardCanvas.Instance.InitRewardsArray(specialReward[index].rewardConfigs, false));
-            specialButtons[i].onClick.AddListener(() => specialInAppSOs[index].BuyItem());
-            // specialButtons[i].onClick.AddListener(() => ChestRewardCanvas.Instance.InitRewardsArray(specialReward[index].rewardConfigs, false));
+            specialButtons[i].onClick.AddListener(() =>
+            {
+                if (Currency.Instance.SpendDonatMoney(priceSpecial[index]))
+                {
+                    ChestRewardCanvas.Instance.InitRewardsArray(specialReward[index].rewardConfigs, false);
+                }
+            });
         }
+        specialButtons[3].onClick.AddListener(() =>
+        {
+            if (Currency.Instance.SpendDonatMoney(priceSpecial[3]))
+                ChestRewardCanvas.Instance.InitMultipleChests(chestsReward[0].rewardChestConfigs, false);
+        });
 
-        specialInAppSOs[3].Subscribe(() => ChestRewardCanvas.Instance.InitMultipleChests(chestsReward[0].rewardChestConfigs, false));
-        specialButtons[3].onClick.AddListener(() => specialInAppSOs[3].BuyItem());
-        // specialButtons[3].onClick.AddListener(() => ChestRewardCanvas.Instance.InitMultipleChests(chestsReward[0].rewardChestConfigs, false));
-        //-----------------Special buttons-----------------
 
         //-----------------Gold-----------------
         goldRewardSO.Subscribe(() => ChestRewardCanvas.Instance.InitInstaReward(goldReward[0], false));
@@ -87,11 +90,9 @@ public class InAppCanvas : MonoBehaviour
 
         for (int i = 0; i < goldInAppSOs.Length; i++)
         {
-            // Debug.Log(i);
             var index = i;
-            goldInAppSOs[i].Subscribe(() => ChestRewardCanvas.Instance.InitInstaReward(goldReward[index+1], false));
-            goldButtons[i+1].onClick.AddListener(() => goldInAppSOs[index].BuyItem());
-            // goldButtons[i].onClick.AddListener(() => ChestRewardCanvas.Instance.InitInstaReward(goldReward[index], true));
+            goldInAppSOs[i].Subscribe(() => ChestRewardCanvas.Instance.InitInstaReward(goldReward[index + 1], false));
+            goldButtons[i + 1].onClick.AddListener(() => goldInAppSOs[index].BuyItem());
         }
         //-----------------Gold-----------------
 
@@ -99,30 +100,33 @@ public class InAppCanvas : MonoBehaviour
         for (int i = 0; i < chestButtons.Length; i++)
         {
             var index = i;
-            chestInAppSOs[i].Subscribe(() => ChestRewardCanvas.Instance.InitChest(chestReward[index], true));
-            chestButtons[i].onClick.AddListener(() => chestInAppSOs[index].BuyItem());
-            // chestButtons[i].onClick.AddListener(() => ChestRewardCanvas.Instance.InitChest(chestReward[index], true));
+
+            chestButtons[i].onClick.AddListener(() =>
+            {
+                if (Currency.Instance.SpendDonatMoney(priceChest[index]))
+                    ChestRewardCanvas.Instance.InitChest(chestReward[index], true);
+            });
         }
         //-----------------Chests-----------------
 
         //-----------------Skins-----------------
-        skinInAppSOs[0].Subscribe(() => AllSkin(playerData));
-        skinInAppSOs[1].Subscribe(() => ChestRewardCanvas.Instance.InitChest(skinChest, false));
-        skinInAppSOs[2].Subscribe(() => rightPanelSkins.chooseHero.SetActive(true));
+        skinButtons[0].onClick.AddListener(() =>
+        {
+            if (Currency.Instance.SpendDonatMoney(priceSkin[0]))
+                AllSkin(Geekplay.Instance.PlayerData);
+        });
 
-        skinButtons[0].onClick.AddListener(() => skinInAppSOs[0].BuyItem());
-        // {
-            // AllSkin(playerData);
-        // });
+        skinButtons[1].onClick.AddListener(() => 
+        {
+            if (Currency.Instance.SpendDonatMoney(priceSkin[1]))
+                skinButtons[1].onClick.AddListener(() => ChestRewardCanvas.Instance.InitChest(skinChest, false));
+        });
 
-        skinButtons[1].onClick.AddListener(() => skinInAppSOs[1].BuyItem());
-        // skinButtons[1].onClick.AddListener(() => ChestRewardCanvas.Instance.InitChest(skinChest, false));
-
-        skinButtons[2].onClick.AddListener(() => skinInAppSOs[2].BuyItem());
-        // skinButtons[2].onClick.AddListener(() =>
-        // {
-        //     rightPanelSkins.chooseHero.SetActive(true);
-        // });
+        skinButtons[2].onClick.AddListener(() =>
+        {
+            if (Currency.Instance.SpendDonatMoney(priceSkin[2]))
+                rightPanelSkins.chooseHero.SetActive(true);
+        });
         //-----------------Skins-----------------
     }
 
@@ -138,7 +142,6 @@ public class InAppCanvas : MonoBehaviour
         skinButtons[0].interactable = false;
         Geekplay.Instance.Save();
         WebSocketBase.Instance.ClaimRewards(0, 0, new());
-        // WebSocketBase.Instance.
     }
 
     public void OpenSkins()
@@ -158,18 +161,18 @@ public class InAppCanvas : MonoBehaviour
         //---------------------------InApps---------------------------
         goldRewardSO.UnsubscribeAll();
 
-        foreach (var app in specialInAppSOs)
-        {
-            app.UnsubscribeAll();
-        }
+        // foreach (var app in specialInAppSOs)
+        // {
+        //     app.UnsubscribeAll();
+        // }
         foreach (var app in goldInAppSOs)
         {
             app.UnsubscribeAll();
         }
-        foreach (var app in skinInAppSOs)
-        {
-            app.UnsubscribeAll();
-        }
+        // foreach (var app in skinInAppSOs)
+        // {
+        //     app.UnsubscribeAll();
+        // }
         //---------------------------InApps---------------------------
 
         //---------------------------Buttons---------------------------

@@ -466,6 +466,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
             if (person.openSkinBody[rewardCard.idSkin] == 1)
             {
                 Debug.Log("Current skin is already open");
+                InitInstaReward(ratingRewardDefault, true);
                 OpenCurrentChest();
                 return;
             }

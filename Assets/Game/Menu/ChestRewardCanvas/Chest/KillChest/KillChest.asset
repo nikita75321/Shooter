@@ -26,19 +26,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
-    isRandomReward: 0
-    weight: 0
-  - rewardPrefab: {fileID: 11400000, guid: ab8e78e8d88250946bf3891092ac97ac, type: 2}
-    cardReward: {fileID: 0}
-    skinReward: {fileID: 0}
-    amount: 0
-    minAmount: 0
-    maxAmount: 10
-    inRange: 1
-    idHero: 0
-    randomHero: 0
-    idSkin: 0
-    randomSkin: 0
+    allSkin: 0
     isRandomReward: 0
     weight: 0
   - rewardPrefab: {fileID: 11400000, guid: c6389583a8826ff4ba4c9874cfc371fd, type: 2}
@@ -52,6 +40,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 90
   - rewardPrefab: {fileID: 11400000, guid: 86f029c3f408b2e4a92838de652ebf8a, type: 2}
@@ -65,6 +54,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 80
   - rewardPrefab: {fileID: 11400000, guid: d589ef6551272434f98e6be57edd9cbe, type: 2}
@@ -78,6 +68,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 70
   - rewardPrefab: {fileID: 11400000, guid: ae3842624953e3d438799181398495c9, type: 2}
@@ -91,6 +82,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 55
   - rewardPrefab: {fileID: 11400000, guid: be1d3d75fc9b74540bc650bd8eaf1b44, type: 2}
@@ -104,6 +96,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 50
   - rewardPrefab: {fileID: 11400000, guid: bd27a6307b7ebe644b842f6406185918, type: 2}
@@ -117,6 +110,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 25
   - rewardPrefab: {fileID: 11400000, guid: c194fdfe13ecee048ba5ca08ba9c3c0a, type: 2}
@@ -130,6 +124,7 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 12
   - rewardPrefab: {fileID: 11400000, guid: addcaf4284396154592b4b2c0914167c, type: 2}
@@ -143,5 +138,6 @@ MonoBehaviour:
     randomHero: 0
     idSkin: 0
     randomSkin: 0
+    allSkin: 0
     isRandomReward: 1
     weight: 4
