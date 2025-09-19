@@ -18,7 +18,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
     [Header("State reward")]
     public bool isNeededX2 = true;
     [SerializeField] private bool isInstantReward;
-    [SerializeField] private int randomValue;
     [SerializeField] private int randomRewardCount;
 
     [Header("Default Rewards")]
@@ -104,9 +103,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
         gameObject.SetActive(true);
         yourRewardTXT.gameObject.SetActive(true);
         yourRewardTXT.color = new Color(yourRewardTXT.color.r, yourRewardTXT.color.g, yourRewardTXT.color.b, 0);
-
-        randomValue = (int)Random.Range(0, 100f);
-        Debug.Log("randomValue - " + randomValue);
 
         allReward.Clear();
 
@@ -203,9 +199,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
 
         isNeededX2 = needX2;
         isInstantReward = true;
-        randomValue = (int)Random.Range(0, 100f);
-        Debug.Log("randomValue - " + randomValue);
-
         gameObject.SetActive(true);
         // Скрываем все элементы, связанные с сундуком
         yourRewardTXT.gameObject.SetActive(false);
@@ -238,9 +231,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
         // Устанавливаем настройки X2
         isNeededX2 = needX2;
         isInstantReward = false;
-        randomValue = (int)Random.Range(0, 100f);
-        Debug.Log("randomValue - " + randomValue);
-
         // Настраиваем UI
         gameObject.SetActive(true);
         yourRewardTXT.gameObject.SetActive(false);
@@ -358,16 +348,6 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
     {
         if (currentReward != null)
             currentReward.SetActive(false);
-
-        if (rewardCard.isRandomReward)
-        {
-            if (randomValue > rewardCard.chance)
-            {
-                Debug.Log($"Random value too small : {randomValue}");
-                OpenCurrentChest();
-                return;
-            }
-        }
 
         Debug.Log("PlaySound?");
         // InstanceSoundUI.Instance.PlayGetItemSound();

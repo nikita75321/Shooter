@@ -27,7 +27,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 0
-    chance: 0
+    weight: 0
   - rewardPrefab: {fileID: 11400000, guid: c6389583a8826ff4ba4c9874cfc371fd, type: 2}
     cardReward: {fileID: 11400000, guid: bd4785b858b29e34596e1fea7e7363fb, type: 2}
     skinReward: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 95
+    weight: 95
   - rewardPrefab: {fileID: 11400000, guid: 86f029c3f408b2e4a92838de652ebf8a, type: 2}
     cardReward: {fileID: 11400000, guid: ae96c7e1e96ef164890af637e219707a, type: 2}
     skinReward: {fileID: 0}
@@ -53,7 +53,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 80
+    weight: 80
   - rewardPrefab: {fileID: 11400000, guid: d589ef6551272434f98e6be57edd9cbe, type: 2}
     cardReward: {fileID: 11400000, guid: 1b5fc3607a087d342a6adceeb2d0d7a0, type: 2}
     skinReward: {fileID: 0}
@@ -66,7 +66,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 70
+    weight: 70
   - rewardPrefab: {fileID: 11400000, guid: ae3842624953e3d438799181398495c9, type: 2}
     cardReward: {fileID: 11400000, guid: ed27c1c09c7d40b459fa3fd9f2abe1c4, type: 2}
     skinReward: {fileID: 0}
@@ -79,7 +79,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 55
+    weight: 55
   - rewardPrefab: {fileID: 11400000, guid: be1d3d75fc9b74540bc650bd8eaf1b44, type: 2}
     cardReward: {fileID: 11400000, guid: 3bd54124390cd34429789245167e0ae8, type: 2}
     skinReward: {fileID: 0}
@@ -92,7 +92,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 45
+    weight: 45
   - rewardPrefab: {fileID: 11400000, guid: bd27a6307b7ebe644b842f6406185918, type: 2}
     cardReward: {fileID: 11400000, guid: fc81c213cb2a6af40a7d0fc1e03ce691, type: 2}
     skinReward: {fileID: 0}
@@ -105,7 +105,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 23
+    weight: 23
   - rewardPrefab: {fileID: 11400000, guid: c194fdfe13ecee048ba5ca08ba9c3c0a, type: 2}
     cardReward: {fileID: 11400000, guid: 7e46270cf23c06b4794ec7b2d4d60dde, type: 2}
     skinReward: {fileID: 0}
@@ -118,7 +118,7 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 10
+    weight: 10
   - rewardPrefab: {fileID: 11400000, guid: addcaf4284396154592b4b2c0914167c, type: 2}
     cardReward: {fileID: 11400000, guid: af747dbf172c14546aa7e72e88fc9575, type: 2}
     skinReward: {fileID: 0}
@@ -131,4 +131,4 @@ MonoBehaviour:
     idSkin: 0
     randomSkin: 0
     isRandomReward: 1
-    chance: 3
+    weight: 3
