@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewChestConfig", menuName = "Chests/Chest Config")]
 public class ChestConfigSO : ScriptableObject
@@ -56,8 +57,24 @@ public class RewardConfig
 
     public bool isRandomReward;
 
-    [Range(0, 100), ShowIf("isRandomReward")]
-    public int chance;
+    [FormerlySerializedAs("chance")]
+    [ShowIf("isRandomReward")]
+    public int weight = -1;
+
+    public int GetWeight()
+    {
+        if (weight > 0)
+        {
+            return weight;
+        }
+
+        if (rewardPrefab != null)
+        {
+            return rewardPrefab.weight;
+        }
+
+        return 0;
+    }
 
     // === Условия видимости ===
     private bool IsRewardEmpty => rewardPrefab == null;
