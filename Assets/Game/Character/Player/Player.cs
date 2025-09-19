@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
@@ -362,6 +363,17 @@ public class Player : MonoBehaviour
         int randomAnimation = Random.Range(0, 2); // 0 или 1
         Controller.animator.SetInteger("RandomHit", randomAnimation);
         Controller.animator.SetTrigger("Hit");
+        // Controller.animator.SetLayerWeight(1, 0);
+        // Controller.animator.SetLayerWeight(2, 0);
+
+        // DOVirtual.DelayedCall(0.5f, () =>
+        // {
+        //     if (currentState != PlayerState.Dead)
+        //     {
+        //         Controller.animator.SetLayerWeight(1, 1);
+        //         Controller.animator.SetLayerWeight(2, 1);
+        //     }
+        // });
     }
 
     #region Upgrades

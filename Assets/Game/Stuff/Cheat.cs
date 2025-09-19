@@ -293,7 +293,9 @@ public class Cheat : MonoBehaviour
         }
         if (CheckSequence(_test))
         {
-            WebSocketBase.Instance.LeaveClan();
+            // WebSocketBase.Instance.LeaveClan();
+            // player.Character.Health.Heal(500);
+            player.Character.Health.aidKit.AddKitCharge();
             Debug.Log($"(Cheat) Test (cur leaveClan) {loadId}!");
             return;
         } 

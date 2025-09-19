@@ -420,6 +420,7 @@ public class OnlineRoom : MonoBehaviour
                 if (result.player_id == localPlayerId)
                 {
                     player.overallKills = result.kills;
+                    player.SetMaxDamage((int)result.damage);
                 }
             }
 
@@ -556,7 +557,7 @@ public class OnlineRoom : MonoBehaviour
 
             Enemy enemy = EnemiesInGame.Instance.GetEnemy(response.target_id);
             // enemy.Health.ChangeHp(response.new_hp);
-            enemy.Health.NewTakeDamage(response.damage);
+            enemy.Health.ChangeHp(response.new_hp);
         }
     }
     private void UpdatePlayerArmor(WebSocketBase.PlayerDamagedResponse response)

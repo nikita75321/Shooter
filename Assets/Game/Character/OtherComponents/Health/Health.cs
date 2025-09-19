@@ -222,7 +222,7 @@ public class Health : MonoBehaviour
         }
         OnTakeDamage?.Invoke();
         PlaySound(damageSound);
-        
+
         ChangeHp(CurrentHealth);
     }
     public void ChangeHp(float value)
@@ -231,9 +231,8 @@ public class Health : MonoBehaviour
 
         if (value > 0)
         {
-            // OnTakeDamage?.Invoke();
-
-            // PlaySound(damageSound);
+            OnTakeDamage?.Invoke();
+            PlaySound(damageSound);
 
             CurrentHealth = value;
         }
@@ -245,7 +244,7 @@ public class Health : MonoBehaviour
 
     public void AddKit()
     {
-        aidKit?.AddKitCharge();
+        if (aidKit != null) aidKit.AddKitCharge();
     }
 
     public bool UseKit()

@@ -11336,7 +11336,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character: {fileID: 0}
   weapons:
+  - {fileID: 4066576930490117765}
+  - {fileID: 6132442410994513370}
+  - {fileID: 8656184119577937715}
+  - {fileID: 2512972904666699002}
   - {fileID: 4906044605567986217}
+  - {fileID: 2898530345577568421}
+  - {fileID: 459710138307300358}
+  - {fileID: 4512456676340376067}
+  - {fileID: 7392488324197237797}
+  - {fileID: 3936566784104954280}
   - {fileID: 5868140798832245676}
 --- !u!1 &2053391968846990388
 GameObject:
@@ -41986,7 +41995,6 @@ MonoBehaviour:
   regenerationRate: 5
   regenerationDelay: 3
   invulnerabilityTimeAfterHit: 0.5
-  respawnDelay: 5
   damageSound: {fileID: 0}
   healSound: {fileID: 0}
   deathSound: {fileID: 0}
@@ -56349,7 +56357,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -56358,22 +56366,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 6265658678452251959}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 2301877354919738791}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -56394,6 +56402,11 @@ Transform:
 --- !u!95 &2173368574313385977 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2196376887932522599, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 23153586924609438}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &2301877354919738791 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
   m_PrefabInstance: {fileID: 23153586924609438}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &33617963568418368
@@ -57089,6 +57102,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1801837882130305189, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
   m_PrefabInstance: {fileID: 254862137642541241}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6132442410994513370 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6238536763929744739, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
+  m_PrefabInstance: {fileID: 254862137642541241}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ad65995eacf9b4aa4b6a32753d1798, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &373842144504792778
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59999,6 +60023,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5716247954070400810}
   m_SourcePrefab: {fileID: 100100000, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+--- !u!82 &3377416702213835117 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 1771342052817052818}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8321673576829418635 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7775909171458005017, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
@@ -60027,7 +60056,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -60036,22 +60065,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 4293303680751537579}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 3377416702213835117}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -60271,7 +60300,7 @@ MonoBehaviour:
   fireRate: 0.8
   range: 7
   magazineSize: 20
-  maxMagazineSize: 0
+  maxMagazineSize: 20
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 40
@@ -60280,22 +60309,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 8150238289086433903}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 7
+  InitMaxDamage: 10
+  InitReloadTime: 2.5
+  InitNoiseShoot: 6
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 7200814752673967498}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -60308,6 +60337,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &7200814752673967498 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8696380616081512575, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
+  m_PrefabInstance: {fileID: 1964043077931218421}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2016962199632474574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60619,6 +60653,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1501377814577407839}
   m_SourcePrefab: {fileID: 100100000, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+--- !u!82 &3137212923946346837 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 2144401883280983210}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8515152510670904499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7775909171458005017, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
@@ -60647,7 +60686,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -60656,22 +60695,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 71019081795460345}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 3137212923946346837}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -61149,7 +61188,7 @@ MonoBehaviour:
   fireRate: 0.5
   range: 5
   magazineSize: 7
-  maxMagazineSize: 0
+  maxMagazineSize: 7
   ammoOverall: 9999
   weaponClass: 0
   ammoAmountToPickUp: 30
@@ -61158,22 +61197,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 1
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 4222714156960639626}
   minAimAngle: 5
   maxAimAngle: 15
   aimTransitionSpeed: 3
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 5
+  InitMaxAngle: 15
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 5766986569086088618}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -61186,6 +61225,22 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 35
+--- !u!114 &2512972904666699002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 194026290046162679, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 2336961847395009037}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540692890587451529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a6acfdd6996734dbde5b572177074a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!82 &5766986569086088618 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 2336961847395009037}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2401142759065103574
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61834,7 +61889,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -61843,22 +61898,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 7636143461105355749}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 4415758117853902635}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -61879,6 +61934,11 @@ Transform:
 --- !u!95 &4368314526610310517 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2196376887932522599, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 2514213443944437010}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &4415758117853902635 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
   m_PrefabInstance: {fileID: 2514213443944437010}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2641452933334879483
@@ -62050,6 +62110,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1048382004381187051}
   m_SourcePrefab: {fileID: 100100000, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+--- !u!82 &4240269518339129160 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 2700996474261364081}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4251614510787338994 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2196376887940251523, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
@@ -62083,7 +62148,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -62092,22 +62157,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 7805741128658801412}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 4240269518339129160}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -63707,7 +63772,7 @@ MonoBehaviour:
   fireRate: 0.15
   range: 6
   magazineSize: 45
-  maxMagazineSize: 0
+  maxMagazineSize: 45
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 90
@@ -63716,22 +63781,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 5626461632398392234}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 6
+  InitMaxDamage: 10
+  InitReloadTime: 1.5
+  InitNoiseShoot: 4
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8726742288874814964}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -63747,6 +63812,11 @@ MonoBehaviour:
 --- !u!4 &2960124323903711643 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1801837882130305189, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
+  m_PrefabInstance: {fileID: 3464696802014279998}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &8726742288874814964 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5264301705129690314, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
   m_PrefabInstance: {fileID: 3464696802014279998}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3510149865398187224
@@ -63819,7 +63889,7 @@ PrefabInstance:
       objectReference: {fileID: 2829443752214508337, guid: 4590cfaae2ace1e4098e70f29b8f9a31, type: 2}
     - target: {fileID: 3704105773427155126, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4764449144319681409, guid: 6de09f7c857e2a647940a3b67448289e, type: 3}
       propertyPath: m_Name
@@ -63954,6 +64024,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 4872258092436862700}
   m_SourcePrefab: {fileID: 100100000, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+--- !u!82 &3373168680561281124 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 3561305353419188829}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &3393274840296716858 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2196376887932522599, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
@@ -63992,7 +64067,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -64001,22 +64076,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 5964328760460352083}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 3373168680561281124}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -65987,6 +66062,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3823321262692109988, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
   m_PrefabInstance: {fileID: 4241884858061731954}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4066576930490117765 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 194026290046162679, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 4241884858061731954}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a6acfdd6996734dbde5b572177074a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4352365640679649453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66571,22 +66657,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 2495959284685663535}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 5720047392564723353}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -66599,6 +66685,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &5720047392564723353 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 4541683540092635454}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4569627187812011075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66903,7 +66994,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -66912,22 +67003,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 1680357505578818198}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8505818033214913902}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -66940,6 +67031,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &8505818033214913902 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 4630070684353073297}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4634699417829289146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67281,7 +67377,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -67290,22 +67386,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 4271036265520996060}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8607123140995528962}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -67321,6 +67417,11 @@ MonoBehaviour:
 --- !u!4 &3085208167455658180 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7775909171457901625, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 4699867169023284477}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &8607123140995528962 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
   m_PrefabInstance: {fileID: 4699867169023284477}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4722355373627372226
@@ -68549,6 +68650,22 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5868140798832245676}
   m_SourcePrefab: {fileID: 100100000, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+--- !u!114 &3936566784104954280 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8287054144288018031, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 5017284262737098695}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6619130715027264612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f22e81ca5eb50a4a873efaa9c8e55fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!82 &6486118215447565822 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 5017284262737098695}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6619130715027264612 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2196376887939949475, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
@@ -68577,7 +68694,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -68586,22 +68703,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 1
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 5205227134743526358}
   minAimAngle: 10
   maxAimAngle: 40
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 40
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 6486118215447565822}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -69377,7 +69494,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -69386,22 +69503,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 6459295668639369346}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8970329989997294447}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -69414,6 +69531,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &8970329989997294447 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 5347724630203309712}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5357368287976362204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69767,7 +69889,7 @@ PrefabInstance:
       objectReference: {fileID: 2829443752214508337, guid: 4590cfaae2ace1e4098e70f29b8f9a31, type: 2}
     - target: {fileID: 8850854646223150053, guid: 351baf954590df348a71254a311227b1, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -69948,6 +70070,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 555885695722432685}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &4366081282016524853 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 5544373260635753874}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8790666333490004790 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3823321262692109988, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -69990,22 +70117,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 1809542527525499333}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 4366081282016524853}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -70130,7 +70257,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -70139,22 +70266,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 3226052493249103284}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8927188801051210703}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -70167,6 +70294,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &8927188801051210703 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 5595812990926642736}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5641208494242106019
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70551,6 +70683,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 8607299965463965256}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &2437107331270142364 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 5887513017365995067}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7258553052244775071 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3823321262692109988, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -70593,22 +70730,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 7933537480909350548}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 2437107331270142364}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -70790,6 +70927,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1593061602538789206}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &2471495782443714951 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 5920678251283545632}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7432439043353439396 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3823321262691816068, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -70827,22 +70969,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 6737194162686362324}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 2471495782443714951}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -72042,7 +72184,7 @@ MonoBehaviour:
   fireRate: 0.2
   range: 6
   magazineSize: 24
-  maxMagazineSize: 0
+  maxMagazineSize: 24
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -72051,22 +72193,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 526857377997919591}
   minAimAngle: 10
   maxAimAngle: 45
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 10
+  InitMaxAngle: 45
+  InitMaxRange: 6
+  InitMaxDamage: 25
+  InitReloadTime: 1.5
+  InitNoiseShoot: 1.5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 15
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 7982743974797080960}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -72079,6 +72221,11 @@ MonoBehaviour:
   reloadShakeDuration: 0.5
   reloadEase: 27
   bulletVisualSpeed: 50
+--- !u!82 &7982743974797080960 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3912480937131273727, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 6378095390907503743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6378256932948454661
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72198,7 +72345,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -72207,22 +72354,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 2488951659714229005}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 5127266475651616572}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -72243,6 +72390,11 @@ Transform:
 --- !u!95 &5115816255420906850 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2196376887932522599, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 6378256932948454661}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &5127266475651616572 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
   m_PrefabInstance: {fileID: 6378256932948454661}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6393679318354704172
@@ -73538,6 +73690,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2571003117283992870}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &3187740850500876028 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 6655155573498495323}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7589962669795364863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3823321262692109988, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -73580,22 +73737,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 5383161519069587327}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 3187740850500876028}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -74130,6 +74287,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
+--- !u!114 &459710138307300358 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6405373488127932181, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
+  m_PrefabInstance: {fileID: 6810923332748327699}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3276c69fd7c24d141bc0fe257b61fff3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8113964734729264213 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3323609523921856326, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
@@ -74789,6 +74957,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1316044936866281954}
   m_SourcePrefab: {fileID: 100100000, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
+--- !u!82 &1754881580509675399 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8696380616081512575, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
+  m_PrefabInstance: {fileID: 6986586499513198584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5686500583883767998 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3323609523921856326, guid: d4481c76bd8df8844b540671759a53e0, type: 3}
@@ -74822,7 +74995,7 @@ MonoBehaviour:
   fireRate: 0.8
   range: 7
   magazineSize: 20
-  maxMagazineSize: 0
+  maxMagazineSize: 20
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 40
@@ -74831,22 +75004,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 7199248875078185698}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 7
+  InitMaxDamage: 10
+  InitReloadTime: 2.5
+  InitNoiseShoot: 6
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1754881580509675399}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -76172,6 +76345,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5596637983435289255}
   m_SourcePrefab: {fileID: 100100000, guid: b09ec5d8c38278946a04894adb8f59e2, type: 3}
+--- !u!82 &771430886881925161 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7134685802663651502, guid: b09ec5d8c38278946a04894adb8f59e2, type: 3}
+  m_PrefabInstance: {fileID: 7617788889533952135}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1859102565523286514 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8105082179318372725, guid: b09ec5d8c38278946a04894adb8f59e2, type: 3}
@@ -76200,7 +76378,7 @@ MonoBehaviour:
   fireRate: 0.3
   range: 3.5
   magazineSize: 8
-  maxMagazineSize: 0
+  maxMagazineSize: 8
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 16
@@ -76209,22 +76387,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 8890589871890811199}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 3.5
+  InitMaxDamage: 10
+  InitReloadTime: 1
+  InitNoiseShoot: 8
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 771430886881925161}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -77003,6 +77181,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6574337080094703139}
   m_SourcePrefab: {fileID: 100100000, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+--- !u!82 &8256322591237748291 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 7870026010126275706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8308274695541667801 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2196376887939949475, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
@@ -77031,7 +77214,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -77040,22 +77223,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 612377652483160814}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8256322591237748291}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -78309,6 +78492,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 342154745621045463}
   m_SourcePrefab: {fileID: 100100000, guid: 1f1289a1c8e71ab4f9f8050e0a78c9ca, type: 3}
+--- !u!82 &5783621675259833673 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2526481853582174815, guid: 1f1289a1c8e71ab4f9f8050e0a78c9ca, type: 3}
+  m_PrefabInstance: {fileID: 8308104032449251094}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &8033979501208749923 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2031753809485725813, guid: 1f1289a1c8e71ab4f9f8050e0a78c9ca, type: 3}
@@ -78342,7 +78530,7 @@ MonoBehaviour:
   fireRate: 0.5
   range: 3
   magazineSize: 20
-  maxMagazineSize: 0
+  maxMagazineSize: 20
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 40
@@ -78351,22 +78539,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 4052551462330226905}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 3
+  InitMaxDamage: 10
+  InitReloadTime: 1.5
+  InitNoiseShoot: 7
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 5783621675259833673}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -78833,6 +79021,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2965534672080560763}
   m_SourcePrefab: {fileID: 100100000, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+--- !u!82 &7670022234454650749 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2279854207796994617, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
+  m_PrefabInstance: {fileID: 8490076701478292804}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &7757968106075954467 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2196376887932522599, guid: 79cfad6d28604f54a97b32d45af9d2b2, type: 3}
@@ -78871,7 +79064,7 @@ MonoBehaviour:
   fireRate: 0.1
   range: 5
   magazineSize: 30
-  maxMagazineSize: 0
+  maxMagazineSize: 30
   ammoOverall: 0
   weaponClass: 0
   ammoAmountToPickUp: 60
@@ -78880,22 +79073,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 4950200515197818740}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 20
+  InitReloadTime: 2
+  InitNoiseShoot: 5
   currentAmmo: 0
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 7670022234454650749}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -79308,6 +79501,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8105082179318007125, guid: b09ec5d8c38278946a04894adb8f59e2, type: 3}
   m_PrefabInstance: {fileID: 8713322075517016930}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4512456676340376067 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5076831334632618337, guid: b09ec5d8c38278946a04894adb8f59e2, type: 3}
+  m_PrefabInstance: {fileID: 8713322075517016930}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f24fbad966ba146b7b58d7ce728113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8724708012949317345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79853,6 +80057,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2617893082893153362}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &876490075037654707 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 8957403221887527188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5278285472214956944 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3823321262691816068, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -79890,22 +80099,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 751571893563321880}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 876490075037654707}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -80013,6 +80222,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2031753809493454737, guid: 1f1289a1c8e71ab4f9f8050e0a78c9ca, type: 3}
   m_PrefabInstance: {fileID: 9010626977003602018}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7392488324197237797 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1989264510994990151, guid: 1f1289a1c8e71ab4f9f8050e0a78c9ca, type: 3}
+  m_PrefabInstance: {fileID: 9010626977003602018}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0c073c860c23484a93447ec454cd8b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9078865547872326301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80170,6 +80390,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1497249729689862623}
   m_SourcePrefab: {fileID: 100100000, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+--- !u!82 &1031110889607445910 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8099440057406846887, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
+  m_PrefabInstance: {fileID: 9091008660286163505}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5415273281385846965 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3823321262691816068, guid: 226c568e48d1bbc45a3110f8660d2e2c, type: 3}
@@ -80207,22 +80432,22 @@ MonoBehaviour:
   reloadImage: {fileID: 0}
   bulletsPerShot: 3
   muzzleFlash: {fileID: 0}
-  shootSound: {fileID: 0}
   bulletPrefab: {fileID: 8706560028905044647, guid: 855aa53f3786d9e4ba956c89d223fae7, type: 3}
   muzzle: {fileID: 5922014164649623045}
   minAimAngle: 3
   maxAimAngle: 25
   aimTransitionSpeed: 5
-  InitMinAngle: 0
-  InitMaxAngle: 0
-  InitMaxRange: 0
-  InitMaxDamage: 0
-  InitReloadTime: 0
-  InitNoiseShoot: 0
+  InitMinAngle: 3
+  InitMaxAngle: 25
+  InitMaxRange: 5
+  InitMaxDamage: 15
+  InitReloadTime: 1
+  InitNoiseShoot: 2
   currentAmmo: 7
   isMoving: 0
   currentAimAngle: 0
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1031110889607445910}
+  audioClips: []
   OnStartMoving:
     m_PersistentCalls:
       m_Calls: []
@@ -80313,6 +80538,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
+--- !u!114 &2898530345577568421 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6238536763929744739, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
+  m_PrefabInstance: {fileID: 9127136028424408518}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ad65995eacf9b4aa4b6a32753d1798, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7470191803938905443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1801837882130305189, guid: 0ad09dd81121ac247850956387ca9111, type: 3}
@@ -80474,3 +80710,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7775909171457901625, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
   m_PrefabInstance: {fileID: 9183685187552004808}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8656184119577937715 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 528030140326727163, guid: 26c304c542935a646a21dd134e1c2cea, type: 3}
+  m_PrefabInstance: {fileID: 9183685187552004808}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfbddcdac50540d48b9e5fe28d36f4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
