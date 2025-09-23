@@ -24,21 +24,27 @@ public class SettingsMenu : MonoBehaviour
 
     private PlayerData playerData;
 
+    public void Init()
+    {
+        // playerData = Geekplay.Instance.PlayerData;
+    }
+
     private void Start()
     {
         playerData = Geekplay.Instance.PlayerData;
+        Debug.Log("playerData.masterVolume "+playerData.masterVolume);
 
         // Настройка громкости
-        masterSlider.value = playerData.masterVolume;
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
-        musicSlider.value = playerData.musicVolume;
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        sfxSlider.value = playerData.sfxVolume;
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        masterSlider.value = playerData.masterVolume;
+        musicSlider.value = playerData.musicVolume;
+        sfxSlider.value = playerData.sfxVolume;
 
         // Настройка чувствительности
-        sensitivitySlider.value = playerData.sensativity;
         sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        sensitivitySlider.value = playerData.sensativity;
 
         // Настройка графики
         InitGraphicsSettings();
@@ -49,6 +55,10 @@ public class SettingsMenu : MonoBehaviour
         musicSlider.onValueChanged.RemoveListener(SetMusicVolume);
         sfxSlider.onValueChanged.RemoveListener(SetSFXVolume);
 
+        if (lowGraphicsToggle == null) return;
+        if (mediumGraphicsToggle == null) return;
+        if (highGraphicsToggle == null) return;
+
         lowGraphicsToggle.onValueChanged.RemoveAllListeners();
         mediumGraphicsToggle.onValueChanged.RemoveAllListeners();
         highGraphicsToggle.onValueChanged.RemoveAllListeners();
@@ -56,6 +66,10 @@ public class SettingsMenu : MonoBehaviour
 
     private void InitGraphicsSettings()
     {
+        if (lowGraphicsToggle == null) return;
+        if (mediumGraphicsToggle == null) return;
+        if (highGraphicsToggle == null) return;
+
         lowGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(0); });
         mediumGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(1); });
         highGraphicsToggle.onValueChanged.AddListener((isOn) => { if (isOn) SetGraphicsQuality(2); });
@@ -99,5 +113,23 @@ public class SettingsMenu : MonoBehaviour
         playerData.graphics = qualityIndex;
         QualitySettings.SetQualityLevel(qualityIndex);
         Geekplay.Instance.Save();
+    }
+
+    public void LeaveMatch()
+    {
+        Level.Instance.currentLevel.player.Character.Health.Die();
+        Rating.Instance.SpendRating(5);
+        WebSocketBase.Instance.UpdatePlayerStatsAfterBattle(
+            playerId: Geekplay.Instance.PlayerData.id,
+            ratingChange: -5
+        );
+        WebSocketBase.Instance.LeaveRoom();
+        Level.Instance.LevelFinish();
+    }
+    public void CloseInGame()
+    {
+        GameStateManager.Instance.GameStart?.Invoke();
+        Level.Instance.LevelFinish();
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

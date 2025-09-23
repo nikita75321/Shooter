@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Hero_2
   m_EditorClassIdentifier: 
   icon: {fileID: -313443883, guid: e3f0f136e7633c543a5e82964e4a1a49, type: 3}
-  rewardType: 3
+  rewardType: 2
   id: 2
   randomSkins: []
+  weight: 90

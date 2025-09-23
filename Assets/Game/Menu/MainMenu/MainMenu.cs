@@ -28,6 +28,9 @@ public class MainMenu : MonoBehaviour
 {
     public static MainMenu Instance;
 
+    [Header("Referencess")]
+    [SerializeField] private SettingsMenu settings;
+
     [Header("Camera")]
     [SerializeField] private Camera menuCamera;
 

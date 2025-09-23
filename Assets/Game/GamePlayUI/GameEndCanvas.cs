@@ -40,7 +40,7 @@ public class GameEndCanvas : MonoBehaviour
     [SerializeField] private Button loseClaim;
     [SerializeField] private Button loseStats;
     [SerializeField] private Button rewardLose;
-    [SerializeField] private float loseRatingMin = 5, loseRatingMax = 5, loseMoney = 50, loseDonatMoney = 0;
+    [SerializeField] private float loseRatingMin = 2, loseRatingMax = 5, loseMoney = 50, loseDonatMoney = 0;
     [SerializeField] private int loseRating;
     [SerializeField] private TMP_Text loseRatingTXT, loseMoneyTXT, loseDonatMoneyTXT;
 

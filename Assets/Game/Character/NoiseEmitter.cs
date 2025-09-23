@@ -1,3 +1,4 @@
+using SingularityGroup.HotReload;
 using UnityEngine;
 
 public class NoiseEmitter : MonoBehaviour
@@ -38,18 +39,32 @@ public class NoiseEmitter : MonoBehaviour
                 ResetNoiseDelay(); // Сброс задержки, если был выстрел
             }
         }
+        // targetNoiseRadius = Mathf.Lerp(minNoiseRadius, maxNoiseRadius, 1f);
 
-        // if (player.IsReload)
-        // {
-        //     targetNoiseRadius = 1;
-        //     ResetNoiseDelay(); // Сброс задержки, если был выстрел
-        //     if (player.IsMoving)
-        //     {
-        //         // Нормализуем скорость от 0 до 1 и применяем к радиусу шума
-        //         float speedNormalized = Mathf.Clamp01(player.Controller.currentSpeed / player.Controller.MaxSpeed) / 3;
-        //         targetNoiseRadius = Mathf.Lerp(minNoiseRadius, maxNoiseRadius, speedNormalized);
-        //         ResetNoiseDelay();
-        //     }
+
+
+        else if (player.IsReload)
+        {
+            targetNoiseRadius = 1;
+            ResetNoiseDelay();
+            if (player.IsMoving)
+            {
+                // Нормализуем скорость от 0 до 1 и применяем к радиусу шума
+                float speedNormalized = Mathf.Clamp01(player.Controller.currentSpeed / player.Controller.MaxSpeed) / 3;
+                targetNoiseRadius = Mathf.Lerp(minNoiseRadius, maxNoiseRadius, speedNormalized);
+                ResetNoiseDelay();
+            }
+        }
+        
+        else if (player.IsShoot)
+        {
+            targetNoiseRadius = 1;
+            ResetNoiseDelay();
+
+            float speedNormalized = 1f;
+            targetNoiseRadius = Mathf.Lerp(minNoiseRadius, maxNoiseRadius + 3, speedNormalized);
+            ResetNoiseDelay();
+        }
         // else if (player.IsMoving)
         //     {
         //         // Нормализуем скорость от 0 до 1 и применяем к радиусу шума
@@ -87,7 +102,7 @@ public class NoiseEmitter : MonoBehaviour
     // Сброс таймера задержки (при движении или выстреле)
     private void ResetNoiseDelay()
     {
-        noiseDelayTimer = 0.1f;
+        noiseDelayTimer = 0.2f;
         isWaitingToReset = false;
     }
 

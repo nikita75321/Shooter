@@ -286,7 +286,7 @@ public class Health : MonoBehaviour
         state = HealthState.live;
     }
 
-    private void Die()
+    public void Die()
     {
         if (IsDead) return;
         state = HealthState.death;

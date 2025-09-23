@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
 {
     [Header("Referencess")]
     public GameEndCanvas gameEndCanvas;
+    public SettingsMenu settings;
 
     [Header("Heroes")]
     public LayerMask enemyMask;
@@ -122,6 +123,24 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.L))
         {
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (settings.gameObject.activeSelf)
+            {
+                GameStateManager.Instance.GameStart?.Invoke();
+                settings.gameObject.SetActive(false);
+            }
+            else
+            {
+                GameStateManager.Instance.GamePause?.Invoke();
+                Cursor.lockState = CursorLockMode.None;
+                settings.gameObject.SetActive(true);
+                IsMoving = false;
+                IsShoot = false;
+                
+            }
         }
 
         if (GameStateManager.Instance.GameState == GameState.game)
@@ -299,7 +318,7 @@ public class Player : MonoBehaviour
         Controller.animator.SetTrigger("Die");
         Controller.animator.SetLayerWeight(1, 0);
         Controller.animator.SetLayerWeight(2, 0);
-        GameStateManager.Instance.GameDeath();
+        GameStateManager.Instance.GameDeath?.Invoke();
         currentState = PlayerState.Dead;
         
         respawnCoroutine = StartCoroutine(RespawnRoutine());

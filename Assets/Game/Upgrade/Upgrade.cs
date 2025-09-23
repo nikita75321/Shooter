@@ -23,6 +23,15 @@ public abstract class Upgrade : MonoBehaviour
     private float currentPickUpTime;
     protected Player player;
 
+    private void OnEnable()
+    {
+        GameStateManager.Instance.GameDeath += CancelPickUp;
+    }
+    private void OnDisable()
+    {
+        GameStateManager.Instance.GameDeath -= CancelPickUp;
+    }
+
     private void Start()
     {
         ResetProgress();
@@ -54,6 +63,10 @@ public abstract class Upgrade : MonoBehaviour
                     CancelPickUp();
                 }
             }
+        }
+        else
+        {
+            CancelPickUp();
         }
     }
 
@@ -94,11 +107,6 @@ public abstract class Upgrade : MonoBehaviour
 
         isPickingUp = false;
         ResetProgress();
-
-        // if (Animator != null)
-        // {
-        //     Animator.SetBool("IsPickingUp", false);
-        // }
     }
 
     private IEnumerator PickUpProcess()

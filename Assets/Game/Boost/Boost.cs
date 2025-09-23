@@ -23,6 +23,15 @@ public abstract class Boost : MonoBehaviour
     [Header("Player")]
     public Player player;
 
+    private void OnEnable()
+    {
+        GameStateManager.Instance.GameDeath += CancelPickUp;
+    }
+    private void OnDisable()
+    {
+        GameStateManager.Instance.GameDeath -= CancelPickUp;
+    }
+    
     private void Start()
     {
         ResetProgress();
@@ -46,6 +55,10 @@ public abstract class Boost : MonoBehaviour
                 else
                     Debug.Log("trigger pick up NOT WORK");
             }
+        }
+        else
+        {
+            CancelPickUp();
         }
     }
 

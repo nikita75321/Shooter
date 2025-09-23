@@ -48,7 +48,7 @@ public class LoadCanvas : MonoBehaviour
         // Инициализация кнопок
         prevButton.onClick.AddListener(ShowPreviousHint);
         nextButton.onClick.AddListener(ShowNextHint);
-        // cancelMatchmakingButton.onClick.AddListener(CancelMatchmaking);
+        cancelMatchmakingButton.onClick.AddListener(CancelMatchmaking);
         
         // Показываем первую подсказку
         ShowHint(0);
@@ -189,7 +189,8 @@ public class LoadCanvas : MonoBehaviour
         
         // Возвращаемся в меню или делаем другие действия
         Debug.Log("Matchmaking cancelled");
-        
+        level.LevelFinish();
+        gameObject.SetActive(false);
     }
 
     public void LoadLevel()

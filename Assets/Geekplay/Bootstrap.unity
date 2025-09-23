@@ -414,13 +414,15 @@ MonoBehaviour:
   haveInapp: 1
   emulateWeb: 0
   purchasesList:
-  - {fileID: 11400000, guid: 53048ca80f5f69a4598a025c1602ae28, type: 2}
-  - {fileID: 11400000, guid: e068155dd5e271c4488878293a773ba8, type: 2}
-  - {fileID: 11400000, guid: 5262f4cb897e40d4086cb1a3250d26d5, type: 2}
+  - {fileID: 11400000, guid: 6621fb8d766d1a54ba50c7721f7f3fb8, type: 2}
+  - {fileID: 11400000, guid: c8f505a67e8772f4683778ee7b375081, type: 2}
+  - {fileID: 11400000, guid: 53bd06830d5b3e84cba3320be37f4c93, type: 2}
+  - {fileID: 11400000, guid: afb78b342f629604eb44bd2b31047af6, type: 2}
+  - {fileID: 11400000, guid: 9412fb5c382ed874380a4506533e8d38, type: 2}
   rewards:
-  - {fileID: 11400000, guid: fffddb7eb35be904996a58b7b45b3407, type: 2}
-  - {fileID: 11400000, guid: ddb349c004e484049a1c673f28cab8f9, type: 2}
-  - {fileID: 11400000, guid: fa062af80c8426347996e4c5cb933e9b, type: 2}
+  - {fileID: 11400000, guid: c97e6691a02fa1449828e60a62cce2c4, type: 2}
+  - {fileID: 11400000, guid: 26847fe7987dfa24582ce09b4b45a96b, type: 2}
+  - {fileID: 11400000, guid: 9f015a2ca255e054dbe27d9863f725ec, type: 2}
   - {fileID: 11400000, guid: 87d3fc1ccc85cda46aaf1c9c4ccf0b32, type: 2}
   YanValueType: "\u0413\u043E\u043B\u043E\u0441\u043E\u0432"
   language: ru

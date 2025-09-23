@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class NewPlayer : MonoBehaviour
 {
+    [Header("Referencess")]
+    [SerializeField] private SettingsMenu settings;
+
     [SerializeField] private GameObject newPlayerPanel;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private string playerName;
@@ -20,6 +23,7 @@ public class NewPlayer : MonoBehaviour
         else
         {
             newPlayerPanel.SetActive(true);
+            settings.Init();
         }
     }
 

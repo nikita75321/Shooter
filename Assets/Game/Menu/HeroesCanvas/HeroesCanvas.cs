@@ -8,7 +8,6 @@ public class HeroesCanvas : MonoBehaviour
 
     [Header("Referencess")]
     [SerializeField] private Level level;
-
     [SerializeField] private Skins skins;
     [SerializeField] private GameObject[] allHeroes;
 
@@ -51,12 +50,37 @@ public class HeroesCanvas : MonoBehaviour
     [Header("Sliders")]
     [SerializeField] private Slider slider, sliderUp;
 
+    [Header("Sliders stats")]
+    [SerializeField] private Slider sliderPower;
+    [SerializeField] private Slider sliderHp;
+    [SerializeField] private Slider sliderDamage;
+    [SerializeField] private Slider sliderArmor;
+
+    [SerializeField] private int maxPower;
+    [SerializeField] private int maxHp;
+    [SerializeField] private int maxDamage;
+    [SerializeField] private int maxArmor;
+
     [Header("Description rank up")]
     [SerializeField] private TMP_Text infoRankTXT;
 
     public void Awake()
     {
         Instance = this;
+    }
+
+    private void Start()
+    {
+        //Значения для слайдеров
+        maxPower = 19054;
+        maxHp = 35145;
+        maxDamage = 9549;
+        maxArmor = 15915;
+
+        sliderPower.maxValue = maxPower;
+        sliderHp.maxValue = maxHp;
+        sliderDamage.maxValue = maxDamage;
+        sliderArmor.maxValue = maxArmor;
     }
 
     private void OnEnable()
@@ -101,6 +125,7 @@ public class HeroesCanvas : MonoBehaviour
 
         UpdateRankButtons(curPerson.level);
         UpdateUICharInfo();
+        UpdateSliderStats();
 
         if (curPerson.level == 50 && curPerson.rank == 6)
         {
@@ -125,6 +150,20 @@ public class HeroesCanvas : MonoBehaviour
         {
             slot.InitSlotsIcon();    
         }
+    }
+
+    private void UpdateSliderStats()
+    {
+        var person = Geekplay.Instance.PlayerData.persons[curHeroData.id];
+
+        float currentHealth = GetCurrentHealth(person.level, person.rank);
+        float currentArmor = GetCurrentArmor(person.level, person.rank);
+        float currentDamage = GetCurrentDamage(person.level, person.rank);
+
+        sliderPower.value = (currentHealth + currentArmor + currentDamage) / 3;
+        sliderHp.value = currentHealth;
+        sliderDamage.value = currentArmor;
+        sliderArmor.value = currentDamage;
     }
 
     private void UpdateRankAndLevelUI(int level, int rank)
@@ -430,6 +469,7 @@ public class HeroesCanvas : MonoBehaviour
             }
             UpdateUICharInfo();
             UpdateSliders(person.level, person.rank);
+            UpdateSliderStats();
             WebSocketBase.Instance.UpdateHeroLevels(curHeroData.id);
         }
         else

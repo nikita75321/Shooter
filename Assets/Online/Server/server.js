@@ -9,8 +9,9 @@ const { createClient } = require('redis');
 const Utils = require('./services/utils');
 const clanRedisService = require('./services/clanRedisService');
 const ClanSyncService = require('./services/clanSyncService');
+const statsController = require('./controllers/statsController');
 const playerRedisService = require('./services/playerRedisService')
-const { initializeDatabase } = require('./config/db');
+const { initializeDatabase, db } = require('./config/db');
 
 const { setupWebSocketServer, InitRoomManager } = require('./services/websocket');
 const heapdump = require('heapdump');
@@ -25,6 +26,11 @@ const port = process.env.PORT || 3000;
 const server = https.createServer(sslOptions, app);
 
 global.connectedPlayers = new Map();
+global.pendingReconnections = new Map(); // Новый Map для ожидающих реконнекта
+
+// Константы для реконнекта
+const RECONNECT_TIMEOUT = 10000; // 10 секунд
+const RECONNECT_TOKEN_EXPIRY = 30; // 30 секунд для токена в Redis
 
 (async () => {
     try {
@@ -55,6 +61,19 @@ global.connectedPlayers = new Map();
         await initializeDatabase();
         console.log('Database initialized successfully');
 
+        try {
+            const pg = db;
+            const res = await statsController.ensureLeaderboardsFromDB(pg, { batchSize: 2000 });
+
+            if (res.skipped) {
+                console.log(`[LB warmup] skipped (already have data). ZCARD rating=${res.rc}, kills=${res.kc}`);
+            } else {
+                console.log(`[LB warmup] rebuilt from DB. players=${res.total}, ZCARD rating=${res.rc}, kills=${res.kc}`);
+            }
+        } catch (e) {
+            console.error('Leaderboards warmup failed:', e);
+        }
+
         // ================== Clan sync ==================
         console.log('Starting clan synchronization from DB to Redis...');
         await ClanSyncService.clearAllClansFromRedis();
@@ -65,7 +84,7 @@ global.connectedPlayers = new Map();
         const wss = setupWebSocketServer(server);
         global.wss = wss;
         
-         // ================== Periodic clan sync ==================
+        // ================== Periodic clan sync ==================
         const clanSyncInterval = setInterval(async () => {
             try {
                 console.log('Periodic clan sync start...');
@@ -74,7 +93,12 @@ global.connectedPlayers = new Map();
             } catch (err) {
                 console.error('Periodic clan sync failed:', err);
             }
-        }, 1 * 60 * 5000); // каждые 5 минут
+        }, 1 * 60 * 5000);
+
+        // ================== Очистка старых реконнектов ==================
+        setInterval(() => {
+            cleanupExpiredReconnections();
+        }, 60000); // Каждую минуту
 
         // ================== Start server ==================
         server.listen(port, () => console.log(`Server running on port ${port}`));
@@ -85,9 +109,149 @@ global.connectedPlayers = new Map();
     }
 })();
 
+// ================== Функции для реконнекта ==================
+
+/**
+ * Генерирует токен для реконнекта
+ */
+function generateReconnectToken() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+/**
+ * Сохраняет данные игрока для возможного реконнекта
+ */
+async function preparePlayerReconnect(playerId, playerData) {
+    const reconnectToken = generateReconnectToken();
+    const reconnectKey = `reconnect:${playerId}`;
+    
+    try {
+        // Сохраняем данные игрока в Redis на 30 секунд
+        await global.redisClient.setex(
+            reconnectKey, 
+            RECONNECT_TOKEN_EXPIRY, 
+            JSON.stringify({
+                token: reconnectToken,
+                playerData: playerData,
+                timestamp: Date.now()
+            })
+        );
+        
+        // Сохраняем в памяти для быстрого доступа
+        global.pendingReconnections.set(playerId, {
+            token: reconnectToken,
+            playerData: playerData,
+            timestamp: Date.now(),
+            timeout: setTimeout(() => {
+                cleanupPlayerReconnect(playerId);
+            }, RECONNECT_TIMEOUT)
+        });
+        
+        console.log(`Reconnect prepared for player ${playerId}, token: ${reconnectToken}`);
+        return reconnectToken;
+    } catch (error) {
+        console.error(`Error preparing reconnect for player ${playerId}:`, error);
+        return null;
+    }
+}
+
+/**
+ * Восстанавливает соединение игрока
+ */
+async function handlePlayerReconnect(playerId, token, newWebSocket) {
+    const reconnectKey = `reconnect:${playerId}`;
+    
+    try {
+        // Проверяем в памяти
+        const pendingReconnect = global.pendingReconnections.get(playerId);
+        if (pendingReconnect && pendingReconnect.token === token) {
+            // Успешный реконнект
+            clearTimeout(pendingReconnect.timeout);
+            global.pendingReconnections.delete(playerId);
+            
+            // Восстанавливаем данные
+            newWebSocket.playerId = playerId;
+            newWebSocket.playerData = pendingReconnect.playerData;
+            global.connectedPlayers.set(playerId, newWebSocket);
+            
+            // Удаляем из Redis
+            await global.redisClient.del(reconnectKey);
+            
+            console.log(`Player ${playerId} reconnected successfully`);
+            return {
+                success: true,
+                playerData: pendingReconnect.playerData
+            };
+        }
+        
+        // Если нет в памяти, проверяем Redis
+        const redisData = await global.redisClient.get(reconnectKey);
+        if (redisData) {
+            const reconnectInfo = JSON.parse(redisData);
+            if (reconnectInfo.token === token) {
+                // Успешный реконнект
+                await global.redisClient.del(reconnectKey);
+                
+                // Восстанавливаем данные
+                newWebSocket.playerId = playerId;
+                newWebSocket.playerData = reconnectInfo.playerData;
+                global.connectedPlayers.set(playerId, newWebSocket);
+                
+                console.log(`Player ${playerId} reconnected from Redis`);
+                return {
+                    success: true,
+                    playerData: reconnectInfo.playerData
+                };
+            }
+        }
+        
+        console.log(`Invalid reconnect attempt for player ${playerId}`);
+        return { success: false, error: 'Invalid token or timeout' };
+        
+    } catch (error) {
+        console.error(`Error handling reconnect for player ${playerId}:`, error);
+        return { success: false, error: 'Reconnect failed' };
+    }
+}
+
+/**
+ * Очищает данные реконнекта для игрока
+ */
+function cleanupPlayerReconnect(playerId) {
+    const pendingReconnect = global.pendingReconnections.get(playerId);
+    if (pendingReconnect) {
+        clearTimeout(pendingReconnect.timeout);
+        global.pendingReconnections.delete(playerId);
+        
+        // Асинхронно очищаем Redis
+        const reconnectKey = `reconnect:${playerId}`;
+        global.redisClient.del(reconnectKey).catch(console.error);
+        
+        console.log(`Reconnect data cleaned up for player ${playerId}`);
+        
+        // Здесь можно добавить логику полного сохранения данных игрока
+        // если реконнект не произошел в течение таймаута
+        const { flushPlayerData } = require('./services/servicesflushService');
+        flushPlayerData(playerId).catch(err => 
+            console.error(`Failed to save player ${playerId} after reconnect timeout:`, err)
+        );
+    }
+}
+
+/**
+ * Очищает просроченные реконнекты
+ */
+function cleanupExpiredReconnections() {
+    const now = Date.now();
+    for (const [playerId, reconnect] of global.pendingReconnections.entries()) {
+        if (now - reconnect.timestamp > RECONNECT_TIMEOUT) {
+            cleanupPlayerReconnect(playerId);
+        }
+    }
+}
+
 // ================== Работа с кластерами ==================
 async function initializeRedisPubSub() {
-    // Создаём отдельное соединение для подписки
     const subscriber = global.redisClient.duplicate();
     await subscriber.connect();
 
@@ -95,7 +259,6 @@ async function initializeRedisPubSub() {
         try {
             const { playerId, data, roomId, heroId } = JSON.parse(message);
 
-            // Доставляем сообщение всем локальным WS клиентам с соответствующим playerId
             global.wss.clients.forEach(client => {
                 if (client.playerId === playerId && client.readyState === WebSocket.OPEN) {
                     const fullMessage = {
@@ -135,6 +298,11 @@ const gracefulShutdown = async () => {
     console.log('Shutting down server...');
     const { flushPlayerData } = require('./services/servicesflushService');
 
+    // Очищаем все ожидающие реконнекты
+    for (const playerId of global.pendingReconnections.keys()) {
+        cleanupPlayerReconnect(playerId);
+    }
+
     // 1. Сохраняем всех игроков
     for (const client of global.wss.clients) {
         if (client.playerId) {
@@ -145,7 +313,7 @@ const gracefulShutdown = async () => {
 
     // 2. Синхронизация всех кланов из Redis в БД
     try {
-        if (ClanSyncService) { // проверяем, что модуль доступен
+        if (ClanSyncService) {
             console.log('Syncing all clans to database...');
             await ClanSyncService.syncAllClansToDatabase();
             console.log('All clans synced successfully');
@@ -177,3 +345,10 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
     process.exit(1);
 });
+
+// Экспортируем функции для использования в websocket.js
+module.exports = {
+    preparePlayerReconnect,
+    handlePlayerReconnect,
+    cleanupPlayerReconnect
+};
