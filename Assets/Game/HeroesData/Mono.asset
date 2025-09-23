@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Mono
   heroClass: 2
   heroRarity: 1
-  health: 100
-  armor: 50
-  damage: 5
+  health: 825
+  armor: 475
+  damage: 360
   visionRadius: 5

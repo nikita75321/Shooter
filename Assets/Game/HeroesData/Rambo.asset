@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Rambo
   heroClass: 0
   heroRarity: 5
-  health: 150
-  armor: 100
-  damage: 10
+  health: 1325
+  armor: 600
+  damage: 230
   visionRadius: 5

@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Zetta
   heroClass: 1
   heroRarity: 4
-  health: 100
-  armor: 50
-  damage: 5
+  health: 635
+  armor: 380
+  damage: 340
   visionRadius: 5

@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Bobby
   heroClass: 1
   heroRarity: 1
-  health: 100
-  armor: 50
-  damage: 5
+  health: 576
+  armor: 438
+  damage: 311
   visionRadius: 5

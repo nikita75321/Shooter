@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Ci-J
   heroClass: 0
   heroRarity: 3
-  health: 100
-  armor: 50
-  damage: 5
+  health: 850
+  armor: 480
+  damage: 220
   visionRadius: 5
