@@ -864,7 +864,7 @@ public class ChestRewardCanvas : MonoBehaviour, IPointerClickHandler
             Destroy(reward.gameObject);
         }
 
-        WebSocketBase.Instance.ClaimRewards(totalMoney, totalDonat, heroCards);
+        WebSocketBase.Instance.ClaimRewards(heroCards);
         allReward.Clear();
 
         Geekplay.Instance.Save();

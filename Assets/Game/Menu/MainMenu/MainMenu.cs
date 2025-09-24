@@ -3,6 +3,7 @@ using TMPro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 public static class DataExtensions
 {
@@ -40,6 +41,8 @@ public class MainMenu : MonoBehaviour
 
     [Header("Start game")]
     [SerializeField] private GameObject loadCanvas;
+    [SerializeField] private Button startGameButton;
+    [SerializeField] private Button reconectButton;
 
     [Header("Object To Init")]
     [SerializeField] private GameObject[] objectsToInit;
@@ -61,26 +64,67 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         InitObject();
-        WebSocketBase.Instance.OnServerDataReceived += LoadServerData;
-        // if (Geekplay.Instance.PlayerData != null)
-        // {
-        //     var id = Geekplay.Instance.PlayerData.id;
-
-        //     DOVirtual.DelayedCall(5f, ()=>
-        //     {
-        //         WebSocketBase.Instance.RequestPlayerData(id);	
-        //         Debug.Log("Load server data");
-        //     });
-        // }
-        // else
-        // {
-        //     Debug.Log("Geekplay.Instance == null");
-        // }
+        
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        WebSocketBase.Instance.OnServerDataReceived += LoadServerData;
+        WebSocketBase.Instance.OnClose += UpdateStatusOff;
+        InitSocket.socketConnected += UpdateStatusOn;
+
+        startGameButton.onClick.AddListener(StartGame);
+        reconectButton.onClick.AddListener(Reconect);
+    }
+    private void OnDisable()
     {
         WebSocketBase.Instance.OnServerDataReceived -= LoadServerData;
+        WebSocketBase.Instance.OnClose -= UpdateStatusOff;
+        InitSocket.socketConnected -= UpdateStatusOn;
+
+        startGameButton.onClick.RemoveAllListeners();
+        reconectButton.onClick.RemoveAllListeners();
+    }
+
+    private void UpdateStatusOn(bool status)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            if (status)
+            {
+                Debug.Log("Успешно");
+                startGameButton.gameObject.SetActive(true);
+                reconectButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.Log("Неудачно");
+                reconectButton.gameObject.SetActive(true);
+                startGameButton.gameObject.SetActive(false);
+            }
+        });
+    }
+
+    private void UpdateStatusOff()
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            Debug.Log("Поменять кнопки ");
+            reconectButton.gameObject.SetActive(true);
+            startGameButton.gameObject.SetActive(false);
+        });
+    }
+    
+    private void Reconect()
+    {
+        if (InitSocket.Instance != null)
+        {
+            InitSocket.Instance.ManualReconnect();
+        }
+        else
+        {
+            Debug.LogWarning("InitSocket instance not found. Manual reconnect is unavailable.");
+        }
     }
 
     public void OpenMenu()
@@ -108,7 +152,7 @@ public class MainMenu : MonoBehaviour
         Geekplay.Instance.Save();
 
         // Сохранение в БД
-        SaveHeroStatsToDatabase(heroId);
+        // SaveHeroStatsToDatabase(heroId);
 
         CloseMenu();
         // WebSocketBase.Instance.JoinMatchmaking(Geekplay.Instance.PlayerData.currentMode);

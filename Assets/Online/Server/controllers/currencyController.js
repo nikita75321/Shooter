@@ -22,8 +22,8 @@ async function handleClaimRewards(ws, data) {
         const playerData = await getPlayerFromRedis(data.player_id) || {};
 
         // Обновляем валюту
-        playerData.money = (playerData.money || 0) + (data.money || 0);
-        playerData.donat_money = (playerData.donat_money || 0) + (data.donat_money || 0);
+        playerData.money = data.money || 0;
+        playerData.donat_money = data.donat_money || 0;
 
         // Обновляем карточки героев
         if (data.hero_cards && typeof data.hero_cards === 'object') {

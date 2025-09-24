@@ -47,7 +47,7 @@ public class TopClans : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log("InitTop");
+            // Debug.Log("InitTop");
             // Debug.Log($"clansInfo - {clansInfo.top_clans.Count}");
             // Инициализация текущего клана игрока
             if (clansInfo.current_clan != null)
@@ -64,9 +64,9 @@ public class TopClans : MonoBehaviour
 
     private void InitMyClan(ClanShortInfo myClanInfo)
     {
-        Debug.Log("InitMyClan");
-        Debug.Log("clanLevel - " + myClanInfo.clan_level);
-        Debug.Log("clan_points - " + myClanInfo.clan_points);
+        // Debug.Log("InitMyClan");
+        // Debug.Log("clanLevel - " + myClanInfo.clan_level);
+        // Debug.Log("clan_points - " + myClanInfo.clan_points);
         mySlot.ClanData = new ClanSearch.ClanData
         {
             clan_id = myClanInfo.clan_id,
@@ -86,7 +86,7 @@ public class TopClans : MonoBehaviour
 
     private void InitTopClansList(List<ClanShortInfo> topClans)
     {
-        Debug.Log("InitTopList");
+        // Debug.Log("InitTopList");
         foreach (Transform child in clansContainer)
         {
             Destroy(child.gameObject);
@@ -99,10 +99,10 @@ public class TopClans : MonoBehaviour
         // Создание новых слотов
         foreach (var clanInfo in sortedClans)
         {
-            Debug.Log("Top spawn");
-            Debug.Log("clanInfo.clan_level - "+clanInfo.clan_level);
-            Debug.Log("clanInfo.max_players - "+clanInfo.max_players);
-            Debug.Log("clanInfo.clan_place - "+clanInfo.clan_place);
+            // Debug.Log("Top spawn");
+            // Debug.Log("clanInfo.clan_level - "+clanInfo.clan_level);
+            // Debug.Log("clanInfo.max_players - "+clanInfo.max_players);
+            // Debug.Log("clanInfo.clan_place - "+clanInfo.clan_place);
 
             var slot = Instantiate(clanSlotPrefab, clansContainer);
             var slotComponent = slot.GetComponent<TopClanSlot>();

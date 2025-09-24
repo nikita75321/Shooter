@@ -182,27 +182,21 @@ function setupWebSocketServer(server) {
             try {
                 const playerId = ws.playerId || (await global.redisClient.get(`ws:${ws.id}:player`));
                 if (playerId) {
-                    // 1. Удаляем игрока из комнат и внутренней мапы соединений
-                    await ConnectionController.handlePlayerDisconnect(playerId); // старый метод
-                    await roomManager.handlePlayerDisconnect(playerId); // актуальный метод удаления из комнат
-
-                    // 2. Сохраняем данные игрока в БД
-                    const playerData = await playerRedisService.getPlayerFromRedis(playerId);
-                    if (playerData) {
-                        await flushPlayerData(playerId);
+                    // Проверяем, нужно ли готовить реконнект (не при нормальном закрытии)
+                    if (shouldPrepareReconnect(code, reason)) {
+                        await prepareReconnect(playerId, ws);
+                    } else {
+                        // Немедленное отключение - очищаем реконнект данные
+                        await cleanupReconnectData(playerId);
+                        await handleFullDisconnect(playerId);
                     }
-                    
-                    // 3. Обновляем данные о клане в БД
-                    if (playerData?.clan_id) {
-                        await clanSync.syncClanFromRedisToDB(playerData.clan_id);
-                    }
-                    console.log(`Player ${playerId} disconnected, cleanup done`);
                 }
-
-                // 3. Чистим ключи Redis
-                console.log('Deleting keys:', `${wsKey}${ws.id}`, `ws:${ws.id}:player`);
+                
+                // Всегда чистим ключи Redis соединения
+                // console.log('Deleting keys:', `${wsKey}${ws.id}`, `ws:${ws.id}:player`);
                 await global.redisClient.del(`${wsKey}${ws.id}`);
                 await global.redisClient.del(`ws:connection:${ws.id}:player`);
+
             } catch (error) {
                 console.error('Error during disconnect cleanup:', error);
             }
@@ -222,6 +216,214 @@ function setupWebSocketServer(server) {
     scheduleDailyRestart(wss);
 
     return wss;
+}
+
+// ================== Функции реконнекта ==================
+
+/**
+ * Определяет, нужно ли готовить реконнект
+ */
+function shouldPrepareReconnect(code, reason) {
+    // Не готовим реконнект при нормальном закрытии или ошибках аутентификации
+    const noReconnectCodes = [1000, 1001, 1008, 4000];
+    return !noReconnectCodes.includes(code) && 
+           !reason?.includes('normal') && 
+           !reason?.includes('auth');
+}
+
+/**
+ * Генерирует токен реконнекта
+ */
+function generateReconnectToken() {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+/**
+ * Сохраняет токен реконнекта для игрока
+ */
+async function saveReconnectToken(playerId, ws) {
+    if (!playerId) return null;
+    
+    const reconnectToken = generateReconnectToken();
+    const reconnectKey = `reconnect:${playerId}`;
+    const playerData = await playerRedisService.getPlayerFromRedis(playerId);
+    
+    try {
+        // Сохраняем в Redis на 30 секунд
+        await global.redisClient.setex(
+            reconnectKey, 
+            30, // 30 секунд
+            JSON.stringify({
+                token: reconnectToken,
+                playerData: playerData,
+                timestamp: Date.now(),
+                roomId: ws.roomId // сохраняем ID комнаты если есть
+            })
+        );
+        
+        // Отправляем токен клиенту
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({
+                action: 'reconnect_token',
+                token: reconnectToken,
+                expiresIn: 30
+            }));
+        }
+        
+        console.log(`Reconnect token saved for player ${playerId}`);
+        return reconnectToken;
+    } catch (error) {
+        console.error(`Error saving reconnect token for player ${playerId}:`, error);
+        return null;
+    }
+}
+
+/**
+ * Подготавливает реконнект при отключении
+ */
+async function prepareReconnect(playerId, ws) {
+    try {
+        const playerData = await playerRedisService.getPlayerFromRedis(playerId);
+        if (!playerData) {
+            await handleFullDisconnect(playerId);
+            return;
+        }
+
+        // Сохраняем данные для реконнекта
+        const reconnectToken = await saveReconnectToken(playerId, ws);
+        if (reconnectToken) {
+            console.log(`Reconnect prepared for player ${playerId}, token: ${reconnectToken}`);
+            
+            // Устанавливаем таймаут для полного отключения
+            setTimeout(async () => {
+                const stillPending = await global.redisClient.get(`reconnect:${playerId}`);
+                if (stillPending) {
+                    console.log(`Reconnect timeout for player ${playerId}, performing full disconnect`);
+                    await cleanupReconnectData(playerId);
+                    await handleFullDisconnect(playerId);
+                }
+            }, RECONNECT_TIMEOUT);
+        }
+    } catch (error) {
+        console.error(`Error preparing reconnect for player ${playerId}:`, error);
+        await handleFullDisconnect(playerId);
+    }
+}
+
+/**
+ * Обрабатывает попытку реконнекта
+ */
+async function handlePlayerReconnect(ws, data) {
+    const { playerId, token } = data;
+    
+    if (!playerId || !token) {
+        sendError(ws, 'Missing playerId or token');
+        return;
+    }
+
+    try {
+        const reconnectKey = `reconnect:${playerId}`;
+        const reconnectData = await global.redisClient.get(reconnectKey);
+        
+        if (!reconnectData) {
+            sendError(ws, 'Reconnect token expired or invalid');
+            ws.close(1008, 'Reconnect failed');
+            return;
+        }
+
+        const reconnectInfo = JSON.parse(reconnectData);
+        
+        if (reconnectInfo.token !== token) {
+            sendError(ws, 'Invalid reconnect token');
+            ws.close(1008, 'Reconnect failed');
+            return;
+        }
+
+        // Успешный реконнект
+        await global.redisClient.del(reconnectKey);
+        
+        // Восстанавливаем данные игрока
+        ws.playerId = playerId;
+        ws.playerData = reconnectInfo.playerData;
+        
+        // Регистрируем соединение
+        await global.redisClient.setEx(`ws:${ws.id}:player`, 36000, playerId);
+        roomManager.registerPlayerConnection(playerId, ws);
+        
+        // Восстанавливаем игрока в комнату если нужно
+        if (reconnectInfo.roomId) {
+            await restorePlayerToRoom(playerId, reconnectInfo.roomId, ws);
+        }
+
+        // Отправляем подтверждение
+        ws.send(JSON.stringify({
+            action: 'reconnect_success',
+            playerData: reconnectInfo.playerData,
+            roomId: reconnectInfo.roomId
+        }));
+
+        console.log(`Player ${playerId} reconnected successfully`);
+
+    } catch (error) {
+        console.error(`Error handling reconnect for player ${playerId}:`, error);
+        sendError(ws, 'Reconnect failed');
+        ws.close(1008, 'Reconnect error');
+    }
+}
+
+/**
+ * Восстанавливает игрока в комнату
+ */
+async function restorePlayerToRoom(playerId, roomId, ws) {
+    try {
+        // Здесь должна быть логика восстановления игрока в конкретной комнате
+        // Это зависит от вашей реализации roomManager
+        const room = roomManager.getRoom(roomId);
+        if (room && room.hasPlayer(playerId)) {
+            room.reconnectPlayer(playerId, ws);
+            ws.roomId = roomId;
+            console.log(`Player ${playerId} restored to room ${roomId}`);
+        }
+    } catch (error) {
+        console.error(`Error restoring player ${playerId} to room ${roomId}:`, error);
+    }
+}
+
+/**
+ * Очищает данные реконнекта
+ */
+async function cleanupReconnectData(playerId) {
+    try {
+        await global.redisClient.del(`reconnect:${playerId}`);
+    } catch (error) {
+        console.error(`Error cleaning reconnect data for player ${playerId}:`, error);
+    }
+}
+
+/**
+ * Обрабатывает полное отключение игрока
+ */
+async function handleFullDisconnect(playerId) {
+    try {
+        // 1. Удаляем игрока из комнат
+        await ConnectionController.handlePlayerDisconnect(playerId);
+        await roomManager.handlePlayerDisconnect(playerId);
+
+        // 2. Сохраняем данные игрока в БД
+        const playerData = await playerRedisService.getPlayerFromRedis(playerId);
+        if (playerData) {
+            await flushPlayerData(playerId);
+        }
+        
+        // 3. Обновляем данные о клане в БД
+        if (playerData?.clan_id) {
+            await clanSync.syncClanFromRedisToDB(playerData.clan_id);
+        }
+        
+        console.log(`Player ${playerId} fully disconnected, cleanup done`);
+    } catch (error) {
+        console.error(`Error during full disconnect for player ${playerId}:`, error);
+    }
 }
 
 // ================= Helper Functions =================
@@ -466,4 +668,10 @@ function scheduleWarning(wss, timeUntilWarning, message) {
     }, timeUntilWarning);
 }
 
-module.exports = { setupWebSocketServer, InitRoomManager, roomManager };
+module.exports = { setupWebSocketServer, InitRoomManager, roomManager,
+                setupWebSocketServer,
+                InitRoomManager,
+                prepareReconnect,
+                handlePlayerReconnect,
+                cleanupReconnectData
+ };

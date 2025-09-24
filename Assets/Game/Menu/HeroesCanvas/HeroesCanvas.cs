@@ -125,7 +125,6 @@ public class HeroesCanvas : MonoBehaviour
 
         UpdateRankButtons(curPerson.level);
         UpdateUICharInfo();
-        UpdateSliderStats();
 
         if (curPerson.level == 50 && curPerson.rank == 6)
         {
@@ -148,8 +147,10 @@ public class HeroesCanvas : MonoBehaviour
         skins.selectSkinButton.gameObject.SetActive(false);
         foreach (var slot in skins.heroSlots)
         {
-            slot.InitSlotsIcon();    
+            slot.InitSlotsIcon();
         }
+        
+        UpdateSliderStats();
     }
 
     private void UpdateSliderStats()

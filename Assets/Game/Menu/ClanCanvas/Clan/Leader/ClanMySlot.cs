@@ -25,7 +25,7 @@ public class ClanMySlot : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log($"Init My Slot myRating - {myRating}, clanPoints - {clanPoints}");
+            // Debug.Log($"Init My Slot myRating - {myRating}, clanPoints - {clanPoints}");
             nameTXT.text = myName;
             ratingTXT.text = myRating.ToString();
             clanRatingTXT.text = clanPoints.ToString();

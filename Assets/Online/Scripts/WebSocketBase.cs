@@ -1068,7 +1068,7 @@ public class WebSocketBase : MonoBehaviour
             {
                 // Debug.Log(2);
                 var clanJson = JsonConvert.SerializeObject(clanObj);
-                Debug.Log("Clan JSON: " + clanJson);
+                // Debug.Log("Clan JSON: " + clanJson);
 
                 var clanInfo = JsonConvert.DeserializeObject<ClanInfo>(clanJson);
 
@@ -1163,7 +1163,7 @@ public class WebSocketBase : MonoBehaviour
                 var topClansList = new List<ClanShortInfo>();
                 if (message.TryGetValue("topClans", out var topClansObj) && topClansObj is JArray topClansArray)
                 {
-                    Debug.Log("topClans we have");
+                    // Debug.Log("topClans we have");
                     foreach (var item in topClansArray)
                     {
                         var clanDict = item.ToObject<Dictionary<string, object>>();
@@ -1180,7 +1180,7 @@ public class WebSocketBase : MonoBehaviour
                 ClanShortInfo currentClan = null;
                 if (message.TryGetValue("currentClan", out var currentClanObj) && currentClanObj is JObject currentClanJObject)
                 {
-                    Debug.Log("currentClan we have");
+                    // Debug.Log("currentClan we have");
                     currentClan = ParseClanDict(currentClanJObject.ToObject<Dictionary<string, object>>());
                 }
                 else
@@ -2023,13 +2023,13 @@ public class WebSocketBase : MonoBehaviour
         SendWebSocketRequest("get_player_data", data);
     }
 
-    public void ClaimRewards(int money, int donatMoney, Dictionary<int, int> heroCards)
+    public void ClaimRewards(Dictionary<int, int> heroCards)
     {
         var data = new Dictionary<string, object>
         {
             {"player_id", Geekplay.Instance.PlayerData.id},
-            {"money", money},
-            {"donat_money", donatMoney},
+            {"money", Geekplay.Instance.PlayerData.money},
+            {"donat_money", Geekplay.Instance.PlayerData.donatMoney},
             {"hero_cards", heroCards},
             {"open_characters", GetUpdatedOpenCharacters()}
         };

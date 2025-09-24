@@ -141,7 +141,7 @@ public class InAppCanvas : MonoBehaviour
         }
         skinButtons[0].interactable = false;
         Geekplay.Instance.Save();
-        WebSocketBase.Instance.ClaimRewards(0, 0, new());
+        WebSocketBase.Instance.ClaimRewards(new());
     }
 
     public void OpenSkins()

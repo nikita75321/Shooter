@@ -9,7 +9,7 @@ async function fixAllCorruptedData() {
         
         for (const key of keys) {
             const playerId = key.split(':')[1];
-            await Utils.fixCorruptedPlayerData(playerId);
+            await Utils.fixCorruptdPlayerData(playerId);
         }
         
         console.log('Finished fixing all corrupted data');

@@ -62,8 +62,8 @@ public class Clan : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log("InitClan");
-            Debug.Log(clanInfo.Stats.Clan_points + " clanInfo.Stats.Clan_points");
+            // Debug.Log("InitClan");
+            // Debug.Log(clanInfo.Stats.Clan_points + " clanInfo.Stats.Clan_points");
 
             myClanPanel.SetActive(true);
             bestClanPanel.SetActive(false);

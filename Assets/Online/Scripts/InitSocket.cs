@@ -1,24 +1,37 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class InitSocket : MonoBehaviour
 {
+    public static InitSocket Instance { get; private set; }
     public static Action<bool> socketConnected;
 
     [SerializeField] private bool isWebGL, isDebug, testServer;
     [SerializeField] private string testURL;
     [SerializeField] private string prodURL;
 
+    [Header("Reconnect Settings")]
+    [SerializeField] private float autoReconnectTimeout = 10f;
+    [SerializeField] private float reconnectAttemptInterval = 1f;
+
     private Action<bool> socketConnectedHandler;
+    private Coroutine reconnectCoroutine;
+    private bool isReconnecting;
+
     private void Awake()
     {
-        // Debug.Log("00");
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         socketConnectedHandler = status =>
         {
-            // Debug.Log(0);
             if (status)
             {
-                // Debug.Log(1);
                 if (!string.IsNullOrEmpty(Geekplay.Instance.PlayerData.id))
                 {
                     Debug.Log("connect");
@@ -27,11 +40,12 @@ public class InitSocket : MonoBehaviour
                         Geekplay.Instance.PlayerData.id,
                         Geekplay.Instance.PlayerData.name
                     );
-                } else
-                Debug.Log(2);
+                }
+                else
+                    Debug.Log(2);
             }
         };
-        
+
         socketConnected += socketConnectedHandler;
 
         InitializeWebSocket();
@@ -41,29 +55,148 @@ public class InitSocket : MonoBehaviour
 
     private void InitializeWebSocket()
     {
-        if (testServer)
-            WebSocketBase.InitializeSocket(isWebGL, isDebug, testURL);
-        else
-            WebSocketBase.InitializeSocket(isWebGL, isDebug, prodURL);
+        StartConnectionAttempt(null);
+    }
 
+    private bool EnsureSocketInitialized()
+    {
+        if (WebSocketBase.Instance == null)
+        {
+            if (testServer)
+                WebSocketBase.InitializeSocket(isWebGL, isDebug, testURL);
+            else
+                WebSocketBase.InitializeSocket(isWebGL, isDebug, prodURL);
+        }
+
+        if (WebSocketBase.Instance == null)
+        {
+            Debug.LogError("WebSocketBase instance is not available.");
+            return false;
+        }
+
+        WebSocketBase.Instance.OnClose -= SocketClosed;
         WebSocketBase.Instance.OnClose += SocketClosed;
+        return true;
+    }
+
+    private void StartConnectionAttempt(Action<bool> onCompleted)
+    {
+        if (!EnsureSocketInitialized())
+        {
+            return;
+        }
 
         WebSocketBase.Load(status =>
         {
-            // Debug.Log("aaa");
             socketConnected.Invoke(status);
+            if (status)
+            {
+                isReconnecting = false;
+            }
+
+            socketConnected?.Invoke(status);
+            onCompleted?.Invoke(status);
         });
     }
 
-    private void Start()
+    private void StartReconnectRoutine()
     {
-        
+        if (isReconnecting || !isActiveAndEnabled)
+        {
+            return;
+        }
+
+        isReconnecting = true;
+        reconnectCoroutine = StartCoroutine(AutoReconnectCoroutine());
+    }
+    private void StopReconnectRoutine()
+    {
+        if (reconnectCoroutine != null)
+        {
+            StopCoroutine(reconnectCoroutine);
+            reconnectCoroutine = null;
+        }
+
+        isReconnecting = false;
+    }
+
+    private IEnumerator AutoReconnectCoroutine()
+    {
+        isReconnecting = true;
+        float startTime = Time.realtimeSinceStartup;
+
+        while (Time.realtimeSinceStartup - startTime < autoReconnectTimeout)
+        {
+            Debug.Log("Attempting to reconnect to the server...");
+
+            bool attemptCompleted = false;
+            bool attemptSuccess = false;
+
+            StartConnectionAttempt(result =>
+            {
+                attemptCompleted = true;
+                attemptSuccess = result;
+            });
+
+            while (!attemptCompleted && Time.realtimeSinceStartup - startTime < autoReconnectTimeout)
+            {
+                yield return null;
+            }
+
+            if (!attemptCompleted)
+            {
+                break;
+            }
+
+            if (attemptSuccess)
+            {
+                Debug.Log("Auto reconnect succeeded.");
+                isReconnecting = false;
+                reconnectCoroutine = null;
+                yield break;
+            }
+
+            if (Time.realtimeSinceStartup - startTime >= autoReconnectTimeout)
+            {
+                break;
+            }
+
+            yield return new WaitForSecondsRealtime(reconnectAttemptInterval);
+        }
+
+        Debug.LogWarning($"Failed to reconnect within {autoReconnectTimeout} seconds.");
+        isReconnecting = false;
+        reconnectCoroutine = null;
+    }
+
+    public void ManualReconnect()
+    {
+        if (!isActiveAndEnabled)
+        {
+            Debug.LogWarning("InitSocket is not active. Manual reconnect aborted.");
+            return;
+        }
+
+        Debug.Log("Manual reconnect requested.");
+        StopReconnectRoutine();
+        StartConnectionAttempt(null);
     }
 
     private void SocketClosed()
     {
-        // MainMenu.Instance.SaveHeroStatsToDatabase();
-        Debug.Log("Connection Closed");
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            Debug.Log("Connection Closed");
+
+            if (!isActiveAndEnabled)
+            {
+                Debug.Log(1);
+                return;
+            }
+            Debug.Log(2);
+
+            StartReconnectRoutine();
+        });
     }
 
     private void OnDestroy()
@@ -73,11 +206,18 @@ public class InitSocket : MonoBehaviour
         {
             socketConnected -= socketConnectedHandler;
         }
-        
+
+        StopReconnectRoutine();
+
         // Также отписываемся от других событий
         if (WebSocketBase.Instance != null)
         {
             WebSocketBase.Instance.OnClose -= SocketClosed;
+        }
+        
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 }
