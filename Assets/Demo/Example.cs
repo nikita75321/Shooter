@@ -6,12 +6,12 @@ public class Example : MonoBehaviour
 {
     void Awake()
     {
-        InitSocket.socketConnected += status =>
-        {
-            if (status)
-            {
-                WebSocketBase.Instance.GetStats();
-            }
-        };
+        // InitSocket.socketConnected += status =>
+        // {
+        //     if (status)
+        //     {
+        //         WebSocketBase.Instance.GetStats();
+        //     }
+        // };
     }
 }

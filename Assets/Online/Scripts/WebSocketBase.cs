@@ -1733,6 +1733,11 @@ public class WebSocketBase : MonoBehaviour
 
 
     #region *Запросы*
+    public void PingPong()
+    {
+        SendWebSocketRequest("ping");
+    }
+
     public void LoginPlayer(string playerId, string playerName = null)
     {
         var data = new Dictionary<string, object>

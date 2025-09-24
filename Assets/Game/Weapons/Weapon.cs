@@ -361,7 +361,7 @@ public abstract class Weapon : MonoBehaviour
         ammoOverall += ammoAmountToPickUp;
         ammoInfo.UpdateUI();
 
-        Debug.Log(player.Character.MainWeapon.ammoOverall + " - 1");
+        // Debug.Log(player.Character.MainWeapon.ammoOverall + " - 1");
         // Debug.Log(player.Character);
         // Debug.Log(player);
 

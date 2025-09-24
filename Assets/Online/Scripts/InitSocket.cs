@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class InitSocket : MonoBehaviour
 {
     public static InitSocket Instance { get; private set; }
     public static Action<bool> socketConnected;
+
+    [Header("Status")]
+    [ShowInInspector] public static bool ISCONECTED;
 
     [SerializeField] private bool isWebGL, isDebug, testServer;
     [SerializeField] private string testURL;
@@ -43,6 +47,11 @@ public class InitSocket : MonoBehaviour
                 }
                 else
                     Debug.Log(2);
+                ISCONECTED = true;
+            }
+            else
+            {
+                ISCONECTED = false;
             }
         };
 
@@ -51,6 +60,21 @@ public class InitSocket : MonoBehaviour
         InitializeWebSocket();
         DG.Tweening.DOTween.SetTweensCapacity(500, 50);
         DG.Tweening.DOTween.logBehaviour = DG.Tweening.LogBehaviour.Verbose;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(PingPong());
+    }
+
+    private static WaitForSeconds _waitForSeconds1 = new(1);
+    private IEnumerator PingPong()
+    {
+        while (true)
+        {
+            yield return _waitForSeconds1;
+            WebSocketBase.Instance.PingPong();
+        }
     }
 
     private void InitializeWebSocket()
@@ -88,10 +112,14 @@ public class InitSocket : MonoBehaviour
 
         WebSocketBase.Load(status =>
         {
-            socketConnected.Invoke(status);
+            // socketConnected.Invoke(status);
             if (status)
             {
                 isReconnecting = false;
+            }
+            else
+            {
+                ISCONECTED = false;
             }
 
             socketConnected?.Invoke(status);
@@ -196,6 +224,7 @@ public class InitSocket : MonoBehaviour
             Debug.Log(2);
 
             StartReconnectRoutine();
+            ISCONECTED = false;
         });
     }
 

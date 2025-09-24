@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -100,6 +99,7 @@ public class LoadCanvas : MonoBehaviour
         {
             isInMatchmaking = false;
             currentRoomId = response.room_id;
+            Geekplay.Instance.PlayerData.roomId = response.room_id;
 
             UpdateStatusText($"Комната найдена! Игроков: {response.players_in_room}/{response.max_players}");
             UpdateRoomInfo($"Комната: {response.room_id}\nОжидание игроков...");

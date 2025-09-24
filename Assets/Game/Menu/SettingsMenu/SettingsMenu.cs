@@ -32,7 +32,7 @@ public class SettingsMenu : MonoBehaviour
     private void Start()
     {
         playerData = Geekplay.Instance.PlayerData;
-        Debug.Log("playerData.masterVolume "+playerData.masterVolume);
+        // Debug.Log("playerData.masterVolume "+playerData.masterVolume);
 
         // Настройка громкости
         masterSlider.onValueChanged.AddListener(SetMasterVolume);

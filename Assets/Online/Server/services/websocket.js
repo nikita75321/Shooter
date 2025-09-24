@@ -190,6 +190,7 @@ function setupWebSocketServer(server) {
                         await cleanupReconnectData(playerId);
                         await handleFullDisconnect(playerId);
                     }
+                    // await handleFullDisconnect(playerId);
                 }
                 
                 // Всегда чистим ключи Redis соединения
