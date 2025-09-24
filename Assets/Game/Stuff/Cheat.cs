@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 // WebSocketBase.Instance.RequestPlayerData("27-89804");
@@ -47,6 +48,8 @@ public class Cheat : MonoBehaviour
     [ShowInInspector] private readonly KeyCode[] _timeScaleSpeedUpMotion = { KeyCode.UpArrow, KeyCode.UpArrow, KeyCode.UpArrow, KeyCode.Alpha1 };
     [ShowInInspector] private readonly KeyCode[] _win = { KeyCode.W, KeyCode.I, KeyCode.N };
     [ShowInInspector] private readonly KeyCode[] _lose = { KeyCode.L, KeyCode.O, KeyCode.S, KeyCode.E };
+    [ShowInInspector] private readonly KeyCode[] _noclip = { KeyCode.N, KeyCode.O, KeyCode.C, KeyCode.L, KeyCode.I, KeyCode.P };
+    public LayerMask layerMaskDefault, layerMaskNoClip;
 
     [Header("Menu")]
     [SerializeField] private Currency currency;
@@ -232,7 +235,27 @@ public class Cheat : MonoBehaviour
             Debug.Log("(Cheat) Lose!");
             return;
         }
+        if (CheckSequence(_noclip))
+        {
+            player.Controller.characterController.excludeLayers = layerMaskNoClip;
+            player.Controller.MaxSpeed = 8;
+            player.Controller.MoveSpeed = 8;
+
+            DOVirtual.DelayedCall(10, () =>
+            {
+                player.Controller.characterController.excludeLayers = layerMaskDefault;
+                player.Controller.MaxSpeed = 3;
+                player.Controller.MoveSpeed = 3;
+            });
+            // GameStateManager.Instance.matchState = MatchState.lose;
+            Debug.Log("(Cheat) NoClip!");
+            return;
+        }
         #endregion
+
+
+
+
         #region Menu
         if (CheckSequence(_openAllCharacters))
         {

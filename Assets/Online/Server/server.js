@@ -144,7 +144,7 @@ async function preparePlayerReconnect(playerId, playerData) {
             timestamp: Date.now(),
             timeout: setTimeout(() => {
                 cleanupPlayerReconnect(playerId);
-            }, RECONNECT_TIMEOUT)
+            }, 10000)
         });
         
         console.log(`Reconnect prepared for player ${playerId}, token: ${reconnectToken}`);

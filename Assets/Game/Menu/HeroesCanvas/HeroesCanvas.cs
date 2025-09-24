@@ -149,18 +149,21 @@ public class HeroesCanvas : MonoBehaviour
         {
             slot.InitSlotsIcon();
         }
-        
+
         UpdateSliderStats();
     }
 
     private void UpdateSliderStats()
     {
+        // Debug.Log("UpdateSliderStats");
         var person = Geekplay.Instance.PlayerData.persons[curHeroData.id];
+        // Debug.Log(person + " "+ person.level + " " + person.rank);
 
         float currentHealth = GetCurrentHealth(person.level, person.rank);
         float currentArmor = GetCurrentArmor(person.level, person.rank);
         float currentDamage = GetCurrentDamage(person.level, person.rank);
 
+        // Debug.Log(currentHealth + " " + currentArmor + " " + currentDamage);
         sliderPower.value = (currentHealth + currentArmor + currentDamage) / 3;
         sliderHp.value = currentHealth;
         sliderDamage.value = currentArmor;

@@ -361,10 +361,10 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            Debug.Log(1);
+            // Debug.Log(1);
             if (IsInRoom && CurrentRoom.id == response.room_id)
             {
-                Debug.Log(2);
+                // Debug.Log(2);
                 CurrentRoom.state = "in_progress";
                 CurrentRoom.matchId = response.match_id;
                 matchStart = true;
@@ -643,6 +643,10 @@ public class OnlineRoom : MonoBehaviour
         {
             WebSocketBase.Instance.SendPlayerTransformUpdate(player.Controller.transform.position,
                                                             player.Controller.transform.rotation);
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.matchState = MatchState.ready;
+            }
             yield return _waitForSeconds0_1;
         }
     }

@@ -96,6 +96,7 @@ public class CharacterControllerCustom : MonoBehaviour
     {
         MoveSpeed = 3f;
         MaxSpeed = 3f;
+        // characterController.
         if (Geekplay.Instance.Mobile)
         {
             joystick = JoystickCanvas.Instance.GetJoystick();

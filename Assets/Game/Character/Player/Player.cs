@@ -127,19 +127,23 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (settings.gameObject.activeSelf)
+            if (GameStateManager.Instance.matchState == MatchState.ready)
             {
-                GameStateManager.Instance.GameStart?.Invoke();
-                settings.gameObject.SetActive(false);
-            }
-            else
-            {
-                GameStateManager.Instance.GamePause?.Invoke();
-                Cursor.lockState = CursorLockMode.None;
-                settings.gameObject.SetActive(true);
-                IsMoving = false;
-                IsShoot = false;
-                
+                if (settings.gameObject.activeSelf)
+                    {
+                        GameStateManager.Instance.GameStart?.Invoke();
+                        settings.gameObject.SetActive(false);
+                        Cursor.lockState = CursorLockMode.Locked;
+                    }
+                    else
+                    {
+                        GameStateManager.Instance.GamePause?.Invoke();
+                        Cursor.lockState = CursorLockMode.None;
+                        settings.gameObject.SetActive(true);
+                        IsMoving = false;
+                        IsShoot = false;
+
+                    }
             }
         }
 

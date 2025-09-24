@@ -42084,6 +42084,10 @@ PrefabInstance:
       propertyPath: OnDie.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
       objectReference: {fileID: 8311292777050953594}
+    - target: {fileID: 2708785207497487065, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3426944974293793793, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
       value: 
@@ -50761,6 +50765,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3270166620360052292, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3505231976036458752, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -11.66
@@ -53146,6 +53154,10 @@ PrefabInstance:
     - target: {fileID: 6416267439605183077, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7368125086377429053, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7442168858788926201, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
@@ -67841,6 +67853,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8921048830314778565}
     m_Modifications:
+    - target: {fileID: 60802222986102936, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2474065132863854482, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -74382,6 +74398,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 7956714067432971466, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8745685258276724986, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: player
       value: 
@@ -82284,6 +82304,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 3013464667186960487, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4085893109431772590, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.0200005
@@ -83273,6 +83297,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 7552825390510647004, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8737210727326014318, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: player
       value: 
@@ -87632,6 +87660,10 @@ PrefabInstance:
       propertyPath: topDownCamera
       value: 
       objectReference: {fileID: 2912058140385455832}
+    - target: {fileID: 6429848181521552190, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8831528390001103214, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_Camera
       value: 

@@ -129,7 +129,7 @@ public class SettingsMenu : MonoBehaviour
     public void CloseInGame()
     {
         GameStateManager.Instance.GameStart?.Invoke();
-        Level.Instance.LevelFinish();
+        // Level.Instance.LevelFinish();
         Cursor.lockState = CursorLockMode.Locked;
     }
 }
