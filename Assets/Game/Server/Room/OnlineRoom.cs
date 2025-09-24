@@ -361,10 +361,8 @@ public class OnlineRoom : MonoBehaviour
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
-            // Debug.Log(1);
             if (IsInRoom && CurrentRoom.id == response.room_id)
             {
-                // Debug.Log(2);
                 CurrentRoom.state = "in_progress";
                 CurrentRoom.matchId = response.match_id;
                 matchStart = true;

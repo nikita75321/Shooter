@@ -7,6 +7,13 @@ public class LevelPrefab : MonoBehaviour
     public Player player;
     public EnemiesInGame enemiesInGame;
     public SpawnPoints spawnPoints;
+    public BotsInGame botsInGame;
+
+    private void OnValidate()
+    {
+        if (botsInGame == null)
+            botsInGame = GetComponentInChildren<BotsInGame>();
+    }
 
     public void Start()
     {
@@ -23,7 +30,7 @@ public class LevelPrefab : MonoBehaviour
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
         {
             InstanceSoundUI.Instance.PlayGameBack();
-            
+
             foreach (var player in response.players)
             {
                 Debug.Log("Init models");
@@ -48,6 +55,11 @@ public class LevelPrefab : MonoBehaviour
                     enemy.Health.MaxHealth = player.max_hp;
                     enemy.Armor.MaxArmor = player.max_armor;
                 }
+            }
+
+            if (botsInGame != null)
+            {
+                botsInGame.SpawnBots(response.bots);
             }
         });
     }

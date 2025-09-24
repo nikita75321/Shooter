@@ -14,6 +14,8 @@ public class EnemiesInGame : MonoBehaviour
     // [SerializeField] private List<Enemy> enemies;
     [ShowInInspector] private Dictionary<string, Enemy> enemyModel = new();
 
+    public Enemy EnemyPrefab => enemyPrefab;
+    
     private void Awake()
     {
         Instance = this;
