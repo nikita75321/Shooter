@@ -165,7 +165,6 @@ public class GameEndCanvas : MonoBehaviour
             clanPoints = clanPoint
         };
 
-        playerData.clanPoints += clanPoint;
         playerData.totalShots += player.shotCount;
         if (playerData.maxDamageBattle < player.maxDamage)
             playerData.maxDamageBattle = player.maxDamage;

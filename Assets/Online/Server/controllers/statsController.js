@@ -218,12 +218,12 @@ async function handleUpdatePlayerStats(ws, data) {
     const heroLvl = typeof current.hero_lvl === 'string'
       ? JSON.parse(current.hero_lvl) : (current.hero_lvl || [0,0,0]);
     const heroMatch = typeof current.hero_match === 'string'
-      ? JSON.parse(current.hero_match) : (current.hero_match || Array(8).fill(0));
 
     // 3) Пересчёт метрик
     const newRating = Math.max(0, num(current.rating) + num(data.rating_change));
     const newMaxDamage = Math.max(num(current.max_damage), num(data.damage_dealt));
     const winInc = data.is_win ? 1 : 0;
+    const clan_points = data.clan_points_change;
 
     // 4) Апдейты
     const updates = {
@@ -240,6 +240,7 @@ async function handleUpdatePlayerStats(ws, data) {
 
       love_hero: data.favorite_hero ?? current.love_hero ?? null,
       player_name: data.player_name ?? current.player_name ?? null,
+      clan_points: clan_points,
 
       open_characters: Object.assign(openCharacters, data.open_characters || {}),
       hero_levels: data.hero_levels || heroLevels,

@@ -107,7 +107,15 @@ function setupWebSocketServer(server) {
                     break;
                 case 'player_connect':
                     await playerController.handlePlayerConnect(ws, data);
-                    if (data.player_id) { ws.playerId = data.player_id; roomManager.registerPlayerConnection(ws.playerId, ws); }
+                    // if (data.player_id) {
+                    //  ws.playerId = data.player_id;
+                    //  roomManager.registerPlayerConnection(ws.playerId, ws); 
+                    // }
+                    if (data.player_id) {
+                        ws.playerId = data.player_id;
+                        roomManager.registerPlayerConnection(ws.playerId, ws);
+                        await cleanupReconnectData(ws.playerId);
+                    }
                     break;
                 case 'update_player_rating': await playerController.handleUpdatePlayerRating(ws, data); break;
                 case 'check_name': await playerController.handleCheckName(ws, data); break;
@@ -189,7 +197,7 @@ function setupWebSocketServer(server) {
                         // Немедленное отключение - очищаем реконнект данные
                         await cleanupReconnectData(playerId);
                         await handleFullDisconnect(playerId);
-                    }
+                    }   
                     // await handleFullDisconnect(playerId);
                 }
                 
@@ -251,7 +259,7 @@ async function saveReconnectToken(playerId, ws) {
     
     try {
         // Сохраняем в Redis на 30 секунд
-        await global.redisClient.setex(
+        await global.redisClient.setEx(
             reconnectKey, 
             30, // 30 секунд
             JSON.stringify({

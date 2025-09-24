@@ -93,7 +93,7 @@ const RECONNECT_TOKEN_EXPIRY = 30; // 30 секунд для токена в Red
             } catch (err) {
                 console.error('Periodic clan sync failed:', err);
             }
-        }, 60 * 60 * 24);
+        }, 60 * 60 * 60 * 24);
 
         // ================== Очистка старых реконнектов ==================
         setInterval(() => {
