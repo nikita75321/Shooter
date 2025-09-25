@@ -16,7 +16,7 @@ MonoBehaviour:
   heroName: Coco
   heroClass: 0
   heroRarity: 0
-  health: 576
-  armor: 438
-  damage: 311
+  health: 1150
+  armor: 550
+  damage: 200
   visionRadius: 5

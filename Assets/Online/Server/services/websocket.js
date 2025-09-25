@@ -311,7 +311,7 @@ async function prepareReconnect(playerId, ws) {
                     await cleanupReconnectData(playerId);
                     await handleFullDisconnect(playerId);
                 }
-            }, RECONNECT_TIMEOUT);
+            }, 10000); //10 сек
         }
     } catch (error) {
         console.error(`Error preparing reconnect for player ${playerId}:`, error);

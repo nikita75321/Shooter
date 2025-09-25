@@ -1324,6 +1324,14 @@ public class WebSocketBase : MonoBehaviour
             {
                 Debug.Log("playerResp.max_hp " + playerResp.max_hp);
                 Debug.Log("playerResp.max_armor " + playerResp.max_armor);
+
+                var cachedRoom = OnlineRoom.Instance.CurrentRoom;
+                PlayerInGameInfo cachedInfo = null;
+                if (cachedRoom != null && cachedRoom.players != null)
+                {
+                    cachedRoom.players.TryGetValue(playerResp.playerId, out cachedInfo);
+                }
+
                 var playerInfo = new PlayerInGameInfo(
                     playerResp.playerId,
                     playerResp.player_name,
@@ -1346,6 +1354,19 @@ public class WebSocketBase : MonoBehaviour
                     rotation = playerResp.rotation != null ? playerResp.rotation : Quaternion.identity,
                     animationState = !string.IsNullOrEmpty(playerResp.animationState) ? playerResp.animationState : "idle"
                 };
+
+                if ((playerInfo.hero_level <= 0 || playerInfo.hero_rank <= 0) && cachedInfo != null)
+                {
+                    if (playerInfo.hero_level <= 0)
+                    {
+                        playerInfo.hero_level = cachedInfo.hero_level;
+                    }
+
+                    if (playerInfo.hero_rank <= 0)
+                    {
+                        playerInfo.hero_rank = cachedInfo.hero_rank;
+                    }
+                }
 
                 playersDict[playerResp.playerId] = playerInfo;
             }

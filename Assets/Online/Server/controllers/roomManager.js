@@ -1,5 +1,12 @@
 // roomManager.js
 const { GameConstants, Constants } = require('../config/constants');
+
+const BOT_CONFIG = {
+    MIN_HERO_ID: 0,
+    MAX_HERO_ID: 7,
+    DEFAULT_HERO_SKIN_COUNT: 9,
+    HERO_WEIGHT_DECAY: 0.7
+};
 const WebSocket = require('ws');
 const playerRedisService = require('../services/playerRedisService');
 const playerInGameController = require('./playerInGameController');
@@ -17,9 +24,74 @@ class RoomManager {
         this.validModes = [1, 2, 3];
         this.isRedisConnected = false;
         this.initializationPromise = null;
+        this.botHeroLottery = null;
+        this.botHeroSkinCounts = {};
         console.log('RoomManager created, waiting for Redis connection...');
     }
 
+    buildBotHeroLottery() {
+        const pool = [];
+        const minId = BOT_CONFIG.MIN_HERO_ID;
+        const maxId = BOT_CONFIG.MAX_HERO_ID;
+
+        for (let heroId = minId; heroId <= maxId; heroId++) {
+            const weight = Math.max(1, maxId - heroId + 1);
+            for (let i = 0; i < weight; i++) {
+                pool.push(heroId);
+            }
+        }
+
+        return pool;
+    }
+    
+    _ensureHeroWeights() {
+        if (
+            this._heroCumWeights &&
+            this._heroIds &&
+            this._heroIds.length === (BOT_CONFIG.MAX_HERO_ID - BOT_CONFIG.MIN_HERO_ID + 1)
+        ) {
+            return;
+        }
+
+        const decay = BOT_CONFIG.HERO_WEIGHT_DECAY;
+        const minId = BOT_CONFIG.MIN_HERO_ID;
+        const maxId = BOT_CONFIG.MAX_HERO_ID;
+
+        const ids = [];
+        const weights = [];
+
+        for (let id = minId; id <= maxId; id++) {
+            ids.push(id);
+            // геометрическое затухание: 1, decay, decay^2, ...
+            const w = Math.pow(decay, id - minId);
+            weights.push(w);
+        }
+
+        // нормируем и делаем кумулятив
+        const sum = weights.reduce((a, b) => a + b, 0);
+        let acc = 0;
+        const cum = weights.map(w => (acc += w / sum));
+
+        this._heroIds = ids;
+        this._heroCumWeights = cum; // последняя ≈ 1
+    }
+
+    getRandomBotHeroId() {
+        this._ensureHeroWeights();
+        const r = Math.random();
+        const cum = this._heroCumWeights;
+        const ids = this._heroIds;
+
+        for (let i = 0; i < cum.length; i++) {
+            if (r <= cum[i]) return ids[i];
+        }
+        return ids[ids.length - 1];
+    }
+
+    getRandomBotHeroSkin(heroId) {
+        const count = BOT_CONFIG.DEFAULT_HERO_SKIN_COUNT;
+        return Math.floor(Math.random() * count);
+    }
     // === Инициализация ===
     async initialize() {
         try {
@@ -299,6 +371,7 @@ class RoomManager {
 
         const safePlayers = Array.isArray(playersInfo) ? playersInfo : [];
 
+        // Ориентируемся на сильнейшего реального игрока в комнате
         const maxHeroLevel = safePlayers.reduce((max, player) => {
             return Math.max(max, toInt(player?.hero_level, 1));
         }, 1);
@@ -309,42 +382,44 @@ class RoomManager {
 
         const referencePlayer = safePlayers.reduce((best, current) => {
             if (!current) return best;
-
             if (!best) return current;
 
             const bestLevel = toInt(best.hero_level, 0);
             const currentLevel = toInt(current.hero_level, 0);
-
             if (currentLevel > bestLevel) return current;
             if (currentLevel < bestLevel) return best;
 
             const bestRank = toInt(best.hero_rank, 0);
             const currentRank = toInt(current.hero_rank, 0);
-
             if (currentRank > bestRank) return current;
 
             return best;
         }, null) || safePlayers[0] || null;
 
-        const heroId = toInt(referencePlayer?.hero_id, 0);
-        const heroSkin = toInt(referencePlayer?.hero_skin, 0);
         const rating = toInt(referencePlayer?.rating, 0);
 
         const bots = [];
 
         for (let i = 0; i < botsNeeded; i++) {
             const botId = `bot_${room.id}_${i}`;
+
+            // 🎲 Случайный герой и скин для КАЖДОГО бота (с возможными повторами)
+            const heroId = this.getRandomBotHeroId();
+            const heroSkin = this.getRandomBotHeroSkin(heroId);
+
             const heroLevel = maxHeroLevel > 0 ? maxHeroLevel : 1;
             const heroRank = maxHeroRank > 0 ? maxHeroRank : 1;
 
             let stats = { maxHp: 100, maxArmor: 0, damage: 0, vision: 0 };
 
+            // Инициализируем боевые статы бота (hp/armor/damage/vision) на основе героя/уровня/ранга
             try {
                 stats = await this.initPlayerStats(room.id, botId, heroId, heroLevel, heroRank) || stats;
             } catch (err) {
                 console.error(`Failed to initialize stats for bot ${botId} in room ${room.id}:`, err);
             }
 
+            // Сохраняем временную информацию о герое бота (как у игроков)
             try {
                 const heroKey = `${Constants.playerHeroKey}${room.id}:${botId}`;
                 await global.redisClient.hSet(heroKey, {
@@ -353,7 +428,7 @@ class RoomManager {
                     level: heroLevel,
                     rank: heroRank
                 });
-                await global.redisClient.expire(heroKey, 60 * 5);
+                await global.redisClient.expire(heroKey, 60 * 5); // 5 минут
             } catch (err) {
                 console.error(`Failed to persist hero info for bot ${botId}:`, err);
             }
@@ -735,20 +810,22 @@ class RoomManager {
         if (heroRedis) {
             heroData.hero_id = parseInt(heroRedis.hero_id || 0);
             heroData.hero_skin = parseInt(heroRedis.skin_id || 0);
+            heroData.hero_level = parseInt(heroRedis.level || 0);
+            heroData.hero_rank = parseInt(heroRedis.rank || 0);
         }
 
         // Подставляем level и rank из профиля
-        if (profile && profile.hero_levels) {
-            try {
-                const heroLevels = JSON.parse(profile.hero_levels);
-                const heroIndex = heroData.hero_id > 0 ? heroData.hero_id - 1 : 0;
-                const levelInfo = heroLevels[heroIndex] || { level: 1, rank: 1 };
-                heroData.hero_level = levelInfo.level || 1;
-                heroData.hero_rank = levelInfo.rank || 1;
-            } catch (err) {
-                console.warn(`Failed to parse hero_levels for player ${playerId}`, err);
-            }
-        }
+        // if (profile && profile.hero_levels) {
+        //     try {
+        //         const heroLevels = JSON.parse(profile.hero_levels);
+        //         const heroIndex = heroData.hero_id > 0 ? heroData.hero_id - 1 : 0;
+        //         const levelInfo = heroLevels[heroIndex] || { level: 1, rank: 1 };
+        //         // heroData.hero_level = levelInfo.level || 1;
+        //         // heroData.hero_rank = levelInfo.rank || 1;
+        //     } catch (err) {
+        //         console.warn(`Failed to parse hero_levels for player ${playerId}`, err);
+        //     }
+        // }
 
         return heroData;
     }

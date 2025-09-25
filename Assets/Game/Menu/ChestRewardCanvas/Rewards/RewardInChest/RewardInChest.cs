@@ -41,8 +41,11 @@ public class RewardInChest : MonoBehaviour
 
     [Header("HeroCard")]
     public Slider heroCardSlider;
+    [SerializeField] private GameObject characterSliderMicroPanel;
+    [SerializeField] private Image[] characterSliderMicroImages;
     public TMP_Text sliderText;
-    private string example = "9,999 <#AFD9E9>/ 9,999";
+    [SerializeField] private GameObject characterMicroPanel;
+    [SerializeField] private Image[] characterMicroImages;
 
     [SerializeField] private float animationDuration = 1.5f;
     [SerializeField] private Ease easeType = Ease.OutQuad;
@@ -165,10 +168,22 @@ public class RewardInChest : MonoBehaviour
             rewardValue = rewardConfig.amount;
             // Debug.Log($"InitSliderHeroCard rewardValue={rewardValue}");
             InitSliderHeroCard(rewardValue);
+            characterMicroPanel.SetActive(true);
+            characterSliderMicroPanel.SetActive(true);
+
+            for (int i = 0; i < characterMicroImages.Length; i++)
+            {
+                characterMicroImages[i].gameObject.SetActive(false);
+                characterSliderMicroImages[i].gameObject.SetActive(false);
+            }
+            characterMicroImages[rewardConfig.idHero].gameObject.SetActive(true);
+            characterSliderMicroImages[rewardConfig.idHero].gameObject.SetActive(true);
         }
         else
         {
             heroCardSlider.gameObject.SetActive(false);
+            characterMicroPanel.SetActive(false);
+            characterSliderMicroPanel.SetActive(false);
         }
 
         // Оригинальные проверки для размеров изображений

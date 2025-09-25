@@ -123,18 +123,23 @@ class DamageController {
         console.warn(`Room not found: ${room_id}`);
         return Utils.sendError(ws, 'Room not found');
       }
-      console.log(`Room loaded: ${room_id}, players: ${room.players.join(', ')}`);
+
+      // Собираем цели: реальные игроки + боты
+      const playerIds = Array.isArray(room.players) ? room.players : [];
+      const botIds = Array.isArray(room.bots) ? room.bots.map(b => b && b.playerId).filter(Boolean) : [];
+      const targetIds = [...new Set([...playerIds, ...botIds])].filter(id => id && id !== attacker_id);
+
+      // (опционально) тихий лог на отладку
+      // console.debug(`[Damage] room ${room_id}: targets=${targetIds.length} (players=${playerIds.length}, bots=${botIds.length})`);
 
       // Собираем хиты
       const hits = [];
-      for (const playerId of room.players) {
-        if (!playerId || playerId === attacker_id) continue;
-
+      for (const playerId of targetIds) {
         const targetTransform = await playerInGameController.getPlayerTransform(playerId);
         if (!targetTransform || !targetTransform.position) continue;
 
         // Привязываем серверную капсулу к CC: база у пола
-        const pos = targetTransform.position; // мировая позиция объекта игрока
+        const pos = targetTransform.position;
         const baseY = pos.y + this.playerCapsuleCenter.y - this.playerCapsuleHeight * 0.5;
         const capsuleBase = {
           x: pos.x + this.playerCapsuleCenter.x,
@@ -149,7 +154,13 @@ class DamageController {
         );
 
         if (result.hit) {
-          hits.push({ playerId, tRay: result.tRay, hitPoint: result.point });
+          hits.push({
+            playerId,
+            tHit: result.tRay,
+            hitPoint: result.point
+          });
+
+          if (mode === 'single') break; // одиночный выстрел — берем первого попавшегося
         }
       }
 

@@ -230,6 +230,8 @@ public class Enemy : MonoBehaviour
         healthbar.Hide();
         armorBar.Hide();
 
+        trace.HideTraces();
+
         Geekplay.Instance.PlayerData.killCaseValue++;
         Geekplay.Instance.PlayerData.killOverral++;
         Geekplay.Instance.Save();
