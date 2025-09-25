@@ -13,7 +13,7 @@ public class RoomInfo
     public int mode;
     public string state;
     [ShowInInspector] public Dictionary<string, PlayerInGameInfo> players;
-    public List<string> bots;
+    public List<PlayerInGameInfo> bots;
     public int playerCount;
     public int botCount;
     public int maxPlayers;
@@ -24,7 +24,7 @@ public class RoomInfo
     public RoomInfo()
     {
         players = new Dictionary<string, PlayerInGameInfo>();
-        bots = new List<string>();
+        bots = new List<PlayerInGameInfo>();
         lastMatchResults = new List<MatchPlayerResult>();
     }
 
@@ -182,7 +182,7 @@ public class MatchStartResponse
     public string room_id;
     public string match_id;
     public List<PlayerInGameInfo> players;
-    public List<string> bots;
+    public List<PlayerInGameInfo> bots;
 }
 
 [Serializable]
@@ -330,7 +330,7 @@ public class OnlineRoom : MonoBehaviour
             {
                 id = response.room_id,
                 players = new Dictionary<string, PlayerInGameInfo>(),
-                bots = new List<string>(),
+                bots = new(),
                 playerCount = response.players_in_room,
                 maxPlayers = response.max_players,
                 state = "waiting"
@@ -378,6 +378,7 @@ public class OnlineRoom : MonoBehaviour
 
                 player.Controller.enabled = true;
                 CurrentRoom.bots = response.bots;
+                CurrentRoom.botCount = response.bots?.Count ?? 0;
                 Debug.Log($"Match started in room {response.room_id} with {CurrentRoom.playerCount} players");
             }
         });

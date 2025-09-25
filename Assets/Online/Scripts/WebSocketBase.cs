@@ -1308,6 +1308,11 @@ public class WebSocketBase : MonoBehaviour
     {
         Debug.Log("HandleMatchStartResponse");
 
+        // Debug.Log(typeof(MatchStartResponse).Assembly.FullName);
+        // foreach (var f in typeof(MatchStartResponse).GetFields(
+        //     System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+        // Debug.Log($"Field: {f.Name} : {f.FieldType}");
+
         var response = JsonConvert.DeserializeObject<MatchStartResponse>(
             JsonConvert.SerializeObject(message));
 
@@ -1351,9 +1356,10 @@ public class WebSocketBase : MonoBehaviour
                 id = response.room_id,
                 state = "in_progress",
                 players = playersDict,
-                bots = response.bots ?? new List<string>(),
+                bots = response.bots ?? new List<PlayerInGameInfo>(),
                 maxPlayers = OnlineRoom.Instance.CurrentRoom?.maxPlayers ?? 4,
                 matchId = response.match_id,
+                botCount = response.bots?.Count ?? 0
             };
 
             // Обновляем комнату

@@ -4,6 +4,11 @@ const WebSocket = require('ws');
 const playerRedisService = require('../services/playerRedisService');
 const playerInGameController = require('./playerInGameController');
 
+const toInt = (value, fallback = 0) => {
+    const parsed = parseInt(value, 10);
+    return Number.isFinite(parsed) ? parsed : fallback;
+};
+
 class RoomManager {
     constructor() {
         this.roomTimers = new Map();
@@ -117,9 +122,19 @@ class RoomManager {
 
             const roomData = JSON.parse(roomRaw);
             const players = await this.getRoomPlayers(roomId);
-            // const players = await this.getAllPlayersHeroInfo();
 
             let bots = [];
+            if (Array.isArray(roomData.bots)) {
+                bots = roomData.bots;
+            } else if (typeof roomData.bots === 'string' && roomData.bots.length > 0) {
+                try {
+                    bots = JSON.parse(roomData.bots);
+                } catch (err) {
+                    console.warn(`Failed to parse bots list for room ${roomId}:`, err);
+                    bots = [];
+                }
+            }
+
             return {
                 ...roomData,
                 mode,
@@ -268,6 +283,101 @@ class RoomManager {
         });
 
         console.log(`✅ Stats initialized for player ${playerId} in room ${roomId}`);
+
+        return {
+            maxHp,
+            maxArmor,
+            damage,
+            vision
+        };
+    }
+
+    async generateBotsForRoom(room, botsNeeded, playersInfo) {
+        if (!botsNeeded || botsNeeded <= 0) {
+            return [];
+        }
+
+        const safePlayers = Array.isArray(playersInfo) ? playersInfo : [];
+
+        const maxHeroLevel = safePlayers.reduce((max, player) => {
+            return Math.max(max, toInt(player?.hero_level, 1));
+        }, 1);
+
+        const maxHeroRank = safePlayers.reduce((max, player) => {
+            return Math.max(max, toInt(player?.hero_rank, 1));
+        }, 1);
+
+        const referencePlayer = safePlayers.reduce((best, current) => {
+            if (!current) return best;
+
+            if (!best) return current;
+
+            const bestLevel = toInt(best.hero_level, 0);
+            const currentLevel = toInt(current.hero_level, 0);
+
+            if (currentLevel > bestLevel) return current;
+            if (currentLevel < bestLevel) return best;
+
+            const bestRank = toInt(best.hero_rank, 0);
+            const currentRank = toInt(current.hero_rank, 0);
+
+            if (currentRank > bestRank) return current;
+
+            return best;
+        }, null) || safePlayers[0] || null;
+
+        const heroId = toInt(referencePlayer?.hero_id, 0);
+        const heroSkin = toInt(referencePlayer?.hero_skin, 0);
+        const rating = toInt(referencePlayer?.rating, 0);
+
+        const bots = [];
+
+        for (let i = 0; i < botsNeeded; i++) {
+            const botId = `bot_${room.id}_${i}`;
+            const heroLevel = maxHeroLevel > 0 ? maxHeroLevel : 1;
+            const heroRank = maxHeroRank > 0 ? maxHeroRank : 1;
+
+            let stats = { maxHp: 100, maxArmor: 0, damage: 0, vision: 0 };
+
+            try {
+                stats = await this.initPlayerStats(room.id, botId, heroId, heroLevel, heroRank) || stats;
+            } catch (err) {
+                console.error(`Failed to initialize stats for bot ${botId} in room ${room.id}:`, err);
+            }
+
+            try {
+                const heroKey = `${Constants.playerHeroKey}${room.id}:${botId}`;
+                await global.redisClient.hSet(heroKey, {
+                    hero_id: heroId,
+                    skin_id: heroSkin,
+                    level: heroLevel,
+                    rank: heroRank
+                });
+                await global.redisClient.expire(heroKey, 60 * 5);
+            } catch (err) {
+                console.error(`Failed to persist hero info for bot ${botId}:`, err);
+            }
+
+            bots.push({
+                playerId: botId,
+                player_name: `Bot ${i + 1}`,
+                rating,
+                hero_id: heroId,
+                hero_skin: heroSkin,
+                hero_level: heroLevel,
+                hero_rank: heroRank,
+                isReady: true,
+                isAlive: true,
+                kills: 0,
+                deaths: 0,
+                hp: stats.maxHp ?? 100,
+                armor: 0,
+                max_hp: stats.maxHp ?? 100,
+                max_armor: stats.maxArmor ?? 0
+            });
+        }
+
+        return bots;
     }
 
     async removePlayerFromRoom(playerId) {
@@ -334,14 +444,15 @@ class RoomManager {
                     return;
                 }
 
-                const botsNeeded = room.maxPlayers - currentPlayers.length;
-                const bots = [];
-                for (let i = 0; i < botsNeeded; i++) bots.push(`bot_${room.id}_${i}`);
-
                 const roomsKey = `rooms:${room.mode}`;
                 const roomDataRaw = await global.redisClient.hGet(roomsKey, room.id);
                 const roomData = roomDataRaw ? JSON.parse(roomDataRaw) : { ...room };
+                const maxPlayers = toInt(room.maxPlayers ?? roomData.maxPlayers, GameConstants.MODE_CAPACITY[room.mode] || currentPlayers.length);
+                const botsNeeded = Math.max(0, maxPlayers - currentPlayers.length);
+                const playersInfo = await this.getPlayersWithInfo(currentPlayers, room.id);
+                const bots = await this.generateBotsForRoom({ ...roomData, ...room }, botsNeeded, playersInfo);
                 roomData.bots = bots;
+                roomData.botCount = bots.length;
                 roomData.state = GameConstants.ROOM_STATES.IN_PROGRESS;
                 await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
 
@@ -410,15 +521,34 @@ class RoomManager {
         const roomDataRaw = await global.redisClient.hGet(roomsKey, room.id);
         const roomData = roomDataRaw ? JSON.parse(roomDataRaw) : { ...room };
 
+        const realPlayers = Array.isArray(room.players) ? room.players : [];
+        const allPlayersInfo = await this.getPlayersWithInfo(realPlayers, room.id);
+
+        const modeKey = toInt(room.mode ?? roomData.mode, room.mode);
+        const capacityFallback = GameConstants.MODE_CAPACITY[modeKey] || allPlayersInfo.length;
+        const maxPlayers = toInt(room.maxPlayers ?? roomData.maxPlayers, capacityFallback);
+        const botsNeeded = Math.max(0, maxPlayers - realPlayers.length);
+
+        let botInfos = [];
+        if (Array.isArray(room.bots) && room.bots.length > 0) {
+            botInfos = room.bots;
+        } else if (Array.isArray(roomData.bots) && roomData.bots.length > 0) {
+            botInfos = roomData.bots;
+        }
+
+        const botsAreObjects = Array.isArray(botInfos) && botInfos.every(bot => bot && typeof bot === 'object');
+        if (!botsAreObjects || botInfos.length !== botsNeeded) {
+            botInfos = await this.generateBotsForRoom({ ...roomData, ...room }, botsNeeded, allPlayersInfo);
+        }
+
         roomData.state = GameConstants.ROOM_STATES.IN_PROGRESS;
         const matchStartTimestamp = Date.now();
         roomData.matchId = `match_${matchStartTimestamp}_${Math.random().toString(36).substr(2,9)}`;
         roomData.matchStartTime = matchStartTimestamp.toString();
         roomData.matchEndTime = (matchStartTimestamp + GameConstants.MATCH_DURATION_MS).toString();
+        roomData.bots = botInfos;
+        roomData.botCount = botInfos.length;
         await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
-
-        const realPlayers = room.players || [];
-        const allPlayersInfo = await this.getPlayersWithInfo(realPlayers, room.id);
         
         // Формируем payload в старом формате
         const matchStartPayload = {
@@ -442,14 +572,30 @@ class RoomManager {
                 max_hp: p.max_hp,
                 max_armor: p.max_armor
             })),
-            bots: room.bots || []
+            bots: botInfos.map(bot => ({
+                playerId: bot.playerId,
+                player_name: bot.player_name,
+                rating: bot.rating,
+                hero_id: bot.hero_id,
+                hero_skin: bot.hero_skin,
+                hero_level: bot.hero_level,
+                hero_rank: bot.hero_rank,
+                isReady: bot.isReady ?? true,
+                isAlive: bot.isAlive ?? true,
+                kills: bot.kills ?? 0,
+                deaths: bot.deaths ?? 0,
+                hp: bot.hp ?? bot.max_hp ?? 0,
+                armor: bot.armor ?? 0,
+                max_hp: bot.max_hp ?? bot.hp ?? 0,
+                max_armor: bot.max_armor ?? 0
+            }))
         };
 
         for (const player of allPlayersInfo) {
             await this.publishToPlayer(player.playerId, matchStartPayload, room.id);
         }
 
-        console.log(`Game started in room ${room.id} with ${allPlayersInfo.length} players and ${room.bots?.length || 0} bots`);
+        console.log(`Game started in room ${room.id} with ${allPlayersInfo.length} players and ${botInfos.length} bots`);
 
         this.startMatchTimer({
             ...room,
@@ -547,12 +693,6 @@ class RoomManager {
         } catch (err) {
             console.error(`Failed to cleanup match data for room ${room.id}:`, err);
         }
-
-        // await this.resetRoom({
-        //     id: room.id,
-        //     mode: room.mode,
-        //     maxPlayers: room.maxPlayers || GameConstants.MODE_CAPACITY[room.mode]
-        // });
     }
 
     async resetRoom(room) {

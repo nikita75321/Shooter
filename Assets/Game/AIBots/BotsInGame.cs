@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class BotsInGame : MonoBehaviour
@@ -10,7 +9,7 @@ public class BotsInGame : MonoBehaviour
     [SerializeField] private SpawnPoints spawnPoints;
     [SerializeField] private Enemy botPrefab;
 
-    [ShowInInspector] private Dictionary<string, Enemy> activeBots = new Dictionary<string, Enemy>();
+    private Dictionary<string, Enemy> activeBots = new Dictionary<string, Enemy>();
 
     private void Awake()
     {
@@ -47,24 +46,35 @@ public class BotsInGame : MonoBehaviour
         }
     }
 
-    public void SpawnBots(IList<string> botIds)
+    public void SpawnBots(IList<PlayerInGameInfo> botInfos)
     {
         ClearBots();
 
-        if (botIds == null || botIds.Count == 0)
+        if (botInfos == null || botInfos.Count == 0)
         {
             return;
         }
 
-        foreach (var botId in botIds)
+        foreach (var botInfo in botInfos)
         {
-            SpawnSingleBot(botId);
+            SpawnSingleBot(botInfo);
         }
     }
 
-    private void SpawnSingleBot(string botId)
+    private void SpawnSingleBot(PlayerInGameInfo botInfo)
     {
-        if (string.IsNullOrEmpty(botId) || activeBots.ContainsKey(botId))
+        if (botInfo == null)
+        {
+            return;
+        }
+
+        PlayerInGameInfo runtimeInfo = BuildRuntimeBotInfo(botInfo);
+        if (runtimeInfo == null || string.IsNullOrEmpty(runtimeInfo.playerId))
+        {
+            return;
+        }
+
+        if (activeBots.ContainsKey(runtimeInfo.playerId))
         {
             return;
         }
@@ -90,12 +100,11 @@ public class BotsInGame : MonoBehaviour
         }
 
         Enemy botInstance = Instantiate(prefab, spawnPosition, spawnRotation, transform);
-        botInstance.name = $"Bot_{botId}";
+        botInstance.name = $"Bot_{runtimeInfo.playerId}";
+        botInstance.InitHero(runtimeInfo);
+        ApplyServerStats(botInstance, runtimeInfo);
 
-        PlayerInGameInfo botInfo = CreateBotInfo(botId);
-        botInstance.InitHero(botInfo);
-
-        activeBots.Add(botId, botInstance);
+        activeBots.Add(runtimeInfo.playerId, botInstance);
     }
 
     private Enemy GetBotPrefab()
@@ -113,33 +122,81 @@ public class BotsInGame : MonoBehaviour
         return null;
     }
 
-    private PlayerInGameInfo CreateBotInfo(string botId)
+    private PlayerInGameInfo BuildRuntimeBotInfo(PlayerInGameInfo source)
     {
-        int heroIndex = 0;
-        float maxHp = 100f;
-        float maxArmor = 0f;
-
-        if (Level.Instance != null && Level.Instance.heroDatas != null && Level.Instance.heroDatas.Length > 0)
+        if (source == null)
         {
-            heroIndex = Mathf.Clamp(UnityEngine.Random.Range(0, Level.Instance.heroDatas.Length), 0, Level.Instance.heroDatas.Length - 1);
-            var heroData = Level.Instance.heroDatas[heroIndex];
-            maxHp = heroData.health;
-            maxArmor = heroData.armor;
+            return null;
         }
 
-        var info = new PlayerInGameInfo(botId, botId, 0, heroIndex)
+        int heroCount = Level.Instance != null && Level.Instance.heroDatas != null
+            ? Level.Instance.heroDatas.Length
+            : 0;
+
+        int sanitizedHeroId = source.hero_id;
+        if (heroCount > 0)
         {
-            hero_skin = 0,
-            hero_level = 0,
-            hero_rank = 0,
-            max_hp = maxHp,
-            hp = maxHp,
-            max_armor = maxArmor,
-            armor = maxArmor,
-            isAlive = true
+            sanitizedHeroId = Mathf.Clamp(sanitizedHeroId, 0, heroCount - 1);
+        }
+        else
+        {
+            sanitizedHeroId = Mathf.Max(0, sanitizedHeroId);
+        }
+
+        string botId = string.IsNullOrEmpty(source.playerId)
+            ? (string.IsNullOrEmpty(source.player_name) ? null : source.player_name)
+            : source.playerId;
+
+        if (string.IsNullOrEmpty(botId))
+        {
+            return null;
+        }
+
+        string botName = string.IsNullOrEmpty(source.player_name) ? botId : source.player_name;
+
+        var runtimeInfo = new PlayerInGameInfo(botId, botName, source.rating, sanitizedHeroId)
+        {
+            hero_skin = Mathf.Max(0, source.hero_skin),
+            hero_level = Mathf.Max(0, source.hero_level),
+            hero_rank = Mathf.Max(0, source.hero_rank),
+            hp = source.hp > 0 ? source.hp : Mathf.Max(source.max_hp, 0f),
+            armor = Mathf.Max(0f, source.armor),
+            max_hp = Mathf.Max(source.max_hp, 0f),
+            max_armor = Mathf.Max(source.max_armor, 0f),
+            isAlive = source.isAlive,
+            kills = source.kills,
+            deaths = source.deaths,
+            animationState = source.animationState,
+            boolsState = source.boolsState,
+            current_weapon = source.current_weapon,
+            isReady = source.isReady,
+            noizeRadius = source.noizeRadius,
+            position = source.position,
+            rotation = source.rotation
         };
 
-        return info;
+        return runtimeInfo;
+    }
+
+    private void ApplyServerStats(Enemy botInstance, PlayerInGameInfo botInfo)
+    {
+        if (botInstance == null || botInfo == null)
+        {
+            return;
+        }
+
+        if (botInfo.max_hp > 0f)
+        {
+            float maxHp = Mathf.Max(botInfo.max_hp, 0f);
+            botInstance.Health.MaxHealth = maxHp;
+            float clampedHp = Mathf.Clamp(botInfo.hp, 0f, maxHp);
+            botInstance.Health.ChangeHp(clampedHp);
+        }
+
+        float maxArmor = Mathf.Max(botInfo.max_armor, 0f);
+        botInstance.Armor.MaxArmor = maxArmor;
+        float clampedArmor = maxArmor > 0f ? Mathf.Clamp(botInfo.armor, 0f, maxArmor) : Mathf.Max(botInfo.armor, 0f);
+        botInstance.Armor.ChangeArmor(clampedArmor);
     }
 
     public void ClearBots()
