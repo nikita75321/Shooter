@@ -29,6 +29,69 @@ class RoomManager {
         console.log('RoomManager created, waiting for Redis connection...');
     }
 
+    cloneSpawnPoint(point) {
+        if (!point) {
+            return {
+                position: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0, w: 1 }
+            };
+        }
+
+        return {
+            position: {
+                x: Number(point.position?.x ?? 0),
+                y: Number(point.position?.y ?? 0),
+                z: Number(point.position?.z ?? 0)
+            },
+            rotation: {
+                x: Number(point.rotation?.x ?? 0),
+                y: Number(point.rotation?.y ?? 0),
+                z: Number(point.rotation?.z ?? 0),
+                w: Number(point.rotation?.w ?? 1)
+            }
+        };
+    }
+
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    allocateSpawnPoints(count) {
+        const configuredPoints = Array.isArray(GameConstants.SPAWN_POINTS)
+            ? GameConstants.SPAWN_POINTS
+            : [];
+
+        if (!count || count <= 0) {
+            return [];
+        }
+
+        if (configuredPoints.length === 0) {
+            return Array.from({ length: count }, () => this.cloneSpawnPoint());
+        }
+
+        const result = [];
+        let available = this.shuffleArray(
+            configuredPoints.map(point => this.cloneSpawnPoint(point))
+        );
+
+        while (result.length < count) {
+            if (available.length === 0) {
+                available = this.shuffleArray(
+                    configuredPoints.map(point => this.cloneSpawnPoint(point))
+                );
+            }
+
+            const nextPoint = available.pop();
+            result.push(this.cloneSpawnPoint(nextPoint));
+        }
+
+        return result;
+    }
+
     buildBotHeroLottery() {
         const pool = [];
         const minId = BOT_CONFIG.MIN_HERO_ID;
@@ -621,16 +684,30 @@ class RoomManager {
         roomData.matchId = `match_${matchStartTimestamp}_${Math.random().toString(36).substr(2,9)}`;
         roomData.matchStartTime = matchStartTimestamp.toString();
         roomData.matchEndTime = (matchStartTimestamp + GameConstants.MATCH_DURATION_MS).toString();
-        roomData.bots = botInfos;
-        roomData.botCount = botInfos.length;
-        await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
         
         // Формируем payload в старом формате
+        const totalParticipants = allPlayersInfo.length + botInfos.length;
+        const spawnAssignments = this.allocateSpawnPoints(totalParticipants);
+        const playerSpawns = spawnAssignments.slice(0, allPlayersInfo.length);
+        const botSpawns = spawnAssignments.slice(allPlayersInfo.length);
+
+        const playersWithSpawns = allPlayersInfo.map((player, index) => ({
+            ...player,
+            position: this.cloneSpawnPoint(playerSpawns[index])?.position,
+            rotation: this.cloneSpawnPoint(playerSpawns[index])?.rotation
+        }));
+
+        const botsWithSpawns = botInfos.map((bot, index) => ({
+            ...bot,
+            position: this.cloneSpawnPoint(botSpawns[index])?.position,
+            rotation: this.cloneSpawnPoint(botSpawns[index])?.rotation
+        }));
+
         const matchStartPayload = {
             action: 'match_start',
             room_id: room.id,
             match_id: roomData.matchId,
-            players: allPlayersInfo.map(p => ({
+            players: playersWithSpawns.map(p => ({
                 playerId: p.playerId,
                 player_name: p.player_name,
                 rating: p.rating,
@@ -645,9 +722,11 @@ class RoomManager {
                 hp: p.hp,
                 armor: p.armor,
                 max_hp: p.max_hp,
-                max_armor: p.max_armor
+                max_armor: p.max_armor,
+                position: p.position || { x: 0, y: 0, z: 0 },
+                rotation: p.rotation || { x: 0, y: 0, z: 0, w: 1 }
             })),
-            bots: botInfos.map(bot => ({
+            bots: botsWithSpawns.map(bot => ({
                 playerId: bot.playerId,
                 player_name: bot.player_name,
                 rating: bot.rating,
@@ -662,15 +741,21 @@ class RoomManager {
                 hp: bot.hp ?? bot.max_hp ?? 0,
                 armor: bot.armor ?? 0,
                 max_hp: bot.max_hp ?? bot.hp ?? 0,
-                max_armor: bot.max_armor ?? 0
+                max_armor: bot.max_armor ?? 0,
+                position: bot.position || { x: 0, y: 0, z: 0 },
+                rotation: bot.rotation || { x: 0, y: 0, z: 0, w: 1 }
             }))
         };
 
+        roomData.bots = botsWithSpawns;
+        roomData.botCount = botsWithSpawns.length;
+        await global.redisClient.hSet(roomsKey, room.id, JSON.stringify(roomData));
+        
         for (const player of allPlayersInfo) {
             await this.publishToPlayer(player.playerId, matchStartPayload, room.id);
         }
 
-        console.log(`Game started in room ${room.id} with ${allPlayersInfo.length} players and ${botInfos.length} bots`);
+        console.log(`Game started in room ${room.id} with ${allPlayersInfo.length} players and ${botsWithSpawns.length} bots`);
 
         this.startMatchTimer({
             ...room,

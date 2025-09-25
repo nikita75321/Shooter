@@ -35,21 +35,36 @@ public class LevelPrefab : MonoBehaviour
             {
                 Debug.Log("Init models");
                 // Debug.Log("player.username - "+player.player_name);
+                Vector3 spawnPosition = player.position;
+                Quaternion spawnRotation = player.rotation;
+
+                bool hasServerPosition = spawnPosition.sqrMagnitude > 0.0001f;
+
+                if (!hasServerPosition && spawnPoints != null)
+                {
+                    var spawnPoint = spawnPoints.GetRandomSpawnPoint();
+                    if (spawnPoint != null)
+                    {
+                        spawnPosition = spawnPoint.position;
+                        spawnRotation = spawnPoint.rotation;
+                    }
+                }
+
+                player.position = spawnPosition;
+                player.rotation = spawnRotation;
+
                 if (player.player_name == Geekplay.Instance.PlayerData.name)
                 {
                     Debug.Log("This is me");
-                    var pos = spawnPoints.GetRandomSpawnPoint().position;
                     this.player.Controller.characterController.enabled = false;
-                    this.player.Controller.transform.position = pos;
-                    // DOVirtual.DelayedCall(0.1f, () => this.player.Controller.enabled = true);
+                    this.player.Controller.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
                     this.player.Controller.characterController.enabled = true;
-                    // Форсируем обновление
                     this.player.Controller.characterController.Move(Vector3.zero);
                 }
                 else
                 {
                     Debug.Log("This is new enemy player");
-                    enemiesInGame.InitEnemies(player);
+                    enemiesInGame.InitEnemies(player, spawnPosition, spawnRotation);
 
                     Enemy enemy = EnemiesInGame.Instance.GetEnemy(player.playerId);
                     enemy.Health.MaxHealth = player.max_hp;

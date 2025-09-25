@@ -86,18 +86,36 @@ public class BotsInGame : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPosition = transform.position;
-        Quaternion spawnRotation = Quaternion.identity;
+        Vector3 spawnPosition = runtimeInfo.position;
+        Quaternion spawnRotation = runtimeInfo.rotation;
 
-        if (spawnPoints != null)
+        bool hasServerPosition = spawnPosition.sqrMagnitude > 0.0001f;
+
+        if (!hasServerPosition)
         {
-            var spawnPoint = spawnPoints.GetRandomSpawnPoint();
-            if (spawnPoint != null)
+            if (spawnPoints != null)
             {
-                spawnPosition = spawnPoint.position;
-                spawnRotation = spawnPoint.rotation;
+                var spawnPoint = spawnPoints.GetRandomSpawnPoint();
+                if (spawnPoint != null)
+                {
+                    spawnPosition = spawnPoint.position;
+                    spawnRotation = spawnPoint.rotation;
+                }
+                else
+                {
+                    spawnPosition = transform.position;
+                    spawnRotation = transform.rotation;
+                }
+            }
+            else
+            {
+                spawnPosition = transform.position;
+                spawnRotation = transform.rotation;
             }
         }
+
+        runtimeInfo.position = spawnPosition;
+        runtimeInfo.rotation = spawnRotation;
 
         Enemy botInstance = Instantiate(prefab, spawnPosition, spawnRotation, transform);
         botInstance.name = $"Bot_{runtimeInfo.playerId}";
