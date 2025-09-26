@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -165,7 +164,7 @@ public class WebSocketWebGL : WebSocketBase {
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Error sending WebSocket message: {ex.Message}");
+            Debug.LogWarning($"Error sending WebSocket message: {ex.Message}");
         }
         data["action"] = action;
     

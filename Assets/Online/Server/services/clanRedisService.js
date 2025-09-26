@@ -115,6 +115,31 @@ async function updateClanInRedis(clanId, updates) {
     }
 }
 
+async function updateClanMemberInRedis(clanId, playerId, updates = {}) {
+    try {
+        if (!clanId || !playerId || !updates || Object.keys(updates).length === 0) return false;
+
+        const memberKey = `clan:${clanId}:members`;
+        const rawMember = await redisClient.hGet(memberKey, playerId.toString());
+        if (!rawMember) return false;
+
+        let parsedMember;
+        try {
+            parsedMember = JSON.parse(rawMember);
+        } catch (parseErr) {
+            console.error(`Error parsing member ${playerId} data from clan ${clanId}:`, parseErr);
+            return false;
+        }
+
+        const updatedMember = { ...parsedMember, ...updates };
+        await redisClient.hSet(memberKey, playerId.toString(), JSON.stringify(updatedMember));
+        return true;
+    } catch (err) {
+        console.error(`Error updating member ${playerId} in clan ${clanId}:`, err);
+        return false;
+    }
+}
+
 async function removeClanFromRedis(clanId) {
     try {
         const members = await getClanMembersFromRedis(clanId);
@@ -276,5 +301,6 @@ module.exports = {
     updateClanMemberLeaderFlag,
     setPlayerClanInRedis,
     getPlayerClanFromRedis,
-    getAllClansFromRedis
+    getAllClansFromRedis,
+    updateClanMemberInRedis
 };

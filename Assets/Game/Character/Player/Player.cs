@@ -88,32 +88,25 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        WebSocketBase.Instance.OnMatchEnd += response =>
-        {
-            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
-            {
-                if (respawnCoroutine != null)
-                {
-                    StopCoroutine(respawnCoroutine);
-                    respawnCoroutine = null;
-                }
-            });
-        };
+        WebSocketBase.Instance.OnMatchEnd += Reconect;
     }
     private void OnDisable()
     {
-        WebSocketBase.Instance.OnMatchEnd -= response =>
-        {
-            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
-            {
-                if (respawnCoroutine != null)
-                {
-                    StopCoroutine(respawnCoroutine);
-                    respawnCoroutine = null;
-                }
-            });
-        };
+        WebSocketBase.Instance.OnMatchEnd -= Reconect;
     }
+
+    private void Reconect(MatchEndResponse response)
+    {
+        WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+        {
+            if (respawnCoroutine != null)
+            {
+                StopCoroutine(respawnCoroutine);
+                respawnCoroutine = null;
+            }
+        });
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.J))
@@ -130,20 +123,20 @@ public class Player : MonoBehaviour
             if (GameStateManager.Instance.matchState == MatchState.ready)
             {
                 if (settings.gameObject.activeSelf)
-                    {
-                        GameStateManager.Instance.GameStart?.Invoke();
-                        settings.gameObject.SetActive(false);
-                        Cursor.lockState = CursorLockMode.Locked;
-                    }
-                    else
-                    {
-                        GameStateManager.Instance.GamePause?.Invoke();
-                        Cursor.lockState = CursorLockMode.None;
-                        settings.gameObject.SetActive(true);
-                        IsMoving = false;
-                        IsShoot = false;
+                {
+                    GameStateManager.Instance.GameStart?.Invoke();
+                    settings.gameObject.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
+                else
+                {
+                    GameStateManager.Instance.GamePause?.Invoke();
+                    Cursor.lockState = CursorLockMode.None;
+                    settings.gameObject.SetActive(true);
+                    IsMoving = false;
+                    IsShoot = false;
 
-                    }
+                }
             }
         }
 

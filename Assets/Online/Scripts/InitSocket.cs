@@ -115,7 +115,7 @@ public class InitSocket : MonoBehaviour
             // socketConnected.Invoke(status);
             if (status)
             {
-                isReconnecting = false;
+                isReconnecting = false;                
             }
             else
             {
@@ -124,6 +124,7 @@ public class InitSocket : MonoBehaviour
 
             socketConnected?.Invoke(status);
             onCompleted?.Invoke(status);
+
         });
     }
 

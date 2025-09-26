@@ -260,7 +260,7 @@ class DamageController {
 
       // Статистика стрелка
       const attackerStatsKey = `player_stats:${room_id}:${attacker_id}`;
-      if (totalDamageToHp > 0) {
+      if (totalDamageToHp >= 0) {
         pipeline.hIncrByFloat(attackerStatsKey, 'damage', totalDamageToHp);
       }
       if (killsToAdd > 0) {

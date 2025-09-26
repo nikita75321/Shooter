@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,6 @@ public class HeroesCanvas : MonoBehaviour
     [SerializeField] private TMP_Text heroClass;
     [SerializeField] private TMP_Text heroLevel;
     [SerializeField] private bool keepLevelAfterRankUp = true;
-    // [SerializeField] private TMP_Text heroRank;
 
     [SerializeField] private GameObject[] rarityPanel;
 
@@ -44,6 +44,14 @@ public class HeroesCanvas : MonoBehaviour
     [SerializeField] private Image[] cardImageUp;
     [SerializeField] private TMP_Text cardInfoUp;
 
+    [Header("Additional info for buy")]
+    [SerializeField] private TMP_Text rankUpMoney;
+    [SerializeField] private TMP_Text rankUpCard;
+    [SerializeField] private TMP_Text rankUpMoneyFinal;
+    [SerializeField] private TMP_Text rankUpCardFinal;
+    [SerializeField] private Image[] iconsCard;
+    [SerializeField] private Image[] iconsCardFinal;
+
     [SerializeField] private Button moneyButtonUp;
     [SerializeField] private Button rankButtonUp;
 
@@ -56,10 +64,10 @@ public class HeroesCanvas : MonoBehaviour
     [SerializeField] private Slider sliderDamage;
     [SerializeField] private Slider sliderArmor;
 
-    [SerializeField] private int maxPower;
-    [SerializeField] private int maxHp;
-    [SerializeField] private int maxDamage;
-    [SerializeField] private int maxArmor;
+    [SerializeField] private int initPower;
+    [SerializeField] private int initHp;
+    [SerializeField] private int initDamage;
+    [SerializeField] private int initArmor;
 
     [Header("Description rank up")]
     [SerializeField] private TMP_Text infoRankTXT;
@@ -71,16 +79,34 @@ public class HeroesCanvas : MonoBehaviour
 
     private void Start()
     {
+        // Статы Рэмбо
+        // Здоровье - 1325
+        // Урон - 1150
+        // Броня - 600
         //Значения для слайдеров
-        maxPower = 19054;
-        maxHp = 35145;
-        maxDamage = 9549;
-        maxArmor = 15915;
+    }
 
-        sliderPower.maxValue = maxPower;
-        sliderHp.maxValue = maxHp;
-        sliderDamage.maxValue = maxDamage;
-        sliderArmor.maxValue = maxArmor;
+    private void GetSliderMaxValue(int rank, int level)
+    {
+        float hp = initHp;
+        float armor = initArmor;
+        float damage = initDamage;
+        float power = initPower;
+
+        hp *= Mathf.Pow(1.05f, level);
+        hp *= Mathf.Pow(1.15f, rank);
+        armor *= Mathf.Pow(1.05f, level);
+        armor *= Mathf.Pow(1.15f, rank);
+        damage *= Mathf.Pow(1.05f, level);
+        damage *= Mathf.Pow(1.15f, rank);
+        power *= Mathf.Pow(1.05f, level);
+        power *= Mathf.Pow(1.15f, rank);
+        
+        Debug.Log($"hp={hp}, armor={armor}, damage={damage}, power={power}");
+        sliderHp.maxValue = hp;
+        sliderArmor.maxValue = armor;
+        sliderDamage.maxValue = damage;
+        sliderPower.maxValue = power;
     }
 
     private void OnEnable()
@@ -91,6 +117,11 @@ public class HeroesCanvas : MonoBehaviour
 
     public void InitChar(HeroCard heroCard)
     {
+        initHp = level.heroDatas[7].health;
+        initDamage = level.heroDatas[7].damage;
+        initArmor = level.heroDatas[7].armor;
+        initPower = (initHp + initDamage + initArmor) / 3;
+
         curHeroData = heroCard.heroData;
 
         foreach (var hero in allHeroes)
@@ -137,12 +168,10 @@ public class HeroesCanvas : MonoBehaviour
             infoRankTXT.gameObject.SetActive(true);
             maxLevelButton.gameObject.SetActive(false);
         }
-        // UpdateSliders(curPerson.level, curPerson.rank);
 
         UpdateRankAndLevelUI(curPerson.level, curPerson.rank);
 
         skins.curHeroId = heroCard.heroData.id;
-        // Debug.Log(heroCard.heroData.id + " heroCard.heroData.id");
         skins.SelectSlot(skins.heroSlots[Geekplay.Instance.PlayerData.persons[heroCard.heroData.id].currentBody]);
         skins.selectSkinButton.gameObject.SetActive(false);
         foreach (var slot in skins.heroSlots)
@@ -150,24 +179,22 @@ public class HeroesCanvas : MonoBehaviour
             slot.InitSlotsIcon();
         }
 
+        GetSliderMaxValue(curPerson.rank, curPerson.level);
         UpdateSliderStats();
     }
 
     private void UpdateSliderStats()
     {
-        // Debug.Log("UpdateSliderStats");
         var person = Geekplay.Instance.PlayerData.persons[curHeroData.id];
-        // Debug.Log(person + " "+ person.level + " " + person.rank);
 
         float currentHealth = GetCurrentHealth(person.level, person.rank);
         float currentArmor = GetCurrentArmor(person.level, person.rank);
         float currentDamage = GetCurrentDamage(person.level, person.rank);
 
-        // Debug.Log(currentHealth + " " + currentArmor + " " + currentDamage);
         sliderPower.value = (currentHealth + currentArmor + currentDamage) / 3;
         sliderHp.value = currentHealth;
-        sliderDamage.value = currentArmor;
-        sliderArmor.value = currentDamage;
+        sliderDamage.value = currentDamage;
+        sliderArmor.value = currentArmor;
     }
 
     private void UpdateRankAndLevelUI(int level, int rank)
@@ -196,6 +223,8 @@ public class HeroesCanvas : MonoBehaviour
     }
     private void UpdateRankButtons(int level, int rank)
     {
+        var person = Geekplay.Instance.PlayerData.persons[curHeroData.id];
+
         // Проверяем, был ли уже повышен ранг на этом уровне
         bool isRankAlreadyUp = rank > (level / 10);
         bool isMaxRank = rank > 5;
@@ -206,6 +235,20 @@ public class HeroesCanvas : MonoBehaviour
         moneyButtonUp.gameObject.SetActive(!isRankLevel || isRankAlreadyUp);
         rankButtonUp.gameObject.SetActive(isRankLevel);
         maxLevelButton.gameObject.SetActive(isMaxRank);
+
+        rankUpMoney.text = GetRequiredMoneyForRank(person).ToString();
+        rankUpCard.text = GetRequiredCardsForRank(person.rank).ToString();
+
+        rankUpMoneyFinal.text = GetRequiredMoneyForRank(person).ToString();
+        rankUpCardFinal.text = GetRequiredCardsForRank(person.rank).ToString();
+
+        for (int i = 0; i < iconsCard.Length; i++)
+        {
+            iconsCard[i].gameObject.SetActive(false);
+            iconsCardFinal[i].gameObject.SetActive(false);
+        }
+        iconsCard[curHeroData.id].gameObject.SetActive(true);
+        iconsCardFinal[curHeroData.id].gameObject.SetActive(true);
     }
 
     private int GetRequiredCardsForLevel(int currentLevel)
@@ -227,6 +270,18 @@ public class HeroesCanvas : MonoBehaviour
             case 4: return 100;
             case 5: return 125;
             default: return 999;
+        }
+    }
+    private int GetRequiredMoneyForRank(Hero person)
+    {
+        switch(person.rank)
+        {
+            case 1: return person.level * 100 * 5;
+            case 2: return person.level * 100 * 5;
+            case 3: return person.level * 100 * 5;
+            case 4: return person.level * 100 * 5;
+            case 5: return person.level * 100 * 5;
+            default: return person.level * 100 * 100;
         }
     }
     private int GetRequiredLevel(int currentLevel)
@@ -301,8 +356,6 @@ public class HeroesCanvas : MonoBehaviour
         UpdateRankButtons(person.level, person.rank);
 
         bool isRankAlreadyUp = person.rank > (person.level / 10);
-        // Debug.Log(person.rank);
-        // Debug.Log(isRankAlreadyUp);
     
         if (person.rank > 5 && person.level == 50)
         {
@@ -431,18 +484,13 @@ public class HeroesCanvas : MonoBehaviour
 
     private void UpdateSliders(int level, int rank)
     {
-        // Debug.Log("UpdateSliders");
         var person = Geekplay.Instance.PlayerData.persons[curHeroData.id];
         int currentCards = person.heroCard;
-
-        // int requiredCards = person.level % 10 == 0 && person.rank < 5 ?
-        //     GetRequiredCardsForRank(person.rank + 1) : GetRequiredCardsForRank(person.rank + 1);
         int requiredCards = GetRequiredCardsForRank(person.rank);
 
         float progress = requiredCards > 0 ?
             Mathf.Clamp01((float)currentCards / requiredCards) : 0;
 
-        // Debug.Log($"{person.heroCard} - {requiredCards}");
         slider.value = progress;
         sliderUp.value = progress;
 
@@ -488,7 +536,9 @@ public class HeroesCanvas : MonoBehaviour
         if (person.level % 10 != 0 || person.rank > 5) return;
 
         int requiredCards = GetRequiredCardsForRank(person.rank);
-        if (HeroCards.Instance.SpendCard(requiredCards, curHeroData.id))
+        int requiredMoney = GetRequiredMoneyForRank(person);
+
+        if (HeroCards.Instance.SpendCard(requiredCards, curHeroData.id) && Currency.Instance.SpendMoney(requiredMoney))
         {
             person.rank += 1;
 
@@ -507,10 +557,12 @@ public class HeroesCanvas : MonoBehaviour
                 CloseLevelUpPanel();
             }
             WebSocketBase.Instance.UpdateHeroLevels(curHeroData.id);
+
+            GetSliderMaxValue(person.rank, person.level);
         }
         else
         {
-            Debug.Log("Not enough cards");
+            Debug.Log("Not enough cards or Money");
         }
     }
 

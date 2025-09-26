@@ -2054,6 +2054,23 @@ public class WebSocketBase : MonoBehaviour
         };
         SendWebSocketRequest("get_player_data", data);
     }
+    public void SyncPlayerDataAfterReconnect(string playerId)
+    {
+        // Берём твой локальный PlayerData
+        var pd = Geekplay.Instance.PlayerData;
+
+        // Вариант А (проще, если есть Newtonsoft.Json в проекте)
+        var json = JsonConvert.SerializeObject(pd);
+        var pdDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+
+        var data = new Dictionary<string, object>
+        {
+            { "player_id", playerId },
+            { "player_data", pdDict } // сервер сам разберёт имена полей
+        };
+
+        SendWebSocketRequest("sync_player_data", data);
+    }
 
     public void ClaimRewards(Dictionary<int, int> heroCards)
     {

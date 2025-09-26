@@ -5,7 +5,9 @@ const { isValidMessage,
         sendError,
         updatePlayerInRedis } = require('../services/utils');
 
-const playerRedisService = require('../services/playerRedisService')
+const { flushPlayerData } = require('../services/servicesflushService');
+const playerRedisService = require('../services/playerRedisService');
+const ClanRedisService = require('../services/clanRedisService');
 
 //Регистрация нового игрока
 async function handleRegisterPlayer(ws, data) {
@@ -309,10 +311,25 @@ async function handleUpdatePlayerName(ws, data) {
         );
         
         // 4. Обновление имени в clan_members (по внутреннему числовому ID)
-        await client.query(
-            'UPDATE clan_members SET player_name = $1 WHERE player_id = $2',
+        const clanMembershipRes = await client.query(
+            'UPDATE clan_members SET player_name = $1 WHERE player_id = $2 RETURNING clan_id, is_leader',
             [data.new_name, playerId]
         );
+
+        // 5. Обновляем данные игрока в кланах в Redis
+        const clanMemberships = clanMembershipRes.rows || [];
+        for (const membership of clanMemberships) {
+            const clanId = membership?.clan_id;
+            if (!clanId) continue;
+
+            await ClanRedisService.updateClanMemberInRedis(clanId, data.player_id, {
+                player_name: data.new_name,
+            });
+
+            if (membership?.is_leader) {
+                await ClanRedisService.updateClanInRedis(clanId, { leader_name: data.new_name });
+            }
+        }
         
         await client.query('COMMIT');
         await updatePlayerInRedis(data.player_id, {
@@ -467,6 +484,165 @@ async function handleGetPlayerData(ws, data) {
     }
 }
 
+async function handleSyncPlayerData(ws, data) {
+    // ожидаем: { action: 'sync_player_data', player_id, player_data: {...} }
+    if (!isValidMessage(data, ['player_id', 'player_data'])) {
+        return sendError(ws, 'Missing player_id or player_data');
+    }
+    const playerId = data.player_id;
+    const clientPD = data.player_data;
+    if (typeof clientPD !== 'object' || clientPD === null) {
+        return sendError(ws, 'player_data must be an object');
+    }
+
+    try {
+        // 1) Берём текущие данные сервера
+        let serverPD = await playerRedisService.getPlayerFromRedis(playerId);
+        if (!serverPD) {
+            // Попытка взять из БД и закэшировать (упрощённо: возьмём тем же путём, что в get_player_data)
+            const client = await shooterPool.connect();
+            try {
+                const res = await client.query(
+                    `SELECT 
+                        p.player_id, p.player_name, p.rating, p.best_rating, p.money, p.donat_money,
+                        p.clan_name, p.clan_points, p.platform, p.open_characters, p.love_hero,
+                        p.overral_kill, p.match_count, p.win_count, p.revive_count, p.max_damage,
+                        p.shoot_count, p.friends_reward, p.hero_card, p.hero_match, p.hero_levels
+                    FROM players p
+                    WHERE p.player_id = $1`,
+                    [playerId]
+                );
+                if (res.rows.length > 0) {
+                    serverPD = res.rows[0];
+                    await playerRedisService.savePlayerProfileToRedis(playerId, serverPD);
+                } else {
+                    // если игрока нет в БД — стартуем «с нуля»
+                    serverPD = {};
+                }
+            } finally {
+                client.release();
+            }
+        }
+
+        // 2) Нормализаторы
+        const toInt = (v, d=0)=>Number.isFinite(parseInt(v))?parseInt(v):d;
+        const toNum = (v, d=0)=>Number.isFinite(Number(v))?Number(v):d;
+
+        // 3) Мердж правила
+        // - простые поля: берём client, если он прислал (иначе — server)
+        // - best_rating: берём max
+        // - hero_levels: по каждому слоту max(level), max(rank)
+        // - hero_card: суммируем по ключам
+        // - hero_match: по позициям суммируем (чтобы оффлайн прогресс не потерять)
+        // - open_characters: по героям берём поэлементный max
+        const merged = { ...(serverPD || {}) };
+
+        function pick(field, transform = (x)=>x) {
+            if (clientPD[field] !== undefined) merged[field] = transform(clientPD[field]);
+            else if (serverPD[field] !== undefined) merged[field] = transform(serverPD[field]);
+        }
+
+        // Простые числовые/строковые
+        pick('player_name', String);
+        pick('rating', toInt);
+        // best_rating — безопаснее max
+        merged.best_rating = Math.max(
+            toInt(clientPD.best_rating, -Infinity),
+            toInt(serverPD.best_rating, -Infinity),
+            0
+        );
+        pick('money', toInt);
+        pick('donat_money', toInt);
+        pick('platform', String);
+        pick('love_hero', (v)=>String(v));
+        pick('friends_reward', String);
+        // статистика — возьмём client, если он есть; можно взять max/sum по желанию
+        pick('overral_kill', toInt);
+        pick('match_count', toInt);
+        pick('win_count', toInt);
+        pick('revive_count', toInt);
+        // max_damage — берём max
+        merged.max_damage = Math.max(
+            toNum(clientPD.max_damage, -Infinity),
+            toNum(serverPD.max_damage, -Infinity),
+            0
+        );
+        pick('shoot_count', toInt);
+
+        // Клановые (если у тебя есть логика валидации — подключи тут)
+        pick('clan_name', String);
+        pick('clan_points', toInt);
+
+        // hero_levels: массив длиной 8 [{level,rank},...]
+        const srvLevels = Array.isArray(serverPD.hero_levels) ? serverPD.hero_levels
+                        : (typeof serverPD.hero_levels === 'string' ? JSON.parse(serverPD.hero_levels) : []);
+        const cliLevels = Array.isArray(clientPD.hero_levels) ? clientPD.hero_levels
+                        : (typeof clientPD.hero_levels === 'string' ? JSON.parse(clientPD.hero_levels) : []);
+        const levels = [];
+        for (let i=0;i<8;i++){
+            const s = srvLevels[i] || { level:1, rank:1 };
+            const c = cliLevels[i] || s;
+            levels[i] = {
+                level: Math.max(toInt(s.level,1), toInt(c.level,1)),
+                rank:  Math.max(toInt(s.rank,1),  toInt(c.rank,1))
+            };
+        }
+        merged.hero_levels = levels;
+
+        // hero_card: объект { heroId: count }
+        const srvCards = (typeof serverPD.hero_card === 'string') ? JSON.parse(serverPD.hero_card||'{}') : (serverPD.hero_card || {});
+        const cliCards = (typeof clientPD.hero_card === 'string') ? JSON.parse(clientPD.hero_card||'{}') : (clientPD.hero_card || {});
+        const cards = { ...srvCards };
+        for (const [k,v] of Object.entries(cliCards)) {
+            cards[k] = toInt(cards[k],0) + toInt(v,0);
+        }
+        merged.hero_card = cards;
+
+        // hero_match: массив из 8 чисел — суммируем поэлементно
+        const srvMatch = Array.isArray(serverPD.hero_match) ? serverPD.hero_match
+                        : (typeof serverPD.hero_match === 'string' ? JSON.parse(serverPD.hero_match) : []);
+        const cliMatch = Array.isArray(clientPD.hero_match) ? clientPD.hero_match
+                        : (typeof clientPD.hero_match === 'string' ? JSON.parse(clientPD.hero_match) : []);
+        const match = [];
+        for (let i=0;i<8;i++){
+            match[i] = toInt(srvMatch[i],0) + toInt(cliMatch[i],0);
+        }
+        merged.hero_match = match;
+
+        // open_characters: { HeroName: [ints...] } — поэлементный max
+        const srvOpen = (typeof serverPD.open_characters === 'string') ? JSON.parse(serverPD.open_characters||'{}') : (serverPD.open_characters || {});
+        const cliOpen = (typeof clientPD.open_characters === 'string') ? JSON.parse(clientPD.open_characters||'{}') : (clientPD.open_characters || {});
+        const open = { ...srvOpen };
+        for (const [hero, arr] of Object.entries(cliOpen)) {
+            const a = Array.isArray(arr) ? arr : [];
+            const b = Array.isArray(open[hero]) ? open[hero] : [];
+            const m = [];
+            const n = Math.max(a.length, b.length);
+            for (let i=0;i<n;i++){
+                m[i] = Math.max(toInt(a[i],0), toInt(b[i],0));
+            }
+            open[hero] = m;
+        }
+        merged.open_characters = open;
+
+        // 4) Сохраняем в Redis (сервис сам сериализует сложные поля)
+        await playerRedisService.savePlayerProfileToRedis(playerId, merged);
+
+        // 5) Фиксируем в БД (синхронно, чтобы точно не потерялось)
+        await flushPlayerData(playerId);
+
+        // 6) Ответ
+        ws.send(JSON.stringify({
+            action: 'sync_player_data_response',
+            success: true,
+            player_id: playerId
+        }));
+    } catch (err) {
+        console.error('Sync player data error:', err);
+        sendError(ws, 'Failed to sync player data');
+    }
+}
+
 module.exports = {
     handleRegisterPlayer,
     handlePlayerConnect,
@@ -475,5 +651,6 @@ module.exports = {
     handleCheckName,
     handleUpdatePlayerName,
     handleUpdateRating,
-    handleGetPlayerData
+    handleGetPlayerData,
+    handleSyncPlayerData
 };

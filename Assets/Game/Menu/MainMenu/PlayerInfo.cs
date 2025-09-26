@@ -1,7 +1,6 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
@@ -194,6 +193,9 @@ public class PlayerInfo : MonoBehaviour
         {
             if (success)
             {
+                infoTXT.DOFade(1, 1);
+                infoTXT.text = "Имя успешно изменено";
+
                 Geekplay.Instance.PlayerData.name = newName;
                 Geekplay.Instance.Save();
                 UpdateUI();

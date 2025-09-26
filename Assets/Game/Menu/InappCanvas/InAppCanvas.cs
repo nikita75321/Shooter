@@ -116,7 +116,7 @@ public class InAppCanvas : MonoBehaviour
                 AllSkin(Geekplay.Instance.PlayerData);
         });
 
-        skinButtons[1].onClick.AddListener(() => 
+        skinButtons[1].onClick.AddListener(() =>
         {
             if (Currency.Instance.SpendDonatMoney(priceSkin[1]))
                 skinButtons[1].onClick.AddListener(() => ChestRewardCanvas.Instance.InitChest(skinChest, false));
@@ -128,6 +128,8 @@ public class InAppCanvas : MonoBehaviour
                 rightPanelSkins.chooseHero.SetActive(true);
         });
         //-----------------Skins-----------------
+
+        Geekplay.Instance.CheckBuysOnStart(Geekplay.Instance.PlayerData.lastBuy);
     }
 
     private void AllSkin(PlayerData playerData)
@@ -142,6 +144,7 @@ public class InAppCanvas : MonoBehaviour
         skinButtons[0].interactable = false;
         Geekplay.Instance.Save();
         WebSocketBase.Instance.ClaimRewards(new());
+
     }
 
     public void OpenSkins()
@@ -161,18 +164,10 @@ public class InAppCanvas : MonoBehaviour
         //---------------------------InApps---------------------------
         goldRewardSO.UnsubscribeAll();
 
-        // foreach (var app in specialInAppSOs)
-        // {
-        //     app.UnsubscribeAll();
-        // }
         foreach (var app in goldInAppSOs)
         {
             app.UnsubscribeAll();
         }
-        // foreach (var app in skinInAppSOs)
-        // {
-        //     app.UnsubscribeAll();
-        // }
         //---------------------------InApps---------------------------
 
         //---------------------------Buttons---------------------------

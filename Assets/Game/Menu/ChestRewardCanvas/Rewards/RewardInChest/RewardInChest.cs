@@ -176,8 +176,8 @@ public class RewardInChest : MonoBehaviour
                 characterMicroImages[i].gameObject.SetActive(false);
                 characterSliderMicroImages[i].gameObject.SetActive(false);
             }
-            characterMicroImages[rewardConfig.idHero].gameObject.SetActive(true);
-            characterSliderMicroImages[rewardConfig.idHero].gameObject.SetActive(true);
+            characterMicroImages[rewardConfig.rewardPrefab.id].gameObject.SetActive(true);
+            characterSliderMicroImages[rewardConfig.rewardPrefab.id].gameObject.SetActive(true);
         }
         else
         {

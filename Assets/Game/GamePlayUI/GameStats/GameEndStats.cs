@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class GameEndStats : MonoBehaviour
@@ -14,22 +15,28 @@ public class GameEndStats : MonoBehaviour
 
     public void InitStats(MatchEndResponse response)
     {
-        if (!isUpdate)
+        if (isUpdate) return;
+        isUpdate = true;
+
+        var myName = Geekplay.Instance.PlayerData.name;
+
+        var sorted = response.results
+            .OrderBy(r => r.place)                   // 1-е место -> сверху
+            .ThenByDescending(r => r.score)          // при равенстве места — больший счёт выше
+            .ThenByDescending(r => r.kills)          // затем по киллам
+            .ToList();
+
+        foreach (var result in sorted)
         {
-            isUpdate = true;
-            
-            for (int i = 0; i < response.results.Count; i++)
+            if (result.player_name == myName) // лучше сравнивать по player_id, если есть
             {
-                var result = response.results[i];
-                if (result.player_name == Geekplay.Instance.PlayerData.name)
-                {
-                    myStatsPrefab.Init(result);
-                }
-                else
-                {
-                    var other = Instantiate(otherStatsPrefab, content.transform);
-                    other.Init(result);
-                }
+                var row = Instantiate(myStatsPrefab, content.transform);
+                row.Init(result);
+            }
+            else
+            {
+                var row = Instantiate(otherStatsPrefab, content.transform);
+                row.Init(result);
             }
         }
     }

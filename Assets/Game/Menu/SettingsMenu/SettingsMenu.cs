@@ -34,6 +34,10 @@ public class SettingsMenu : MonoBehaviour
         playerData = Geekplay.Instance.PlayerData;
         // Debug.Log("playerData.masterVolume "+playerData.masterVolume);
 
+        WebSocketBase.Instance.OnMatchEnd += (t) =>
+        {
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() => gameObject.SetActive(false));
+        };
         // Настройка громкости
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
@@ -51,6 +55,10 @@ public class SettingsMenu : MonoBehaviour
     }
     private void OnDestroy()
     {
+        WebSocketBase.Instance.OnMatchEnd -= (t) =>
+        {
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() => gameObject.SetActive(false));
+        };
         masterSlider.onValueChanged.RemoveListener(SetMasterVolume);
         musicSlider.onValueChanged.RemoveListener(SetMusicVolume);
         sfxSlider.onValueChanged.RemoveListener(SetSFXVolume);

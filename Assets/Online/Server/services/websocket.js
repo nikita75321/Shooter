@@ -180,6 +180,9 @@ function setupWebSocketServer(server) {
                 case 'spawn_room_upgrades': await upgradeController.spawnUpgrades(ws, data); break;
                 case 'upgrade_pickup': await upgradeController.handleUpgradePickup(ws, data); break;
                 case 'upgrade_drop': await upgradeController.handleUpgradeDrop(ws, data); break;
+                
+                // =================== PlayerData Sync ===================
+                case 'sync_player_data': await playerController.handleSyncPlayerData(ws, data); break;
 
                 default:
                     sendError(ws, `Unknown action: ${data.action}`);
