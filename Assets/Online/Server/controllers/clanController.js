@@ -232,7 +232,7 @@ class ClanController {
             sendError(ws, err.message);
         }
     }
-
+    
     // Получить информацию о клане
     async handleGetClanInfo(ws, data) {
         try {
@@ -259,12 +259,15 @@ class ClanController {
             const levelProgress = nextLevelThreshold 
                 ? Math.min(100, Math.round((totalClanPoints / nextLevelThreshold) * 100))
                 : 100;
-
+            
             // 3.1️⃣ Пересчет max_players каждые 2 уровня
             const max_players = calculateMaxPlayers(clan.max_players || 25, clanLevel);
-
+            
+            // 🆕 3.2️⃣ Сортируем участников
+            const sortedMembers = [...members].sort(compareClanMembers);            
+            
             // 4️⃣ Формируем ответ
-            const response = {
+            const response = {  
                 action: 'get_clan_info_response',
                 success: true,
                 clan: {
@@ -289,14 +292,14 @@ class ClanController {
                         clan_points: totalClanPoints           // <-- сумма очков участников
                     }
                 },
-                members: members.map(m => ({
+                members: sortedMembers.map(m => ({
                     id: m.player_id,
                     name: m.player_name,
                     is_leader: m.is_leader,
                     stats: {
                         rating: m.rating,
                         clan_points: m.clan_points,
-                        contribution_percent: totalClanPoints > 0 
+                        contribution_percent: totalClanPoints > 0
                             ? Math.round((m.clan_points / totalClanPoints) * 100)
                             : 0
                     }
@@ -341,6 +344,17 @@ function getClanLevelByPoints(points) {
         }
     }
     return level;
+}
+
+// --- сортировка участников клана: по очкам, затем по рейтингу ---
+function compareClanMembers(a, b) {
+    const pa = (a?.clan_points ?? 0) | 0;
+    const pb = (b?.clan_points ?? 0) | 0;
+    if (pa !== pb) return pb - pa;
+
+    const ra = (a?.rating ?? 0) | 0;
+    const rb = (b?.rating ?? 0) | 0;
+    return rb - ra;
 }
 
 function calculateMaxPlayers(baseMax = 25, level) {

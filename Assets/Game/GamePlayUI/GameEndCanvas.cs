@@ -155,19 +155,21 @@ public class GameEndCanvas : MonoBehaviour
                 clanPoint = player.overallKills * 5 + player.reviveCount * 5 + 3;
             }
         }
+        
+        var damageDealt = GetLocalPlayerDamageDealt();
 
         matchStats = new MatchStats
         {
             kills = player.overallKills,
             revives = player.reviveCount,
-            damageDealt = player.maxDamage,
+            damageDealt = damageDealt,
             shotsFired = player.shotCount,
             clanPoints = clanPoint
         };
 
         playerData.totalShots += player.shotCount;
-        if (playerData.maxDamageBattle < player.maxDamage)
-            playerData.maxDamageBattle = player.maxDamage;
+        if (playerData.maxDamageBattle < damageDealt)
+            playerData.maxDamageBattle = damageDealt;
         playerData.reviveAlly += player.reviveCount;
 
         playerData.clanPoints += clanPoint;
@@ -205,19 +207,21 @@ public class GameEndCanvas : MonoBehaviour
             }
         }
 
+        var damageDealt = GetLocalPlayerDamageDealt();
+
         matchStats = new MatchStats
         {
             kills = player.overallKills,
             revives = player.reviveCount,
-            damageDealt = player.maxDamage,
+            damageDealt = damageDealt,
             shotsFired = player.shotCount,
             clanPoints = clanPoint
         };
 
         playerData.clanPoints += clanPoint;
         playerData.totalShots += player.shotCount;
-        if (playerData.maxDamageBattle < player.maxDamage)
-            playerData.maxDamageBattle = player.maxDamage;
+        if (playerData.maxDamageBattle < damageDealt)
+            playerData.maxDamageBattle = damageDealt;
         playerData.reviveAlly += player.reviveCount;
 
         Geekplay.Instance.Save();
@@ -316,6 +320,26 @@ public class GameEndCanvas : MonoBehaviour
         rewardLose.interactable = false;
         UpdateUI();
         rewardLose.gameObject.SetActive(false);
+    }
+
+    private int GetLocalPlayerDamageDealt()
+    {
+        if (Response?.results == null || Geekplay.Instance?.PlayerData == null)
+        {
+            return 0;
+        }
+
+        var localPlayerId = Geekplay.Instance.PlayerData.id;
+
+        foreach (var result in Response.results)
+        {
+            if (result.player_id == localPlayerId)
+            {
+                return Mathf.RoundToInt(result.damage);
+            }
+        }
+
+        return 0;
     }
 
     private void UpdateUI()

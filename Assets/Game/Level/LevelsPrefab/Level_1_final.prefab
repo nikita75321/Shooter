@@ -26376,7 +26376,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &8878840894048505362
 MonoBehaviour:
@@ -37338,6 +37338,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 519166985728928651, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 857624976782158201, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: ammoInfo
       value: 
@@ -37368,15 +37372,15 @@ PrefabInstance:
       objectReference: {fileID: 6797763633508250195}
     - target: {fileID: 3071462949550167488, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.345134
+      value: -13.49
       objectReference: {fileID: 0}
     - target: {fileID: 3071462949550167488, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3071462949550167488, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.111051
+      value: 16.49
       objectReference: {fileID: 0}
     - target: {fileID: 3071462949550167488, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37414,6 +37418,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 4525448125031445384, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4541911027617690077, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
       propertyPath: ammoInfo
       value: 
@@ -37501,38 +37509,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1619144444683651424, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5027889860767487846}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
---- !u!1 &1516661845986723591 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1619144444683651424, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
-  m_PrefabInstance: {fileID: 248850967620472423}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &5027889860767487846
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516661845986723591}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!4 &3014069121033821095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3071462949550167488, guid: 4ae57fce269aaab41a1003a8d301063c, type: 3}
@@ -40338,6 +40316,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2277010362409380617}
     m_Modifications:
+    - target: {fileID: 4018051869997381, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 18981662437441414, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 114917398377739164, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40370,6 +40356,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 254661721487910638, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 258838720300568899, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -40378,6 +40368,10 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 302730625609870477, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 322415243928157006, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -40446,6 +40440,10 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 640165176465977889, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 658594953214162708, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40458,6 +40456,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 736416152063483555, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 752191822015074039, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
@@ -40469,6 +40471,10 @@ PrefabInstance:
     - target: {fileID: 843197058112597552, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 877595556314352296, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 902658830645960530, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -40522,6 +40528,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1097953708884746616, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1101513782484469790, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1104745543088234765, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40529,6 +40543,10 @@ PrefabInstance:
     - target: {fileID: 1109901977246724263, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1132748654488874128, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1146345860601291028, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -40538,10 +40556,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1187744247266424409, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1217782555022691991, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 1218143808065466482, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1231087965601506315, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40550,6 +40576,10 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 1315947248355120659, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1316044936866281954, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: ammoInfo
       value: 
@@ -40573,6 +40603,10 @@ PrefabInstance:
     - target: {fileID: 1425871965396805457, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1476934412364195092, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1497249729689862623, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: ammoInfo
@@ -40606,9 +40640,17 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 1501587928371359394, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1504225463907736942, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1507798703199375030, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1519547148611229340, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -40678,6 +40720,18 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 2003421014979539830, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2037124631602712117, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2050544096348139311, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2077394685080467880, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40693,6 +40747,10 @@ PrefabInstance:
     - target: {fileID: 2155277591520064128, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173368574313385977, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2188112252005498040, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -40714,6 +40772,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2324432242580653534, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2334239725008623292, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40734,6 +40796,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2417139930467683053, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2441451126425490222, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40742,9 +40808,17 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 2509686769395441837, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2539801056334616704, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2550987899159572030, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2571003117283992870, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: ammoInfo
@@ -40826,6 +40900,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2732991570705325000, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2742946179279378430, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40833,6 +40911,10 @@ PrefabInstance:
     - target: {fileID: 2764707541277464236, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799952706853381252, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2836526291273700404, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -40862,6 +40944,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2952775549500591056, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2961328535552121518, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40889,6 +40975,10 @@ PrefabInstance:
     - target: {fileID: 3119088120274193500, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3131893568257785569, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3156820045111365795, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -40918,6 +41008,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3265474628464005683, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3277446197404560456, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -40930,9 +41024,29 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3331253857740091135, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3336571821328923274, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3378561580751653909, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3393274840296716858, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3396880743384853725, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3430079958626625428, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3443822006170276172, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -40970,9 +41084,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 3513338509048124788, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3542564597676333697, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3577948254651473911, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3598660244125176442, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: OutputAudioMixerGroup
@@ -41078,6 +41200,10 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 4251614510797212950, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4287021751595134882, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41085,6 +41211,18 @@ PrefabInstance:
     - target: {fileID: 4294697403375525065, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303036974828261280, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4311425056361288883, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368314526610310517, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4374607117571394703, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41098,6 +41236,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4442201712520150178, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4468682662290306423, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -41109,6 +41251,10 @@ PrefabInstance:
     - target: {fileID: 4483545248881644688, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4507121634707057928, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4560714513884729743, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41182,6 +41328,10 @@ PrefabInstance:
       propertyPath: 'audioClips.Array.data[4]'
       value: 
       objectReference: {fileID: 8300000, guid: 8d6e7061cf1eb274e90f0ae132668092, type: 3}
+    - target: {fileID: 4919416784940700583, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4981886852279297389, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41222,6 +41372,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5115816255420906850, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5188159759788417165, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41234,6 +41388,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5251795217065693605, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5297019571168189307, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.3
@@ -41241,6 +41399,10 @@ PrefabInstance:
     - target: {fileID: 5297019571168189307, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5306220575705680167, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5379117706798389971, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -41253,6 +41415,10 @@ PrefabInstance:
     - target: {fileID: 5509062003647696974, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536759631104646232, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5546245152870344769, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -41314,6 +41480,14 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 5757496522255068279, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764349942836813590, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5868140798832245676, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: ammoInfo
       value: 
@@ -41342,6 +41516,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6061224578408915540, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6162526973998676329, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41366,6 +41544,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6302464731802192253, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6303515169786504600, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: OutputAudioMixerGroup
       value: 
@@ -41381,6 +41563,10 @@ PrefabInstance:
     - target: {fileID: 6450970261267289429, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6476816706238869887, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6489088087578773837, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: OutputAudioMixerGroup
@@ -41418,9 +41604,21 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6605995390560882896, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6619130715034527648, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6655954213503041781, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733802298426576884, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6746857762600402819, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41469,6 +41667,14 @@ PrefabInstance:
     - target: {fileID: 6875522334041308935, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7007055859765968919, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064985776041144158, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7094764475516217468, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: OutputAudioMixerGroup
@@ -41546,6 +41752,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7236986994731012768, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7250954692450035350, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -41565,6 +41775,10 @@ PrefabInstance:
     - target: {fileID: 7250954693950802028, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255166180965747211, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7278908681231834824, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41594,6 +41808,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7660873098180996818, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7713061558847734917, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Camera
       value: 
@@ -41622,6 +41840,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.65
       objectReference: {fileID: 0}
+    - target: {fileID: 7757968106075954467, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7771865369786092513, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41638,6 +41860,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7830492119037845660, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7832115307830361340, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41653,6 +41879,10 @@ PrefabInstance:
     - target: {fileID: 7952272827040235625, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8033979501208749923, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8043466120262956918, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -41690,6 +41920,14 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8308274695551173661, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8311770468402320516, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8333893804475979169, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41718,6 +41956,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 8366817886005593472, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8374650740407993504, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
@@ -41733,6 +41975,10 @@ PrefabInstance:
     - target: {fileID: 8456696647727488472, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8511950730515077475, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8524529297553439498, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
@@ -41753,6 +41999,10 @@ PrefabInstance:
     - target: {fileID: 8524529298368638463, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Camera
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8582482865548883414, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8590525334348439801, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41786,6 +42036,10 @@ PrefabInstance:
       propertyPath: 'audioClips.Array.data[4]'
       value: 
       objectReference: {fileID: 8300000, guid: 8d6e7061cf1eb274e90f0ae132668092, type: 3}
+    - target: {fileID: 8648948683491554030, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8652973549636026544, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -41822,9 +42076,17 @@ PrefabInstance:
       propertyPath: OutputAudioMixerGroup
       value: 
       objectReference: {fileID: 6736291131897056510, guid: ce3c77725c91e9a41b9ff53d506e7560, type: 2}
+    - target: {fileID: 8929578896849491656, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8954643745764179899, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013129666927513066, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9014777041057282035, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -41837,6 +42099,10 @@ PrefabInstance:
     - target: {fileID: 9031415919885489709, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9052506300661088877, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9074487745200638736, guid: 92621ddd2f0daec4487b3fb524de19fb, type: 3}
       propertyPath: m_CastShadows
@@ -42290,7 +42556,7 @@ PrefabInstance:
       objectReference: {fileID: 8311292777050953594}
     - target: {fileID: 2708785207497487065, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3426944974293793793, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: player
@@ -42348,6 +42614,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 7251928335096893232, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8154029177244099748, guid: fbc31036cda20df4e810ca1abd70c373, type: 3}
       propertyPath: m_Name
       value: Mono
@@ -50971,7 +51241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3270166620360052292, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3505231976036458752, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -51033,6 +51303,10 @@ PrefabInstance:
       propertyPath: ammoInfo
       value: 
       objectReference: {fileID: 6797763633508250195}
+    - target: {fileID: 7454335370712720712, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8153389035840110295, guid: 863f3ea99a1aba44581d83211173344f, type: 3}
       propertyPath: player
       value: 
@@ -53307,6 +53581,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rambo
       objectReference: {fileID: 0}
+    - target: {fileID: 2976176393982804287, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3291866986027744529, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
       value: 
@@ -53361,7 +53639,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7368125086377429053, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7442168858788926201, guid: 2cd7d14cda663f7428acf018c7c0a765, type: 3}
       propertyPath: player
@@ -54716,6 +54994,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1854793380763311541, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1854793380772834929, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -54776,6 +55058,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2411644364409013357, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2411644364418545577, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -54811,6 +55097,10 @@ PrefabInstance:
     - target: {fileID: 2726292912296607778, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752366192120321385, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2752366192129812137, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -54928,6 +55218,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 3990425036686962355, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4051811944903819162, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -54943,6 +55237,10 @@ PrefabInstance:
     - target: {fileID: 4129871253339602136, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4161456159530459505, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4161456159539974833, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -54979,6 +55277,10 @@ PrefabInstance:
     - target: {fileID: 4185361956545475918, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4185361956552754830, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4206443115735043487, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -55175,6 +55477,10 @@ PrefabInstance:
     - target: {fileID: 6064535533125392886, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6136267693474971243, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6136267693484314017, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -55376,6 +55682,10 @@ PrefabInstance:
       propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7956679198048079099, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7956679198057447225, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
       value: 10
@@ -55483,6 +55793,10 @@ PrefabInstance:
     - target: {fileID: 8692085499837616751, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8874038676492974951, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8882656956282802797, guid: 64c6d4ba85d7ca04599a2e965073be93, type: 3}
       propertyPath: m_Layer
@@ -68059,7 +68373,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 60802222986102936, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2474065132863854482, guid: 95e213af5b0cae043815ca5ec4eda51b, type: 3}
       propertyPath: m_Mesh
@@ -74604,7 +74918,7 @@ PrefabInstance:
       objectReference: {fileID: 6797763633508250195}
     - target: {fileID: 7956714067432971466, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8745685258276724986, guid: 7e1fa4b68cbc03847ad377176e67094b, type: 3}
       propertyPath: player
@@ -82510,7 +82824,7 @@ PrefabInstance:
       objectReference: {fileID: 6797763633508250195}
     - target: {fileID: 3013464667186960487, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4085893109431772590, guid: 59f08452f5a8d8847b48e1419ca019c9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -83373,6 +83687,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8921048830314778565}
     m_Modifications:
+    - target: {fileID: 711219580921312466, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1537307958619238142, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9
@@ -83503,7 +83821,7 @@ PrefabInstance:
       objectReference: {fileID: 6797763633508250195}
     - target: {fileID: 7552825390510647004, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8737210727326014318, guid: a240c3a7eb584764a9b161765ef1d28c, type: 3}
       propertyPath: player
@@ -87866,7 +88184,7 @@ PrefabInstance:
       objectReference: {fileID: 2912058140385455832}
     - target: {fileID: 6429848181521552190, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8831528390001103214, guid: b3af1a7f8cd14cb48843cfded6b4088b, type: 3}
       propertyPath: m_Camera

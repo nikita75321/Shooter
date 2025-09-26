@@ -405,12 +405,15 @@ class RoomManager {
         damage *= Math.pow(1.15, rank) * Math.pow(1.05, level);
 
         const statsKey = `player_stats:${roomId}:${playerId}`;
+        const baseDamage = damage;
+
         await global.redisClient.hSet(statsKey, {
             hp: maxHp,          // текущие HP
             max_hp: maxHp,      // макс HP
             armor: 0,           // текущая броня
             max_armor: maxArmor,// макс броня
-            damage,
+            damage: 0,          // нанесённый урон в текущем матче
+            base_damage: baseDamage,
             vision,
             deaths: 0,
             kills: 0,
@@ -422,7 +425,7 @@ class RoomManager {
         return {
             maxHp,
             maxArmor,
-            damage,
+            damage: baseDamage,
             vision
         };
     }

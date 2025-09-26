@@ -258,6 +258,7 @@ async function applyUpgradeEffects(player_id, room_id, upgradeType) {
                 kills: stats.kills,
                 deaths: stats.deaths,
                 damage: stats.damage,
+                base_damage: stats.base_damage,
                 is_alive: true,
                 // Если у тебя внутри updatePlayerStats поддерживается изменение max_armor — добавь:
                 max_armor: new_max_armor
@@ -269,14 +270,16 @@ async function applyUpgradeEffects(player_id, room_id, upgradeType) {
         case "damage": {
             // пример: +20% к damage (если поле damage у тебя есть в stats)
             const mul = 1.2;
-            const new_damage = Math.round((stats.damage || 0) * mul);
+            const currentBaseDamage = stats.base_damage || stats.damage || 0;
+            const newBaseDamage = Math.round(currentBaseDamage * mul);
 
             newStats = await playerInGameController.updatePlayerStats(player_id, room_id, {
                 new_hp: stats.hp,
                 new_armor: stats.armor,
                 kills: stats.kills,
                 deaths: stats.deaths,
-                damage: new_damage,
+                damage: stats.damage,
+                base_damage: newBaseDamage,
                 is_alive: true
             });
 

@@ -72,6 +72,7 @@ class BoostController {
                         kills: playerStats.kills,
                         deaths: playerStats.deaths,
                         damage: playerStats.damage,
+                        base_damage: playerStats.base_damage,
                         is_alive: true
                     });
                     console.log(`new armor = ${playerStats.max_armor}`);
@@ -143,6 +144,7 @@ class BoostController {
                 kills: playerStats.kills,
                 deaths: playerStats.deaths,
                 damage: playerStats.damage,
+                base_damage: playerStats.base_damage,
                 is_alive: true
             });
 

@@ -42,6 +42,9 @@ public class Healthbar : MonoBehaviour
 
     public void Init()
     {
+        Debug.Log(hpbarTxt);
+        Debug.Log(Health);
+        // if (Health == null) Health = GetComponentInParent<Health>();
         hpbarTxt.text = $"{Mathf.RoundToInt(Health.CurrentHealth)} / {Mathf.RoundToInt(Health.MaxHealth)}";
     }
 

@@ -251,6 +251,7 @@ class PlayerInGameController {
         const cur_armor     = toFloat(currentStats.armor,      0);
         const cur_max_armor = toFloat(currentStats.max_armor,  cur_armor);
         const cur_damage    = toFloat(currentStats.damage,     0);
+        const cur_base_damage = toFloat(currentStats.base_damage, cur_damage);
         const cur_kills     = toInt  (currentStats.kills,      0);
         const cur_deaths    = toInt  (currentStats.deaths,     0);
         const cur_vision    = toFloat(currentStats.vision,     0);
@@ -262,6 +263,9 @@ class PlayerInGameController {
         const kills     = toInt  (data.kills,     cur_kills);
         const deaths    = toInt  (data.deaths,    cur_deaths);
         const damage    = toFloat(data.damage,    cur_damage);
+        const base_damage = ('base_damage' in data)
+            ? toFloat(data.base_damage, cur_base_damage)
+            : cur_base_damage;
         const max_hp_in = ('max_hp'    in data) ? toFloat(data.max_hp,    cur_max_hp)    : cur_max_hp;
         const max_ar_in = ('max_armor' in data) ? toFloat(data.max_armor, cur_max_armor) : cur_max_armor;
         const vision    = ('vision'    in data) ? toFloat(data.vision,    cur_vision)    : cur_vision;
@@ -292,6 +296,7 @@ class PlayerInGameController {
             kills: kills.toString(),
             deaths: deaths.toString(),
             damage: damage.toString(),
+            base_damage: base_damage.toString(),
             vision: vision.toString(),               // поле на будущее
             is_alive: is_alive.toString(),
             score: safeScore.toString(),
@@ -307,6 +312,7 @@ class PlayerInGameController {
             kills,
             deaths,
             damage,
+            base_damage,
             vision,
             is_alive,
             score: safeScore,
@@ -341,6 +347,7 @@ class PlayerInGameController {
                     kills: 0,
                     deaths: 0,
                     damage: 0,
+                    base_damage: 0,
                     score: 0,
                     respawn_time: 0,
                     last_update: Date.now(),
@@ -357,7 +364,8 @@ class PlayerInGameController {
                 kills: parseInt(stats.kills ?? 0, 10),
                 deaths: parseInt(stats.deaths ?? 0, 10),
                 damage: parseFloat(stats.damage ?? 0),
-                 score: parseFloat(stats.score ?? 0),
+                base_damage: parseFloat(stats.base_damage ?? stats.damage ?? 0),
+                score: parseFloat(stats.score ?? 0),
                 respawn_time: parseInt(stats.respawn_time ?? 0, 10),
                 last_update: Date.now(),
                 is_alive: stats.is_alive === 'true'
@@ -373,6 +381,7 @@ class PlayerInGameController {
                 kills: 0,
                 deaths: 0,
                 damage: 0,
+                base_damage: 0,
                 score: 0,
                 respawn_time: 0,
                 last_update: Date.now(),

@@ -36,7 +36,11 @@ public class SettingsMenu : MonoBehaviour
 
         WebSocketBase.Instance.OnMatchEnd += (t) =>
         {
-            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() => gameObject.SetActive(false));
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+            {
+                if (gameObject != null)
+                    gameObject.SetActive(false);
+            });
         };
         // Настройка громкости
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
@@ -55,9 +59,13 @@ public class SettingsMenu : MonoBehaviour
     }
     private void OnDestroy()
     {
-        WebSocketBase.Instance.OnMatchEnd -= (t) =>
+        WebSocketBase.Instance.OnMatchEnd += (t) =>
         {
-            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() => gameObject.SetActive(false));
+            WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
+            {
+                if (gameObject != null)
+                    gameObject.SetActive(false);
+            });
         };
         masterSlider.onValueChanged.RemoveListener(SetMasterVolume);
         musicSlider.onValueChanged.RemoveListener(SetMusicVolume);

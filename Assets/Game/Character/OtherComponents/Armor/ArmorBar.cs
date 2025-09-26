@@ -34,7 +34,7 @@ public class ArmorBar : MonoBehaviour
         currentValue = Armor.CurrentArmor;
         mainCamera = Camera.main;
         UpdatePositionAndRotation();
-        changeSpeed = 1000;
+        changeSpeed = 10000;
     }
 
     public void Init()

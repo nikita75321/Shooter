@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +33,8 @@ public class Clan : MonoBehaviour
     [SerializeField] private TMP_Text clanNameTXT;
     [SerializeField] private TMP_Text overallRatingTXT;
     [SerializeField] private TMP_Text membersInfo;
+    [SerializeField] private TMP_Text clanLevelUpTXT;
+    [SerializeField] private Slider sliderLevelUp;
 
     [Header("BestClans RightPanel UI")]
     [SerializeField] private GameObject bestClanPanel;
@@ -88,14 +90,8 @@ public class Clan : MonoBehaviour
             overallRatingTXT.text = clanInfo.Stats.Clan_points.ToString();
             membersInfo.text = $"{memberCount}/{maxMembers}";
 
-            // Сортируем участников по клановым очкам (по убыванию)
-            var sortedMembers = clanInfo.Members
-                .OrderByDescending(m => m.Stats.ClanPoints)
-                .ThenBy(m => m.Name) // Дополнительная сортировка по имени при равных очках
-                .ToList();
-
             // Инициализируем наш слот (предполагая, что текущий игрок есть в списке участников)
-            var currentPlayer = sortedMembers.FirstOrDefault(m =>
+            var currentPlayer = clanInfo.Members.FirstOrDefault(m =>
                 m.Name == Geekplay.Instance.PlayerData.name);
 
             // Debug.Log($"{currentPlayer.name} {currentPlayer.stats.clan_points} {currentPlayer.stats.rating}");
@@ -123,10 +119,10 @@ public class Clan : MonoBehaviour
             members.Clear();
             int index = 0;
             // Создаем слоты для участников в отсортированном порядке
-            foreach (var member in sortedMembers)
+            foreach (var member in clanInfo.Members)
             {
                 // Пропускаем текущего игрока (его слот уже обработан)
-                if (member.Name == Geekplay.Instance.PlayerData.name) continue;
+                // if (member.Name == Geekplay.Instance.PlayerData.name) continue;
 
                 var memberSlot = Instantiate(memberSlotPrefab, membersContainer);
                 var memberUI = memberSlot.GetComponent<ClanMemberSlot>();
@@ -142,6 +138,9 @@ public class Clan : MonoBehaviour
                 index++;
             }
 
+            AnimateSlider();
+            // sliderLevelUp.value = clanPoint;
+            
             // Сохраняем название клана у игрока
             Geekplay.Instance.PlayerData.clanName = clanName;
             Geekplay.Instance.Save();
@@ -149,7 +148,42 @@ public class Clan : MonoBehaviour
             ClanCanvas.Instance.topClans.InitBestClans();
         });
     }
+    //         0: 150,
+    //         1: 500,
+    //         2: 2000,
+    //         3: 5000,
+    //         4: 10000,
+    //         5: 20000,
+    //         6: 35000,
+    //         7: 60000,
+    //         8: 100000,
+    //         9: 150000,
+    private void AnimateSlider()
+    {
+        // Пороговые значения
+        int[] caps = { 150, 500, 2000, 5000, 10000, 20000, 35000, 60000, 100000, 150000 };
 
+        int cap = caps[caps.Length - 1];
+        foreach (int c in caps)
+        {
+            if (clanPoint <= c)
+            {
+                cap = c;
+                break;
+            }
+        }
+
+        sliderLevelUp.maxValue = cap;
+        sliderLevelUp.value = 0;
+
+        // Анимация слайдера
+        DOVirtual.Float(0, clanPoint, 1f, val =>
+        {
+            sliderLevelUp.value = val;
+            clanLevelUpTXT.text = $"{Mathf.RoundToInt(val)} / {cap}";
+        });
+    }
+    
     public void LeaveClan()
     {
         WebSocketMainTread.Instance.mainTreadAction.Enqueue(() =>
@@ -219,11 +253,7 @@ public class Clan : MonoBehaviour
 
     public void SelectBestClan(TopClanSlot clanSlot)
     {
-        // Debug.Log($"a eto che {clanSlot.ClanData}");
         var clanData = clanSlot.ClanData;
-        // Debug.Log($"Select {clanSlot.name}");
-        // Debug.Log(clanData.clan_name);
-        // Debug.Log(clanData.clan_level);
 
         bestClanImage.sprite = ClanCanvas.Instance.clanSprites[clanData.clan_level];
         bestClanNameTXT.text = clanData.clan_name;
