@@ -161,13 +161,42 @@ function normalizeLbEntry(e) {
     place: String(e.place), // строкой
   };
 }
-function normalizeMyStats(e) {
-  if (!e) return null;
-  return {
-    name: e.name || '',
-    value: Number.isFinite(Number(e.value)) ? Math.trunc(Number(e.value)) : 0,
-    place: String(e.place),
-  };
+
+function normalizeMyStats(e, fallbackId) {
+  const name = e?.name || '';
+  const value = Number.isFinite(Number(e?.value)) ? Math.trunc(Number(e.value)) : 0;
+  const place = Number.isFinite(Number(e?.place)) ? String(Math.trunc(Number(e.place))) : '0';
+
+  const result = { name, value, place };
+  const pid = e?.player_id ?? fallbackId;
+  if (pid !== undefined && pid !== null) {
+    result.player_id = String(pid);
+  }
+  return result;
+}
+
+async function buildLeaderboardResponse(zsetKey, playerId, valueField) {
+  const topEntries = await getTopWithPlaces(zsetKey, 30);
+  const top_players = (await hydrateNames(topEntries)).map(normalizeLbEntry);
+
+  const myRank = await getMyRank(zsetKey, playerId);
+  let myEntry;
+  if (myRank) {
+    [myEntry] = await hydrateNames([{ player_id: playerId, ...myRank }]);
+  } else {
+    const profile = await playerRedisService.getPlayerFromRedis(playerId);
+    const numericValue = num(profile?.[valueField], 0);
+    const place = await getPlaceForScore(zsetKey, numericValue);
+    myEntry = {
+      player_id: playerId,
+      name: profile?.player_name || '',
+      value: numericValue,
+      place,
+    };
+  }
+
+  const my_stats = normalizeMyStats(myEntry, playerId);
+  return { top_players, my_stats };
 }
 
 /* ------------------------- update player stats ------------------------- */
@@ -298,16 +327,17 @@ async function handleGetRatingLeaderboard(ws, data) {
   }
   try {
     const playerId = data.player_id;
+    const { top_players, my_stats } = await buildLeaderboardResponse(LB_RATING, playerId, 'rating');
 
-    // Топ-30
-    const topEntries = await getTopWithPlaces(LB_RATING, 30);
-    const top_players = (await hydrateNames(topEntries)).map(normalizeLbEntry);
+    // // Топ-30
+    // const topEntries = await getTopWithPlaces(LB_RATING, 30);
+    // const top_players = (await hydrateNames(topEntries)).map(normalizeLbEntry);
 
-    // Позиция игрока отдельно
-    const myRank = await getMyRank(LB_RATING, playerId);
-    const my_stats = normalizeMyStats(
-      myRank ? (await hydrateNames([{ player_id: playerId, ...myRank }]))[0] : null
-    );
+    // // Позиция игрока отдельно
+    // const myRank = await getMyRank(LB_RATING, playerId);
+    // const my_stats = normalizeMyStats(
+    //   myRank ? (await hydrateNames([{ player_id: playerId, ...myRank }]))[0] : null
+    // );
 
     ws.send(JSON.stringify({
       action: 'rating_leaderboard_response',
@@ -326,14 +356,15 @@ async function handleGetKillsLeaderboard(ws, data) {
   }
   try {
     const playerId = data.player_id;
+    const { top_players, my_stats } = await buildLeaderboardResponse(LB_KILLS, playerId, 'overral_kill');
 
-    const topEntries = await getTopWithPlaces(LB_KILLS, 30);
-    const top_players = (await hydrateNames(topEntries)).map(normalizeLbEntry);
+    // const topEntries = await getTopWithPlaces(LB_KILLS, 30);
+    // const top_players = (await hydrateNames(topEntries)).map(normalizeLbEntry);
 
-    const myRank = await getMyRank(LB_KILLS, playerId);
-    const my_stats = normalizeMyStats(
-      myRank ? (await hydrateNames([{ player_id: playerId, ...myRank }]))[0] : null
-    );
+    // const myRank = await getMyRank(LB_KILLS, playerId);
+    // const my_stats = normalizeMyStats(
+    //   myRank ? (await hydrateNames([{ player_id: playerId, ...myRank }]))[0] : null
+    // );
 
     ws.send(JSON.stringify({
       action: 'kills_leaderboard_response',

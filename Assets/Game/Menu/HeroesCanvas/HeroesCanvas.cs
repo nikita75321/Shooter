@@ -93,16 +93,18 @@ public class HeroesCanvas : MonoBehaviour
         float damage = initDamage;
         float power = initPower;
 
-        hp *= Mathf.Pow(1.05f, level);
+        Debug.Log($"Изначально hp={hp}, armor={armor}, damage={damage}, power={power}");
+
+        hp *= Mathf.Pow(1.05f, 10*rank);
         hp *= Mathf.Pow(1.15f, rank);
-        armor *= Mathf.Pow(1.05f, level);
+        armor *= Mathf.Pow(1.05f, 10*rank);
         armor *= Mathf.Pow(1.15f, rank);
-        damage *= Mathf.Pow(1.05f, level);
+        damage *= Mathf.Pow(1.05f, 10*rank);
         damage *= Mathf.Pow(1.15f, rank);
-        power *= Mathf.Pow(1.05f, level);
+        power *= Mathf.Pow(1.05f, 10*rank);
         power *= Mathf.Pow(1.15f, rank);
         
-        Debug.Log($"hp={hp}, armor={armor}, damage={damage}, power={power}");
+        Debug.Log($"После расчетов hp={hp}, armor={armor}, damage={damage}, power={power}");
         sliderHp.maxValue = hp;
         sliderArmor.maxValue = armor;
         sliderDamage.maxValue = damage;

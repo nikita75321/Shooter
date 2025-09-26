@@ -17,7 +17,8 @@ public class LeaderboardSlot : MonoBehaviour
 
     public void Init(string place, string name, string value)
     {
-        if (place.ToInt() < 4)
+        Debug.Log(place);
+        if (place.ToInt() < 4 && place.ToInt() > 0)
         {
             // placeIcon.enabled = true;
             placeIcon.sprite = ClanCanvas.Instance.placeSprites[place.ToInt() - 1];
